@@ -2,7 +2,7 @@ program the_name_of_the_program
 
     #This is a comment
 
-    -script {
+    script {
         # VARIABLE AND DECLARATION AND INITIALIZATION
 
         # You can declare global variables like this.
@@ -111,7 +111,7 @@ program the_name_of_the_program
             code while being able to demonstrate their findings."
         }
         p {
-            <^ "Whatever goes inside this will be evaluated as code." ^>
+            <^"Whatever goes inside this will be evaluated as code." ^>
             "The result of 1+1 is" <^ 1+1 ^>
         }
         p {
@@ -131,17 +131,18 @@ program the_name_of_the_program
                 th {"Year"}
                 th {"Model"}
             }
-            tr {
-                script{
-                    int counter = 0
-                    loop (counter not len(my_table)) {
-                        th {
-                            eval("Loop number" + i + "")
+            embed my_embed_name {
+                int i
+                int j
+                loop (i not len(my_table)) {
+                    tr {
+                        loop (j not len(my_table[0])) {
+                            th { my_table[i][j] } # prints brand, year, model
+                            j = sum(j,1)
                         }
                     }
-                }
+                    i = sum(i,1)
+                } 
             }
         }
-
     }
-    
