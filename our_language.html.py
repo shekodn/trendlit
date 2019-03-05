@@ -50,7 +50,7 @@ program the_name_of_the_program
         loop (i not 10) {
             eval("Loop number" + i + "")
             # Please don't declare any new variable inside a loop.
-            # int hola = 1 
+            # int hola = 1
         }
 
         # MODULES
@@ -97,7 +97,7 @@ program the_name_of_the_program
         # You can manipulate your sort_2D_slice by using some the default methods
         sort_2D_slice(my_table, criteria, column_index)
             # criteria = min/max
-    
+
     }
 
     h1 { "This is a Title" }
@@ -107,7 +107,7 @@ program the_name_of_the_program
     }
 
     div {
-        p { "What we want to do here is being able to let others write pythoninc 
+        p { "What we want to do here is being able to let others write pythoninc
             code while being able to demonstrate their findings."
         }
         p {
@@ -121,10 +121,10 @@ program the_name_of_the_program
             if you know python, you know how to write using our language.
         }
     }
-    
+
     div {
         class: "example-class"
-        
+
         table {
             tr {
                 th {"Brand"}
@@ -137,12 +137,12 @@ program the_name_of_the_program
                 loop (i not len(my_table)) {
                     tr {
                         loop (j not len(my_table[0])) {
-                            th { my_table[i][j] } # prints brand, year, model
+                            th { eval(my_table[i][j]) } # prints brand, year, model
                             j = sum(j,1)
                         }
                     }
                     i = sum(i,1)
-                } 
+                }
             }
         }
     }
