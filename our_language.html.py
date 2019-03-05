@@ -13,7 +13,8 @@ program the_name_of_the_program
         double height = 1.6
         char sex = 'F'
         bool legal # This is how you deine an uninitialized variable
-
+        # int a,b,c #TODO - can we NOT do this? @elda
+        # a = b = c = 20 #TODO - ?????
         # Slices and 2D Slices work as arrays and matrixes respectively
         my_slice [2] char = ['a','b']
         my_2D_slice [3][3] int = [[]]
@@ -26,6 +27,7 @@ program the_name_of_the_program
 
         # You can create a simple condition like the following
         if (sex is 'F') {
+            int int_var_name = 1 # TODO: can we do this? @elda
             eval("Female!")
         }
 

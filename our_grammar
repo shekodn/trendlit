@@ -1,14 +1,18 @@
 program ::= 'PROGRAM' 'ID' program1
 program1 ::= script | html | empty
 
-script ::= 'SCRIPT' 'OBRACE' block 'CBRACE'
+script ::= 'SCRIPT' block
 
 block ::= 'OBRACE' block1 'CBRACE'
-block1 ::= statute | block1 | empty
+block1 ::= statute block1 | empty
 
-statute ::= vars | assignment | condition | cycle | call | module | writing
+declaration ::= type 'ID'
+type ::= 'STR' | 'INT' | 'DOUBLE' | 'CHAR' | 'BOOL'
 
-assignment ::= ''
+statute ::= declaration | assignment | condition | cycle | call | module | writing
+
+assignment ::= type assignment1 | assignment1
+assignment1 ::= 'ID' 'EQ' expression
 
 expression ::= exp expression1
 expression1 ::= 'REL' exp | 'ASSOCIATIVE' exp | empty
@@ -35,12 +39,14 @@ call ::= 'ID' 'OPAREN' expresion 'CPAREN'
 
 writing ::= 'EVAL' 'OPAREN' expresion 'CPAREN'
 
-// falta agregar slices
+/* falta agregar slices */
 arguments ::= 'STR' 'ID' | 'INT' 'ID' | 'DOUBLE' 'ID' | 'CHAR' 'ID' | 'BOOL' 'ID' | empty
 spitval ::= 'STR' | 'INT' | 'DOUBLE' | 'CHAR' | 'BOOL' | empty
 
-htmltag ::= tag 'OBRACE' class text htmlscript htmltag1 'CBRACE'
-htmltag1 ::= htmltag | empty
+html ::= htmltag | empty
+
+htmltag ::= tag 'OBRACE' class htmltag1 'CBRACE'
+htmltag1 ::= text htmltag1 | htmlscript htmltag1 | htmltag htmltag1 | empty
 
 tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
 
@@ -50,4 +56,4 @@ class ::= 'CLASS' 'COLON' 'STRING' | empty
 
 htmlscript ::= 'OEVALSCRIPT' expression 'CEVALSCRIPT' | embedscript
 
-embedscript ::= 'EMBED' 'ID' 'OBRACE' block 'CBRACE'
+embedscript ::= 'EMBED' 'ID' 'OBRACE' eblock 'CBRACE'
