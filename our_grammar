@@ -4,12 +4,12 @@ program1 ::= script | html | empty
 script ::= 'SCRIPT' block
 
 block ::= 'OBRACE' block1 'CBRACE'
-block1 ::= statute block1 | empty
+block1 ::= statement block1 | empty
 
 declaration ::= type 'ID'
 type ::= 'STR' | 'INT' | 'DOUBLE' | 'CHAR' | 'BOOL'
 
-statute ::= declaration | assignment | condition | cycle | call | module | writing
+statement ::= declaration | assignment | condition | cycle | call | module | writing
 
 assignment ::= type assignment1 | assignment1
 assignment1 ::= 'ID' 'EQ' expression
