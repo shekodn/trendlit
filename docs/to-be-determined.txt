@@ -1,0 +1,4 @@
+- How to not care about the order in our html. What comes first?
+A text or an embedded element inside HTML
+
+- Can we take the luxury of not using ';'
