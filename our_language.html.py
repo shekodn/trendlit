@@ -117,10 +117,10 @@ program the_name_of_the_program
             "The result of 1+1 is" <^ 1+1 ^>
         }
         p {
-            We noticed that a lot of researches and financial people are using python
+            "We noticed that a lot of researches and financial people are using python
             so we tought that we could do a language to help them publish their results
             faster and with a minimal learning curve. The idea is that,
-            if you know python, you know how to write using our language.
+            if you know python, you know how to write using our language."
         }
     }
 

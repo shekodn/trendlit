@@ -47,7 +47,6 @@ tokens = list(reserved_words_code.values()) + [
     "ASSOCIATIVE",
     "EQ",
     "COMMA",
-    "SEMI",
     "COLON",
     "OPAREN",
     "CPAREN",
@@ -57,10 +56,11 @@ tokens = list(reserved_words_code.values()) + [
     "CBRACK",
     "OEVALSCRIPT",
     "CEVALSCRIPT",
-    "STRING",
+    "CTECHAR",
+    "CTESTR",
     "ID",
-    "I",
-    "D",
+    "CTEI",
+    "CTED",
 ]
 
 t_SIGN = r"\+|-"
@@ -69,7 +69,6 @@ t_REL = r"is|not|>|<|>=|<="
 t_ASSOCIATIVE = r"or|and"
 t_EQ = r"="
 t_COMMA = r","
-t_SEMI = r";"
 t_COLON = r":"
 t_OPAREN = r"\("
 t_CPAREN = r"\)"
@@ -77,9 +76,10 @@ t_OBRACE = r"{"
 t_CBRACE = r"}"
 t_OBRACK = r"\["
 t_CBRACK = r"\]"
-t_OEVALSCRIPT = r"<^"
-t_CEVALSCRIPT = r"^>"
-t_STRING = r"\"[^\"]*\""
+t_OEVALSCRIPT = r"<\^"
+t_CEVALSCRIPT = r"\^>"
+t_CTECHAR = r"'.?'"
+t_CTESTR = r"\"[^\"]*\""
 
 
 def t_ID(t):
@@ -87,12 +87,12 @@ def t_ID(t):
     return t
 
 
-def t_D(t):
+def t_CTED(t):
     r"(-?[0-9]+[.])[0-9]+"
     return t
 
 
-def t_I(t):
+def t_CTEI(t):
     r"-?[0-9]+"
     return t
 
@@ -125,34 +125,34 @@ import ply.lex as lex
 lex.lex()
 
 
-def p_(p):
+def p_program(p):
     """program : PROGRAM ID program1"""
 
 
-def p_(p):
+def p_program1(p):
     """program1 : script
         | html
         | empty"""
 
 
-def p_(p):
+def p_script(p):
     """script : SCRIPT block"""
 
 
-def p_(p):
+def p_block(p):
     """block : OBRACE block1 CBRACE"""
 
 
-def p_(p):
+def p_block1(p):
     """block1 : statement block1
         | empty"""
 
 
-def p_(p):
+def p_declaration(p):
     """declaration : type ID"""
 
 
-def p_(p):
+def p_type(p):
     """type : STR
         | INT
         | DOUBLE
@@ -160,7 +160,7 @@ def p_(p):
         | BOOL"""
 
 
-def p_(p):
+def p_statement(p):
     """statement : declaration
         | assignment
         | condition
@@ -170,122 +170,134 @@ def p_(p):
         | writing"""
 
 
-def p_(p):
+def p_assignment(p):
     """assignment : type assignment1
         | assignment1"""
 
 
-def p_(p):
+def p_assignment1(p):
     """assignment1 : ID EQ expression"""
 
 
-def p_(p):
+def p_expression(p):
     """expression : exp expression1"""
 
 
-def p_(p):
+def p_expression1(p):
     """expression1 : REL exp
         | ASSOCIATIVE exp
         | empty"""
 
 
-def p_(p):
+def p_exp(p):
     """exp : term exp1"""
 
 
-def p_(p):
+def p_exp1(p):
     """exp1 : SIGN exp exp1
         | empty"""
 
 
-def p_(p):
+def p_term(p):
     """term : factor term1"""
 
 
-def p_(p):
+def p_term1(p):
     """term1 : OP term term1
         | empty"""
 
 
-def p_(p):
-    """factor : OPAREN expresion CPAREN
+def p_factor(p):
+    """factor : OPAREN expression CPAREN
         | factor1"""
 
 
-def p_(p):
+def p_factor1(p):
     """factor1 : value
         | SIGN value"""
 
 
-def p_(p):
+def p_value(p):
     """value : ID
-        | I
-        | D
-        | STRING
+        | CTEI
+        | CTED
+        | CTESTR
         | FALSE
         | TRUE"""
 
 
-def p_(p):
+def p_condition(p):
     """condition : IF OPAREN expression CPAREN block condition1"""
 
 
-def p_(p):
+def p_condition1(p):
     """condition1 : ELSE OPAREN expression CPAREN block
         | empty"""
 
 
-def p_(p):
+def p_cycle(p):
     """cycle : LOOP OPAREN expression CPAREN block"""
 
 
-def p_(p):
+def p_module(p):
     """module : DEF ID OPAREN arguments CPAREN COLON spitval block"""
 
 
-def p_(p):
-    """call : ID OPAREN expresion CPAREN"""
+def p_call(p):
+    """call : ID call1
+        | predef call1"""
 
 
-def p_(p):
-    """writing : EVAL OPAREN expresion CPAREN"""
+def p_call1(p):
+    """call1 : OPAREN expression CPAREN"""
 
 
-def p_(p):
-    """arguments : STR ID
-        | INT ID
-        | DOUBLE ID
-        | CHAR ID
-        | BOOL ID
+def p_predef(p):
+    """predef : SUCK_CSV
+        | SORT_SLICE
+        | SORT_2D_SLICE
+        | MEDIAN
+        | MODE
+        | AVG
+        | POW"""
+
+
+def p_writing(p):
+    """writing : EVAL OPAREN expression CPAREN"""
+
+
+def p_arguments(p):
+    """arguments : type ID arguments1
         | empty"""
 
 
-def p_(p):
-    """spitval : STR
-        | INT
-        | DOUBLE
-        | CHAR
-        | BOOL
+def p_arguments1(p):
+    """arguments1 : COMMA type ID arguments1
         | empty"""
 
 
-def p_(p):
+def p_spitval(p):
+    """spitval : type
+        | empty"""
+
+
+def p_html(p):
     """html : htmltag
         | empty"""
 
 
-def p_(p):
+def p_htmltag(p):
     """htmltag : tag OBRACE class htmltag1 CBRACE"""
 
 
-def p_(p):
+def p_htmltag1(p):
     """htmltag1 : text htmltag1
         | htmlscript htmltag1
         | htmltag htmltag1
         | empty"""
 
 
-def p_(p):
+def p_tag(p):
     """tag : H1
         | H2
         | DIV
@@ -295,23 +307,28 @@ def p_(p):
         | TH"""
 
 
-def p_(p):
-    """text : STRING
+def p_text(p):
+    """text : CTESTR
         | empty"""
 
 
-def p_(p):
-    """class : CLASS COLON STRING
+def p_class(p):
+    """class : CLASS COLON CTESTR
         | empty"""
 
 
-def p_(p):
+def p_htmlscript(p):
     """htmlscript : OEVALSCRIPT expression CEVALSCRIPT
         | embedscript"""
 
 
-def p_(p):
-    """embedscript : EMBED ID OBRACE eblock CBRACE"""
+def p_embedscript(p):
+    """embedscript : EMBED ID OBRACE CBRACE"""
+    # """embedscript : EMBED ID OBRACE eblock CBRACE"""
+
+
+def p_empty(p):
+    """empty :"""
 
 
 def p_error(p):
