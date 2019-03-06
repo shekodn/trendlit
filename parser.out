@@ -1,0 +1,125 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    CPAREN
+    STR
+    TR
+    OEVALSCRIPT
+    CHAR
+    PROGRAM
+    SORT_SLICE
+    REL
+    DIV
+    TRUE
+    DEF
+    STRING
+    SPIT
+    SEMI
+    SCRIPT
+    POW
+    MEDIAN
+    CEVALSCRIPT
+    OBRACK
+    COMMA
+    ASSOCIATIVE
+    TH
+    COLON
+    SORT_2D_SLICE
+    CLASS
+    MODE
+    D
+    I
+    IS
+    ELSE
+    P
+    EVAL
+    TABLE
+    SIGN
+    EQ
+    IF
+    AND
+    SUCK_CSV
+    FALSE
+    H2
+    DOUBLE
+    H1
+    CBRACK
+    INT
+    BOOL
+    OPAREN
+    NOT
+    AVG
+    OR
+    LOOP
+    OP
+
+Grammar
+
+Rule 0     S' -> embedscript
+Rule 1     embedscript -> EMBED ID OBRACE eblock CBRACE
+
+Terminals, with rules where they appear
+
+AND                  : 
+ASSOCIATIVE          : 
+AVG                  : 
+BOOL                 : 
+CBRACE               : 1
+CBRACK               : 
+CEVALSCRIPT          : 
+CHAR                 : 
+CLASS                : 
+COLON                : 
+COMMA                : 
+CPAREN               : 
+D                    : 
+DEF                  : 
+DIV                  : 
+DOUBLE               : 
+ELSE                 : 
+EMBED                : 1
+EQ                   : 
+EVAL                 : 
+FALSE                : 
+H1                   : 
+H2                   : 
+I                    : 
+ID                   : 1
+IF                   : 
+INT                  : 
+IS                   : 
+LOOP                 : 
+MEDIAN               : 
+MODE                 : 
+NOT                  : 
+OBRACE               : 1
+OBRACK               : 
+OEVALSCRIPT          : 
+OP                   : 
+OPAREN               : 
+OR                   : 
+P                    : 
+POW                  : 
+PROGRAM              : 
+REL                  : 
+SCRIPT               : 
+SEMI                 : 
+SIGN                 : 
+SORT_2D_SLICE        : 
+SORT_SLICE           : 
+SPIT                 : 
+STR                  : 
+STRING               : 
+SUCK_CSV             : 
+TABLE                : 
+TH                   : 
+TR                   : 
+TRUE                 : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+eblock               : 1
+embedscript          : 0
+
