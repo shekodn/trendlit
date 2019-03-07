@@ -16,7 +16,7 @@ declaration3 ::= 'OBRACK' 'I' 'CBRACK'
 constSlice ::= 'OBRACK' value constSlice1 'CBRACK'
 constSlice1 ::= 'COMMA' value constSlice1 | empty*/
 
-type ::= 'STR' | 'INT' | 'DOUBLE' | 'CHAR' | 'BOOL'
+type ::= 'STR' | 'INT' | 'DOUBLE' | 'BOOL'
 
 statement ::= declaration | assignment | condition | cycle | call | module | writing
 
@@ -35,7 +35,7 @@ term1 ::= 'OP' term term1 | empty
 factor ::= 'OPAREN' expression 'CPAREN' | factor1
 factor1 ::= value | 'SIGN' value
 
-value ::= 'ID' | 'CTEI' | 'CTED' | 'CTECHAR' | 'CTESTR' | 'FALSE' | 'TRUE'
+value ::= 'ID' | 'CTEI' | 'CTED' | 'CTESTR' | 'FALSE' | 'TRUE'
 
 condition ::= 'IF' 'OPAREN' expression 'CPAREN' block condition1
 condition1 ::= 'ELSE' 'OPAREN' expression 'CPAREN' block | empty

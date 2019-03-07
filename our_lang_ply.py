@@ -8,9 +8,8 @@ reserved_words = {
     "str": "STR",
     "int": "INT",
     "double": "DOUBLE",
-    # "char": "CHAR",
     "bool": "BOOL",
-    
+
     "if": "IF",
     "else": "ELSE",
     "loop": "LOOP",
@@ -54,7 +53,6 @@ tokens = list(reserved_words.values()) + [
     "CBRACK",
     "OEVALSCRIPT",
     "CEVALSCRIPT",
-    # "CTECHAR",
     "CTESTR",
     "ID",
     "CTEI",
@@ -74,7 +72,6 @@ t_OBRACE = r"{"
 t_CBRACE = r"}"
 t_OBRACK = r"\["
 t_CBRACK = r"\]"
-# t_CTECHAR = r"'.?'"
 
 
 def t_OEVALSCRIPT(t):
