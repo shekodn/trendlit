@@ -9,4 +9,4 @@ Here you can find some incognitas that we had through the development of the pro
 -- Declaration: int a = b = c (TBD)
 -- int a, b, c (TBD)
 -- Declare global vars in any part of the code or only at the top? (TBD)
--- Shpuld vars be inside an statement? (TBD)
+-- Should vars be inside an statement? (TBD)
