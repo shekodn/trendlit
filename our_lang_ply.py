@@ -1,19 +1,16 @@
 # TOKENS
-reserved_words_code = {
+reserved_words = {
+    # reserved words code
     "program": "PROGRAM",
     "script": "SCRIPT",
     "str": "STR",
     "int": "INT",
     "double": "DOUBLE",
-    "char": "CHAR",
+    # "char": "CHAR",
     "bool": "BOOL",
     "if": "IF",
     "else": "ELSE",
     "loop": "LOOP",
-    "is": "IS",
-    "not": "NOT",
-    "or": "OR",
-    "and": "AND",
     "True": "TRUE",
     "False": "FALSE",
     "eval": "EVAL",
@@ -26,9 +23,7 @@ reserved_words_code = {
     "mode": "MODE",
     "avg": "AVG",
     "pow": "POW",
-    # }
-    #
-    # reserved_words_html = {
+    # reserved words html
     "h1": "H1",
     "h2": "H2",
     "div": "DIV",
@@ -40,7 +35,7 @@ reserved_words_code = {
     "embed": "EMBED",
 }
 
-tokens = list(reserved_words_code.values()) + [
+tokens = list(reserved_words.values()) + [
     "SIGN",
     "OP",
     "REL",
@@ -56,7 +51,7 @@ tokens = list(reserved_words_code.values()) + [
     "CBRACK",
     "OEVALSCRIPT",
     "CEVALSCRIPT",
-    "CTECHAR",
+    # "CTECHAR",
     "CTESTR",
     "ID",
     "CTEI",
@@ -76,14 +71,22 @@ t_OBRACE = r"{"
 t_CBRACE = r"}"
 t_OBRACK = r"\["
 t_CBRACK = r"\]"
-t_OEVALSCRIPT = r"<\^"
-t_CEVALSCRIPT = r"\^>"
-t_CTECHAR = r"'.?'"
-t_CTESTR = r"\"[^\"]*\""
+# t_CTECHAR = r"'.?'"
+
+
+def t_OEVALSCRIPT(t):
+    r"<\^"
+    return t
+
+
+def t_CEVALSCRIPT(t):
+    r"\^>"
+    return t
 
 
 def t_ID(t):
     r"[A-Za-z_][A-Za-z0-9_]*"
+    t.type = reserved_words.get(t.value, "ID")
     return t
 
 
@@ -94,6 +97,11 @@ def t_CTED(t):
 
 def t_CTEI(t):
     r"-?[0-9]+"
+    return t
+
+
+def t_CTESTR(t):
+    r"\"[^\"]*\""
     return t
 
 
@@ -156,7 +164,6 @@ def p_type(p):
     """type : STR
         | INT
         | DOUBLE
-        | CHAR
         | BOOL"""
 
 
@@ -288,11 +295,6 @@ def p_arguments(p):
 
 def p_arguments1(p):
     """arguments1 : COMMA type ID arguments1
-        | empty"""
-
-
-def p_spitval(p):
-    """spitval : type
         | empty"""
 
 

@@ -26,7 +26,7 @@ term1 ::= 'OP' term term1 | empty
 factor ::= 'OPAREN' expression 'CPAREN' | factor1
 factor1 ::= value | 'SIGN' value
 
-value ::= 'ID' | 'CTEI' | 'CTED' | 'CTESTR' | 'FALSE' | 'TRUE'
+value ::= 'ID' | 'CTEI' | 'CTED' | 'CTECHAR' | 'CTESTR' | 'FALSE' | 'TRUE'
 
 condition ::= 'IF' 'OPAREN' expression 'CPAREN' block condition1
 condition1 ::= 'ELSE' 'OPAREN' expression 'CPAREN' block | empty
@@ -48,8 +48,6 @@ writing ::= 'EVAL' 'OPAREN' expression 'CPAREN'
 /* falta agregar slices */
 arguments ::= type 'ID' arguments1 | empty
 arguments1 ::= 'COMMA' type 'ID' arguments1 | empty
-
-spitval ::= type | empty
 
 html ::= htmltag | empty
 
