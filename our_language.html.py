@@ -6,7 +6,7 @@ program the_name_of_the_program
         # VARIABLE AND DECLARATION AND INITIALIZATION
 
         # You can declare global variables like this.
-        str = "I am a global variable"
+        str global_var_name = "I am a global variable"
         # We support different data types and you can define them like this
         str name = "Ana Karen"
         int age = 23
@@ -89,7 +89,7 @@ program the_name_of_the_program
             #type = int, double.
         mode(test_slice) # would spit => 3
             #type = int, double, str, char, bool
-        avg(test_slice) # would spit => 3
+        avg(test_slice) # would spit => 3.0
             #type = int, double
 
         #Supported math function

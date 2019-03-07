@@ -3,11 +3,14 @@ reserved_words = {
     # reserved words code
     "program": "PROGRAM",
     "script": "SCRIPT",
+
+    # Data types
     "str": "STR",
     "int": "INT",
     "double": "DOUBLE",
     # "char": "CHAR",
     "bool": "BOOL",
+    
     "if": "IF",
     "else": "ELSE",
     "loop": "LOOP",
@@ -138,8 +141,12 @@ def p_program(p):
 
 
 def p_program1(p):
-    """program1 : script
-        | html
+    """program1 : script program2
+        | program2"""
+
+
+def p_program2(p):
+    """program2 : htmltag program2
         | empty"""
 
 
@@ -298,17 +305,12 @@ def p_arguments1(p):
         | empty"""
 
 
-def p_html(p):
-    """html : htmltag
-        | empty"""
-
-
 def p_htmltag(p):
     """htmltag : tag OBRACE class htmltag1 CBRACE"""
 
 
 def p_htmltag1(p):
-    """htmltag1 : text htmltag1
+    """htmltag1 : CTESTR htmltag1
         | htmlscript htmltag1
         | htmltag htmltag1
         | empty"""
@@ -324,11 +326,6 @@ def p_tag(p):
         | TH"""
 
 
-def p_text(p):
-    """text : CTESTR
-        | empty"""
-
-
 def p_class(p):
     """class : CLASS COLON CTESTR
         | empty"""
@@ -339,8 +336,9 @@ def p_htmlscript(p):
         | embedscript"""
 
 
+# TODO : FIX THIS!!!
 def p_embedscript(p):
-    """embedscript : EMBED ID OBRACE CBRACE"""
+    """embedscript : EMBED ID block"""
     # """embedscript : EMBED ID OBRACE eblock CBRACE"""
 
 

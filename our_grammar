@@ -1,5 +1,6 @@
 program ::= 'PROGRAM' 'ID' program1
-program1 ::= script | html | empty
+program1 ::= script program2 | program2
+program2 ::= htmltag program2 | empty
 
 script ::= 'SCRIPT' block
 
@@ -7,6 +8,14 @@ block ::= 'OBRACE' block1 'CBRACE'
 block1 ::= statement block1 | empty
 
 declaration ::= type 'ID'
+/*declaration ::= type declaration1 declaration2
+declaration1 ::= 'ID' 'EQ' value | 'ID' declaration3 'EQ' constSlice
+declaration2 ::= 'COMMA' declaration1 declaration2 | empty
+declaration3 ::= 'OBRACK' 'I' 'CBRACK'
+
+constSlice ::= 'OBRACK' value constSlice1 'CBRACK'
+constSlice1 ::= 'COMMA' value constSlice1 | empty*/
+
 type ::= 'STR' | 'INT' | 'DOUBLE' | 'CHAR' | 'BOOL'
 
 statement ::= declaration | assignment | condition | cycle | call | module | writing
@@ -49,14 +58,10 @@ writing ::= 'EVAL' 'OPAREN' expression 'CPAREN'
 arguments ::= type 'ID' arguments1 | empty
 arguments1 ::= 'COMMA' type 'ID' arguments1 | empty
 
-html ::= htmltag | empty
-
 htmltag ::= tag 'OBRACE' class htmltag1 'CBRACE'
-htmltag1 ::= text htmltag1 | htmlscript htmltag1 | htmltag htmltag1 | empty
+htmltag1 ::= 'CTESTR' htmltag1 | htmlscript htmltag1 | htmltag htmltag1 | empty
 
 tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
-
-text ::= 'CTESTR' | empty
 
 class ::= 'CLASS' 'COLON' 'CTESTR' | empty
 
