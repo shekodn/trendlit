@@ -240,7 +240,22 @@ def p_cycle(p):
 
 
 def p_module(p):
-    """module : DEF ID OPAREN arguments CPAREN COLON spitval block"""
+    """module : DEF ID OPAREN arguments CPAREN COLON module1"""
+
+
+def p_module1(p):
+    """module1 : OBRACE module3 CBRACE
+        | type OBRACE module2 CBRACE"""
+
+
+def p_module2(p):
+    """module2 : statement module2
+        | empty"""
+
+
+def p_module3(p):
+    """module3 : statement module3
+        | SPIT expression"""
 
 
 def p_call(p):

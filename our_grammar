@@ -33,7 +33,10 @@ condition1 ::= 'ELSE' 'OPAREN' expression 'CPAREN' block | empty
 
 cycle ::= 'LOOP' 'OPAREN' expression 'CPAREN' block
 
-module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' 'COLON' spitval block
+module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' 'COLON' module1
+module1 ::= 'OBRACE' module3 'CBRACE' | type 'OBRACE' module2 'CBRACE'
+module2 ::= statement module2 | empty
+module3 ::= statement module3 | 'SPIT' expression
 
 call ::= 'ID' call1 | predef call1
 call1 ::= 'OPAREN' expression 'CPAREN'
