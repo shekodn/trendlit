@@ -7,21 +7,36 @@ script ::= 'SCRIPT' block
 block ::= 'OBRACE' block1 'CBRACE'
 block1 ::= statement block1 | empty
 
-declaration ::= type 'ID'
-/*declaration ::= type declaration1 declaration2
-declaration1 ::= 'ID' 'EQ' value | 'ID' declaration3 'EQ' constSlice
-declaration2 ::= 'COMMA' declaration1 declaration2 | empty
-declaration3 ::= 'OBRACK' 'I' 'CBRACK'
+declare ::= type 'ID' | type 'ID' initializeSlices | initialize
 
-constSlice ::= 'OBRACK' value constSlice1 'CBRACK'
-constSlice1 ::= 'COMMA' value constSlice1 | empty*/
+initialize ::= type initialize1 initialize2
+initialize1 ::= 'ID' 'EQ' expression | 'ID' initializeSlices 'EQ' constSlices
+initialize2 ::= 'COMMA' initialize1 initialize2 | empty
+
+initializeSlices ::= initializeSlices1D | initializeSlices2D
+initializeSlices1D ::= 'OBRACK' 'CTEI' 'CBRACK'
+initializeSlices2D ::= 'OBRACK' 'CTEI' 'CBRACK' 'OBRACK' 'CTEI' 'CBRACK'
+
+constSlices ::= constSlice1D | constSlice2D
+constSlice1D ::= 'OBRACK' expression constSlice1D1 'CBRACK'
+constSlice1D1 ::= 'COMMA' expression constSlice1D1 | empty
+/*TODO: FIX 2D SLICE*/
+constSlice2D ::=  'OBRACK' constSlice1D 'COMMA' 'CBRACK' | 'OBRACK' constSlice1D 'CBRACK'
 
 type ::= 'STR' | 'INT' | 'DOUBLE' | 'BOOL'
 
-statement ::= declaration | assignment | condition | cycle | call | module | writing
+statement ::= declare | assignment | condition | cycle | call | module | writing
 
-assignment ::= type assignment1 | assignment1
-assignment1 ::= 'ID' 'EQ' expression
+/*
+assignment:
+prev_var = "hi"
+prev_slice[1] = 1+1
+prev_mat[1][2] = 2
+*/
+assignment ::= 'ID'assignmentSlice 'EQ' expression
+assignmentSlice ::= assignmentSlice1D | assignmentSlice2D | empty
+assignmentSlice1D ::= 'OBRACK' expression 'CBRACK'
+assignmentSlice2D ::= 'OBRACK' expression 'CBRACK' 'OBRACK' expression 'CBRACK'
 
 expression ::= exp expression1
 expression1 ::= 'REL' exp | 'ASSOCIATIVE' exp | empty
@@ -35,7 +50,10 @@ term1 ::= 'OP' term term1 | empty
 factor ::= 'OPAREN' expression 'CPAREN' | factor1
 factor1 ::= value | 'SIGN' value
 
-value ::= 'ID' | 'CTEI' | 'CTED' | 'CTESTR' | 'FALSE' | 'TRUE'
+value ::= 'ID' | valueSlice | call | 'CTEI' | 'CTED' | 'CTESTR' | 'FALSE' | 'TRUE'
+valueSlice ::= valueSlice1D | valueSlice2D
+valueSlice1D ::= 'ID' 'OBRACK' expression 'CBRACK'
+valueSlice2D ::= 'ID' 'OBRACK' expression 'CBRACK' 'OBRACK' expression 'CBRACK'
 
 condition ::= 'IF' 'OPAREN' expression 'CPAREN' block condition1
 condition1 ::= 'ELSE' 'OPAREN' expression 'CPAREN' block | empty

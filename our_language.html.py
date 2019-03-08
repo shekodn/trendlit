@@ -13,9 +13,7 @@ program the_name_of_the_program
         str sex = "F"
         double height = 1.6
 
-        bool legal # This is how you deine an uninitialized variable
-        # int a,b,c #TODO - can we NOT do this? @elda
-        # a = b = c = 20 #TODO - ?????
+        bool legal # This is how you deine an uninitialized variable, trendlit by default will assign a false value
         # Slices and 2D Slices work as arrays and matrixes respectively
         my_slice [2] str = ["a","b"]
         my_2D_slice [3][3] int = [[]]
@@ -28,7 +26,7 @@ program the_name_of_the_program
 
         # You can create a simple condition like the following
         if (sex is "F") {
-            int int_var_name = 1 # TODO: can we do this? @elda
+            int int_var_name = 1
             eval("Female!")
         }
 
@@ -72,7 +70,6 @@ program the_name_of_the_program
         }
 
         # BASIC STATISTICS FUNCTIONS
-
         #oh yes we are very cool and we support some basic statistical functions
 
         # You can even import a table from an excel sheet into a matrix!

@@ -3,13 +3,11 @@ reserved_words = {
     # reserved words code
     "program": "PROGRAM",
     "script": "SCRIPT",
-
     # Data types
     "str": "STR",
     "int": "INT",
     "double": "DOUBLE",
     "bool": "BOOL",
-
     "if": "IF",
     "else": "ELSE",
     "loop": "LOOP",
@@ -61,7 +59,7 @@ tokens = list(reserved_words.values()) + [
 
 t_SIGN = r"\+|-"
 t_OP = r"\*|/"
-t_REL = r"is|not|>|<|>=|<="
+# t_REL = r"is|not|>|<|>=|<="
 t_ASSOCIATIVE = r"or|and"
 t_EQ = r"="
 t_COMMA = r","
@@ -72,6 +70,11 @@ t_OBRACE = r"{"
 t_CBRACE = r"}"
 t_OBRACK = r"\["
 t_CBRACK = r"\]"
+
+
+def t_REL(t):
+    r"is|not|>|<|>=|<="
+    return t
 
 
 def t_OEVALSCRIPT(t):
@@ -160,8 +163,57 @@ def p_block1(p):
         | empty"""
 
 
-def p_declaration(p):
-    """declaration : type ID"""
+def p_declare(p):
+    """declare : type ID
+        | type ID initializeSlices
+        | initialize"""
+
+
+def p_initialize(p):
+    """initialize : type initialize1 initialize2"""
+
+
+def p_initialize1(p):
+    """initialize1 : ID EQ expression
+        | ID initializeSlices EQ constSlices"""
+
+
+def p_initialize2(p):
+    """initialize2 : COMMA initialize1 initialize2
+        | empty"""
+
+
+def p_initializeSlices(p):
+    """initializeSlices : initializeSlices1D
+        | initializeSlices2D"""
+
+
+def p_initializeSlices1D(p):
+    """initializeSlices1D : OBRACK CTEI CBRACK"""
+
+
+def p_initializeSlices2D(p):
+    """initializeSlices2D : OBRACK CTEI CBRACK OBRACK CTEI CBRACK"""
+
+
+def p_constSlices(p):
+    """constSlices : constSlice1D
+        | constSlice2D"""
+
+
+def p_constSlice1D(p):
+    """constSlice1D : OBRACK expression constSlice1D1 CBRACK"""
+
+
+def p_constSlice1D1(p):
+    """constSlice1D1 : COMMA expression constSlice1D1
+        | empty"""
+
+
+# TODO: FIX 2D SLICE
+def p_constSlice2D(p):
+    """constSlice2D : OBRACK constSlice1D COMMA CBRACK
+        | OBRACK constSlice1D CBRACK"""
 
 
 def p_type(p):
@@ -172,7 +224,7 @@ def p_type(p):
 
 
 def p_statement(p):
-    """statement : declaration
+    """statement : declare
         | assignment
         | condition
         | cycle
@@ -182,12 +234,21 @@ def p_statement(p):
 
 
 def p_assignment(p):
-    """assignment : type assignment1
-        | assignment1"""
+    """assignment : ID assignmentSlice EQ expression"""
 
 
-def p_assignment1(p):
-    """assignment1 : ID EQ expression"""
+def p_assignmentSlice(p):
+    """assignmentSlice : assignmentSlice1D
+        | assignmentSlice2D
+        | empty"""
+
+
+def p_assignmentSlice1D(p):
+    """assignmentSlice1D : OBRACK expression CBRACK"""
+
+
+def p_assignmentSlice2D(p):
+    """assignmentSlice2D : OBRACK expression CBRACK OBRACK expression CBRACK"""
 
 
 def p_expression(p):
@@ -230,11 +291,26 @@ def p_factor1(p):
 
 def p_value(p):
     """value : ID
+        | valueSlice
+        | call
         | CTEI
         | CTED
         | CTESTR
         | FALSE
         | TRUE"""
+
+
+def p_valueSlice(p):
+    """valueSlice : valueSlice1D
+        | valueSlice2D"""
+
+
+def p_valueSlice1D(p):
+    """valueSlice1D : ID OBRACK expression CBRACK"""
+
+
+def p_valueSlice2D(p):
+    """valueSlice2D : ID OBRACK expression CBRACK OBRACK expression CBRACK"""
 
 
 def p_condition(p):
