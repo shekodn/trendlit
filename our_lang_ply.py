@@ -66,14 +66,14 @@ t_COMMA = r","
 t_COLON = r":"
 t_OPAREN = r"\("
 t_CPAREN = r"\)"
-t_OBRACE = r"{"
-t_CBRACE = r"}"
+t_OBRACE = r"\{"
+t_CBRACE = r"\}"
 t_OBRACK = r"\["
 t_CBRACK = r"\]"
 
 
 def t_REL(t):
-    r"is|not|>|<|>=|<="
+    r"is|not|>=|<=|>|<"
     return t
 
 
@@ -318,7 +318,7 @@ def p_condition(p):
 
 
 def p_condition1(p):
-    """condition1 : ELSE OPAREN expression CPAREN block
+    """condition1 : ELSE block
         | empty"""
 
 
@@ -331,8 +331,8 @@ def p_module(p):
 
 
 def p_module1(p):
-    """module1 : OBRACE module3 CBRACE
-        | type OBRACE module2 CBRACE"""
+    """module1 : OBRACE module2 CBRACE
+        | type OBRACE module3 CBRACE"""
 
 
 def p_module2(p):
@@ -351,7 +351,16 @@ def p_call(p):
 
 
 def p_call1(p):
-    """call1 : OPAREN expression CPAREN"""
+    """call1 : OPAREN params CPAREN"""
+
+
+def p_params(p):
+    """params : expression params1"""
+
+
+def p_params1(p):
+    """params1 : COMMA params
+        | empty"""
 
 
 def p_predef(p):

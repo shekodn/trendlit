@@ -56,17 +56,20 @@ valueSlice1D ::= 'ID' 'OBRACK' expression 'CBRACK'
 valueSlice2D ::= 'ID' 'OBRACK' expression 'CBRACK' 'OBRACK' expression 'CBRACK'
 
 condition ::= 'IF' 'OPAREN' expression 'CPAREN' block condition1
-condition1 ::= 'ELSE' 'OPAREN' expression 'CPAREN' block | empty
+condition1 ::= 'ELSE' block | empty
 
 cycle ::= 'LOOP' 'OPAREN' expression 'CPAREN' block
 
 module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' 'COLON' module1
-module1 ::= 'OBRACE' module3 'CBRACE' | type 'OBRACE' module2 'CBRACE'
+module1 ::= 'OBRACE' module2 'CBRACE' | type 'OBRACE' module3 'CBRACE'
 module2 ::= statement module2 | empty
 module3 ::= statement module3 | 'SPIT' expression
 
 call ::= 'ID' call1 | predef call1
-call1 ::= 'OPAREN' expression 'CPAREN'
+call1 ::= 'OPAREN' params 'CPAREN'
+
+params ::= expression params1
+params1 ::= 'COMMA' params | empty"
 
 predef ::= 'SUCK_CSV' | 'SORT_SLICE' | 'SORT_2D_SLICE' | 'MEDIAN' | 'MODE' | 'AVG' | 'POW'
 
