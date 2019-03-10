@@ -1,18 +1,42 @@
 program ::= 'PROGRAM' 'ID' program1
-program1 ::= script | html | empty
+program1 ::= script program2 | program2
+program2 ::= htmltag program2 | empty
 
 script ::= 'SCRIPT' block
 
 block ::= 'OBRACE' block1 'CBRACE'
 block1 ::= statement block1 | empty
 
-declaration ::= type 'ID'
-type ::= 'STR' | 'INT' | 'DOUBLE' | 'CHAR' | 'BOOL'
+declare ::= type 'ID' | type 'ID' initializeSlices | initialize
 
-statement ::= declaration | assignment | condition | cycle | call | module | writing
+initialize ::= type initialize1 initialize2
+initialize1 ::= 'ID' 'EQ' expression | 'ID' initializeSlices 'EQ' constSlices
+initialize2 ::= 'COMMA' initialize1 initialize2 | empty
 
-assignment ::= type assignment1 | assignment1
-assignment1 ::= 'ID' 'EQ' expression
+initializeSlices ::= initializeSlices1D | initializeSlices2D
+initializeSlices1D ::= 'OBRACK' 'CTEI' 'CBRACK'
+initializeSlices2D ::= 'OBRACK' 'CTEI' 'CBRACK' 'OBRACK' 'CTEI' 'CBRACK'
+
+constSlices ::= constSlice1D | constSlice2D
+constSlice1D ::= 'OBRACK' expression constSlice1D1 'CBRACK'
+constSlice1D1 ::= 'COMMA' expression constSlice1D1 | empty
+/*TODO: FIX 2D SLICE*/
+constSlice2D ::=  'OBRACK' constSlice1D 'COMMA' 'CBRACK' | 'OBRACK' constSlice1D 'CBRACK'
+
+type ::= 'STR' | 'INT' | 'DOUBLE' | 'BOOL'
+
+statement ::= declare | assignment | condition | cycle | call | module | writing
+
+/*
+assignment:
+prev_var = "hi"
+prev_slice[1] = 1+1
+prev_mat[1][2] = 2
+*/
+assignment ::= 'ID'assignmentSlice 'EQ' expression
+assignmentSlice ::= assignmentSlice1D | assignmentSlice2D | empty
+assignmentSlice1D ::= 'OBRACK' expression 'CBRACK'
+assignmentSlice2D ::= 'OBRACK' expression 'CBRACK' 'OBRACK' expression 'CBRACK'
 
 expression ::= exp expression1
 expression1 ::= 'REL' exp | 'ASSOCIATIVE' exp | empty
@@ -23,36 +47,44 @@ exp1 ::= 'SIGN' exp exp1 | empty
 term ::= factor term1
 term1 ::= 'OP' term term1 | empty
 
-factor ::= 'OPAREN' expresion 'CPAREN' | factor1
+factor ::= 'OPAREN' expression 'CPAREN' | factor1
 factor1 ::= value | 'SIGN' value
 
-value ::= 'ID' | 'I' | 'D' | 'STRING' | 'FALSE' | 'TRUE'
+value ::= 'ID' | valueSlice | call | 'CTEI' | 'CTED' | 'CTESTR' | 'FALSE' | 'TRUE'
+valueSlice ::= valueSlice1D | valueSlice2D
+valueSlice1D ::= 'ID' 'OBRACK' expression 'CBRACK'
+valueSlice2D ::= 'ID' 'OBRACK' expression 'CBRACK' 'OBRACK' expression 'CBRACK'
 
 condition ::= 'IF' 'OPAREN' expression 'CPAREN' block condition1
-condition1 ::= 'ELSE' 'OPAREN' expression 'CPAREN' block | empty
+condition1 ::= 'ELSE' block | empty
 
 cycle ::= 'LOOP' 'OPAREN' expression 'CPAREN' block
 
-module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' 'COLON' spitval block
+module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' 'COLON' module1
+module1 ::= 'OBRACE' module2 'CBRACE' | type 'OBRACE' module3 'CBRACE'
+module2 ::= statement module2 | empty
+module3 ::= statement module3 | 'SPIT' expression
 
-call ::= 'ID' 'OPAREN' expresion 'CPAREN'
+call ::= 'ID' call1 | predef call1
+call1 ::= 'OPAREN' params 'CPAREN'
 
-writing ::= 'EVAL' 'OPAREN' expresion 'CPAREN'
+params ::= expression params1
+params1 ::= 'COMMA' params | empty"
+
+predef ::= 'SUCK_CSV' | 'SORT_SLICE' | 'SORT_2D_SLICE' | 'MEDIAN' | 'MODE' | 'AVG' | 'POW'
+
+writing ::= 'EVAL' 'OPAREN' expression 'CPAREN'
 
 /* falta agregar slices */
-arguments ::= 'STR' 'ID' | 'INT' 'ID' | 'DOUBLE' 'ID' | 'CHAR' 'ID' | 'BOOL' 'ID' | empty
-spitval ::= 'STR' | 'INT' | 'DOUBLE' | 'CHAR' | 'BOOL' | empty
-
-html ::= htmltag | empty
+arguments ::= type 'ID' arguments1 | empty
+arguments1 ::= 'COMMA' type 'ID' arguments1 | empty
 
 htmltag ::= tag 'OBRACE' class htmltag1 'CBRACE'
-htmltag1 ::= text htmltag1 | htmlscript htmltag1 | htmltag htmltag1 | empty
+htmltag1 ::= 'CTESTR' htmltag1 | htmlscript htmltag1 | htmltag htmltag1 | empty
 
 tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
 
-text ::= 'STRING' | empty
-
-class ::= 'CLASS' 'COLON' 'STRING' | empty
+class ::= 'CLASS' 'COLON' 'CTESTR' | empty
 
 htmlscript ::= 'OEVALSCRIPT' expression 'CEVALSCRIPT' | embedscript
 
