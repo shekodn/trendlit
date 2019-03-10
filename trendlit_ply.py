@@ -59,7 +59,6 @@ tokens = list(reserved_words.values()) + [
 
 t_SIGN = r"\+|-"
 t_OP = r"\*|/"
-# t_REL = r"is|not|>|<|>=|<="
 t_ASSOCIATIVE = r"or|and"
 t_EQ = r"="
 t_COMMA = r","
@@ -72,13 +71,13 @@ t_OBRACK = r"\["
 t_CBRACK = r"\]"
 
 
-def t_REL(t):
-    r"is|not|>=|<=|>|<"
+def t_OEVALSCRIPT(t):
+    r"<\^"
     return t
 
 
-def t_OEVALSCRIPT(t):
-    r"<\^"
+def t_REL(t):
+    r"is|not|>=|<=|>|<"
     return t
 
 
@@ -138,6 +137,7 @@ lex.lex()
 
 def p_program(p):
     """program : PROGRAM ID program1"""
+    print("it compiles !")
 
 
 def p_program1(p):

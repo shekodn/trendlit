@@ -16,7 +16,7 @@ program the_name_of_the_program
         bool legal # This is how you deine an uninitialized variable, trendlit by default will assign a false value
         # Slices and 2D Slices work as arrays and matrixes respectively
         str my_slice [2] = ["a","b"]
-        int my_2D_slice [3][3] = [[]]
+        # int my_2D_slice [3][3] = [[]]
 
         # You can add and modify elements of your array/matrix
         my_slice[0] = "z" #this will result in the array being ["z", "b"]
@@ -74,10 +74,10 @@ program the_name_of_the_program
 
         # You can even import a table from an excel sheet into a matrix!
         # suck_csv receives an argument with the path to your csv file
-        int my_table [2][3] = suck_csv("C:\\Documents\car.csv")
+        # int my_table [2][3] = suck_csv("C:\\Documents\car.csv")
 
         # You can manipulate your slices by using some the default methods
-        test_slice [5] int = [4,3,1,7,0]
+        int test_slice [5] = [4,3,1,7,0]
         sort_slice(test_slice, criteria)
             #type = int, double, str, bool
             # criteria = min/max
@@ -132,18 +132,18 @@ program the_name_of_the_program
                 th {"Year"}
                 th {"Model"}
             }
-            embed my_embed_name {
-                int i
-                int j
-                loop (i not len(my_table)) {
-                    tr {
-                        loop (j not len(my_table[0])) {
-                            th { eval(my_table[i][j]) } # prints brand, year, model
-                            j = sum(j,1)
-                        }
-                    }
-                    i = sum(i,1)
-                }
-            }
+            # embed my_embed_name {
+            #     int i
+            #     int j
+            #     loop (i not len(my_table)) {
+            #         tr {
+            #             loop (j not len(my_table[0])) {
+            #                 th { eval(my_table[i][j]) } # prints brand, year, model
+            #                 j = sum(j,1)
+            #             }
+            #         }
+            #         i = sum(i,1)
+            #     }
+            # }
         }
     }
