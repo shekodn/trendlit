@@ -72,13 +72,13 @@ t_OBRACK = r"\["
 t_CBRACK = r"\]"
 
 
-def t_REL(t):
-    r"is|not|>=|<=|>|<"
-    return t
-
 
 def t_OEVALSCRIPT(t):
     r"<\^"
+    return t
+
+def t_REL(t):
+    r"is|not|>=|<=|>|<"
     return t
 
 
