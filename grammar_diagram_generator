@@ -4,13 +4,21 @@ program2 ::= htmltag program2 | empty
 
 script ::= 'SCRIPT' block
 
-block ::= 'OBRACE' block1 'CBRACE'
+block ::= 'OBRACE' declareBlock block1 'CBRACE'
 block1 ::= statement block1 | empty
 
+/*
+  Variable declaration/initialization not supported here
+  Used in cycles and conditions.
+*/
+simpleBlock ::= 'OBRACE' simpleBlock1 'CBRACE'
+simpleBlock1 ::= statement simpleBlock1 | empty
+
+declareBlock ::= declare declareBlock | empty
 declare ::= type 'ID' | type 'ID' initializeSlices | initialize
 
 initialize ::= type initialize1 initialize2
-initialize1 ::= 'ID' 'EQ' expression | 'ID' initializeSlices 'EQ' constSlices
+initialize1 ::= 'ID' 'EQ' value | 'ID' initializeSlices 'EQ' constSlices
 initialize2 ::= 'COMMA' initialize1 initialize2 | empty
 
 initializeSlices ::= initializeSlices1D | initializeSlices2D
@@ -18,14 +26,14 @@ initializeSlices1D ::= 'OBRACK' 'CTEI' 'CBRACK'
 initializeSlices2D ::= 'OBRACK' 'CTEI' 'CBRACK' 'OBRACK' 'CTEI' 'CBRACK'
 
 constSlices ::= constSlice1D | constSlice2D
-constSlice1D ::= 'OBRACK' expression constSlice1D1 'CBRACK'
-constSlice1D1 ::= 'COMMA' expression constSlice1D1 | empty
+constSlice1D ::= 'OBRACK' value constSlice1D1 'CBRACK'
+constSlice1D1 ::= 'COMMA' value constSlice1D1 | empty
 /*TODO: FIX 2D SLICE*/
 constSlice2D ::=  'OBRACK' constSlice1D 'COMMA' 'CBRACK' | 'OBRACK' constSlice1D 'CBRACK'
 
 type ::= 'STR' | 'INT' | 'DOUBLE' | 'BOOL'
 
-statement ::= declare | assignment | condition | cycle | call | module | writing
+statement ::= assignment | condition | cycle | call | module | writing
 
 /*
 assignment:
@@ -55,21 +63,20 @@ valueSlice ::= valueSlice1D | valueSlice2D
 valueSlice1D ::= 'ID' 'OBRACK' expression 'CBRACK'
 valueSlice2D ::= 'ID' 'OBRACK' expression 'CBRACK' 'OBRACK' expression 'CBRACK'
 
-condition ::= 'IF' 'OPAREN' expression 'CPAREN' block condition1
-condition1 ::= 'ELSE' block | empty
+condition ::= 'IF' 'OPAREN' expression 'CPAREN' simpleBlock condition1
+condition1 ::= 'ELSE' simpleBlock | empty
 
-cycle ::= 'LOOP' 'OPAREN' expression 'CPAREN' block
+cycle ::= 'LOOP' 'OPAREN' expression 'CPAREN' simpleBlock
 
-module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' 'COLON' module1
-module1 ::= 'OBRACE' module2 'CBRACE' | type 'OBRACE' module3 'CBRACE'
-module2 ::= statement module2 | empty
-module3 ::= statement module3 | 'SPIT' expression
+module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' module1
+module1 ::= block | 'COLON' type 'OBRACE' declareBlock module2 'CBRACE'
+module2 ::= statement module2 | 'SPIT' expression
 
 call ::= 'ID' call1 | predef call1
 call1 ::= 'OPAREN' params 'CPAREN'
 
 params ::= expression params1
-params1 ::= 'COMMA' params | empty"
+params1 ::= 'COMMA' params | empty
 
 predef ::= 'SUCK_CSV' | 'SORT_SLICE' | 'SORT_2D_SLICE' | 'MEDIAN' | 'MODE' | 'AVG' | 'POW'
 

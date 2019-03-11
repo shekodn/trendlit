@@ -155,11 +155,25 @@ def p_script(p):
 
 
 def p_block(p):
-    """block : OBRACE block1 CBRACE"""
+    """block : OBRACE declareBlock block1 CBRACE"""
 
 
 def p_block1(p):
     """block1 : statement block1
+        | empty"""
+
+
+def p_simpleBlock(p):
+    """simpleBlock : OBRACE simpleBlock1 CBRACE"""
+
+
+def p_simpleBlock1(p):
+    """simpleBlock1 : statement simpleBlock1
+        | empty"""
+
+
+def p_declareBlock(p):
+    """declareBlock : declare declareBlock
         | empty"""
 
 
@@ -174,7 +188,7 @@ def p_initialize(p):
 
 
 def p_initialize1(p):
-    """initialize1 : ID EQ expression
+    """initialize1 : ID EQ value
         | ID initializeSlices EQ constSlices"""
 
 
@@ -202,11 +216,11 @@ def p_constSlices(p):
 
 
 def p_constSlice1D(p):
-    """constSlice1D : OBRACK expression constSlice1D1 CBRACK"""
+    """constSlice1D : OBRACK value constSlice1D1 CBRACK"""
 
 
 def p_constSlice1D1(p):
-    """constSlice1D1 : COMMA expression constSlice1D1
+    """constSlice1D1 : COMMA value constSlice1D1
         | empty"""
 
 
@@ -224,8 +238,7 @@ def p_type(p):
 
 
 def p_statement(p):
-    """statement : declare
-        | assignment
+    """statement : assignment
         | condition
         | cycle
         | call
@@ -314,34 +327,29 @@ def p_valueSlice2D(p):
 
 
 def p_condition(p):
-    """condition : IF OPAREN expression CPAREN block condition1"""
+    """condition : IF OPAREN expression CPAREN simpleBlock condition1"""
 
 
 def p_condition1(p):
-    """condition1 : ELSE block
+    """condition1 : ELSE simpleBlock
         | empty"""
 
 
 def p_cycle(p):
-    """cycle : LOOP OPAREN expression CPAREN block"""
+    """cycle : LOOP OPAREN expression CPAREN simpleBlock"""
 
 
 def p_module(p):
-    """module : DEF ID OPAREN arguments CPAREN COLON module1"""
+    """module : DEF ID OPAREN arguments CPAREN module1"""
 
 
 def p_module1(p):
-    """module1 : OBRACE module2 CBRACE
-        | type OBRACE module3 CBRACE"""
+    """module1 : block
+        | COLON type OBRACE declareBlock module2 CBRACE"""
 
 
 def p_module2(p):
     """module2 : statement module2
-        | empty"""
-
-
-def p_module3(p):
-    """module3 : statement module3
         | SPIT expression"""
 
 
