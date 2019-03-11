@@ -3,7 +3,7 @@ program the_name_of_the_program
     #This is a comment
 
     script {
-        # VARIABLE AND DECLARATION AND INITIALIZATION
+        # VARIABLE AND DECLARATION AND INITIALIZATION SECTION
 
         # You can declare global variables like this.
         str global_var_name = "I am a global variable"
@@ -12,6 +12,10 @@ program the_name_of_the_program
         int age = 23
         str sex = "F"
         double height = 1.6
+
+        int i = 1
+        int int_var_name
+        int test_slice [5] = [4,3,1,7,0]
 
         bool legal # This is how you deine an uninitialized variable, trendlit by default will assign a false value
         # Slices and 2D Slices work as arrays and matrixes respectively
@@ -26,7 +30,7 @@ program the_name_of_the_program
 
         # You can create a simple condition like the following
         if (sex is "F") {
-            int int_var_name = 1
+            int_var_name = 1
             eval("Female!")
         }
 
@@ -47,7 +51,6 @@ program the_name_of_the_program
 
         #You can loop through an array/matrix or a fixed number of times by using a loop
         # This is a while disguised as a loop
-        int i = 1
         loop (i not 10) {
             eval("Loop number" + i + "")
             # Please don't declare any new variable inside a loop.
@@ -77,7 +80,6 @@ program the_name_of_the_program
         # int my_table [2][3] = suck_csv("C:\\Documents\car.csv")
 
         # You can manipulate your slices by using some the default methods
-        int test_slice [5] = [4,3,1,7,0]
         sort_slice(test_slice, criteria)
             #type = int, double, str, bool
             # criteria = min/max
