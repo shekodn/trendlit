@@ -65,7 +65,7 @@ program the_name_of_the_program
         }
 
         # This is how you declare a non-spitting function (aka void)
-        def greeting (str nickname) : {
+        def greeting (str nickname) {
             eval("Hello " + nickname + "!")
         }
 

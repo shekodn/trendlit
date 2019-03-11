@@ -327,12 +327,12 @@ def p_cycle(p):
 
 
 def p_module(p):
-    """module : DEF ID OPAREN arguments CPAREN COLON module1"""
+    """module : DEF ID OPAREN arguments CPAREN module1"""
 
 
 def p_module1(p):
     """module1 : OBRACE module2 CBRACE
-        | type OBRACE module3 CBRACE"""
+        | COLON type OBRACE module3 CBRACE"""
 
 
 def p_module2(p):

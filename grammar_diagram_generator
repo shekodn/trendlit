@@ -60,8 +60,8 @@ condition1 ::= 'ELSE' block | empty
 
 cycle ::= 'LOOP' 'OPAREN' expression 'CPAREN' block
 
-module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' 'COLON' module1
-module1 ::= 'OBRACE' module2 'CBRACE' | type 'OBRACE' module3 'CBRACE'
+module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' module1
+module1 ::= 'OBRACE' module2 'CBRACE' | 'COLON' type 'OBRACE' module3 'CBRACE'
 module2 ::= statement module2 | empty
 module3 ::= statement module3 | 'SPIT' expression
 
