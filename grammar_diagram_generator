@@ -18,7 +18,7 @@ declareBlock ::= declare declareBlock | empty
 declare ::= type 'ID' | type 'ID' initializeSlices | initialize
 
 initialize ::= type initialize1 initialize2
-initialize1 ::= 'ID' 'EQ' expression | 'ID' initializeSlices 'EQ' constSlices
+initialize1 ::= 'ID' 'EQ' value | 'ID' initializeSlices 'EQ' constSlices
 initialize2 ::= 'COMMA' initialize1 initialize2 | empty
 
 initializeSlices ::= initializeSlices1D | initializeSlices2D
@@ -26,8 +26,8 @@ initializeSlices1D ::= 'OBRACK' 'CTEI' 'CBRACK'
 initializeSlices2D ::= 'OBRACK' 'CTEI' 'CBRACK' 'OBRACK' 'CTEI' 'CBRACK'
 
 constSlices ::= constSlice1D | constSlice2D
-constSlice1D ::= 'OBRACK' expression constSlice1D1 'CBRACK'
-constSlice1D1 ::= 'COMMA' expression constSlice1D1 | empty
+constSlice1D ::= 'OBRACK' value constSlice1D1 'CBRACK'
+constSlice1D1 ::= 'COMMA' value constSlice1D1 | empty
 /*TODO: FIX 2D SLICE*/
 constSlice2D ::=  'OBRACK' constSlice1D 'COMMA' 'CBRACK' | 'OBRACK' constSlice1D 'CBRACK'
 

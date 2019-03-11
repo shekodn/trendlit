@@ -13,6 +13,13 @@ program the_name_of_the_program
         str sex = "F"
         double height = 1.6
 
+        # int a,b,c # TODO: do we want this?
+        int d = 1, e = 2, f = 3
+        # int int_var = 1+0 # FAILURE EXAMPLE
+        bool flag = True
+        bool flag = False
+        # int my_slice [2] = [1+2,30] # FAILURE EXAMPLE
+
         int i = 1
         int int_var_name
         int test_slice [5] = [4,3,1,7,0]
@@ -20,9 +27,13 @@ program the_name_of_the_program
         bool legal # This is how you deine an uninitialized variable, trendlit by default will assign a false value
         # Slices and 2D Slices work as arrays and matrixes respectively
         str my_slice [2] = ["a","b"]
+        int another_slice [2] = [1, 2]
         # int my_2D_slice [3][3] = [[]]
+        # int another_2D_slice [3][3] = [[1,2,3][1,2,3][1,2,3]]
+
 
         # You can add and modify elements of your array/matrix
+        another_slice[0] = 1+2
         my_slice[0] = "z" #this will result in the array being ["z", "b"]
         my_2D_slice[0][0] = 1
 
@@ -46,6 +57,8 @@ program the_name_of_the_program
             legal = False
             eval("Underage :(")
         }
+        # Please don't declare any new variable  outside the declaring scope.
+        # int hola = 1 # FAILURE EXAMPLE
 
         # LOOPS
 
@@ -54,7 +67,7 @@ program the_name_of_the_program
         loop (i not 10) {
             eval("Loop number" + i + "")
             # Please don't declare any new variable inside a loop.
-            # int hola = 1
+            # int hola = 1 # FAILURE EXAMPLE
         }
 
         # MODULES
@@ -63,7 +76,9 @@ program the_name_of_the_program
         # The group of parentheses is used for parametrization and whatever comes after the ':' the return type.
         # You can use the spit statement to return your values
         def sum (int a, int b) : int {
-            int result = a + b #This is a local variable
+            int result = a #This is a local variable
+            result = a + b
+            # int result = a + b # FAILURE EXAMPLE
             spit result
         }
 

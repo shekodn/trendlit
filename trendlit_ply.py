@@ -188,7 +188,7 @@ def p_initialize(p):
 
 
 def p_initialize1(p):
-    """initialize1 : ID EQ expression
+    """initialize1 : ID EQ value
         | ID initializeSlices EQ constSlices"""
 
 
@@ -216,11 +216,11 @@ def p_constSlices(p):
 
 
 def p_constSlice1D(p):
-    """constSlice1D : OBRACK expression constSlice1D1 CBRACK"""
+    """constSlice1D : OBRACK value constSlice1D1 CBRACK"""
 
 
 def p_constSlice1D1(p):
-    """constSlice1D1 : COMMA expression constSlice1D1
+    """constSlice1D1 : COMMA value constSlice1D1
         | empty"""
 
 
