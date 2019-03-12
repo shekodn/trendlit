@@ -3,6 +3,11 @@ from scipy import stats
 
 
 def suck_csv(file_name):
+    """suck_csv
+    Params:
+
+    Return:
+    """
 
     list = np.loadtxt(open(file_name, "rb"), dtype="string", delimiter=",", skiprows=1)
 
@@ -10,6 +15,12 @@ def suck_csv(file_name):
 
 
 def sort_1Dslice(slice1D, criteria):
+    """sort_1Dslice
+    Params:
+
+    Return:
+    """
+
     if criteria == "max":
         return slice1D.sort()
     elif criteria == "min":
@@ -20,6 +31,11 @@ def sort_1Dslice(slice1D, criteria):
 
 
 def median_1Dslice(slice1D):
+    """median_1Dslice
+    Params:
+
+    Return:
+    """
     np_median = np.median(slice1D)
     median = np_median.item()
     return median
@@ -33,30 +49,58 @@ def mode_1Dslice(slice1D):
     m = np_m[0].item()
     return m
 
+
 # test_slice [5] int = [4,3,1,7,0]
 # double ans = avg(test_slice) # will spit => 3
 def avg(slice1D):
+    """avg
+    Params:
+
+    Return:
+    """
     np_avg = np.average(slice1D)
     avg = np_avg.tolist()
 
     return type(avg)
 
+
 def multiply_1Dslice(list, num):
+    """avg
+    Params:
+
+    Return:
+    """
     np_arr = np.array(list) * num
     a = np_arr.tolist()
     return a
 
 
 def find_min(slice1D, min):
+    """find_min
+    Params:
+
+    Return:
+    """
     np_arr = np.array(slice1D)
     find = np.where(np_arr > min)
     return find[0]
 
 
 def find_max(slice1D, max):
+    """find_max
+    Params:
+
+    Return:
+    """
     np_arr = np.array(slice1D)
     find = np.where(np_arr < max)
     return find[0]
+
+
+def zeros(num_of_zeros):
+    np_arr = np.zeros(num_of_zeros)
+    arr = np_arr.tolist()
+    return arr
 
 
 if __name__ == "__main__":
@@ -109,10 +153,9 @@ if __name__ == "__main__":
     """
 
     print("\navg".upper())
-    slice1D = [4,3,1,7,0]
+    slice1D = [4, 3, 1, 7, 0]
     avg = avg(slice1D)
     print("Average: {}".format(avg))
-
 
     """
     POW
@@ -121,15 +164,43 @@ if __name__ == "__main__":
     print("\npow".upper())
     a = 2
     b = 3
-    ans = pow(a,b)
+    ans = pow(a, b)
     print(ans)
 
+    """
+    Multiply each element of the slice
+    """
+    print("\nMultiply slice".upper())
+    slice = [1, 2, 3]
+    factor = 2
+    print("Slice {}".format(slice))
+    slice = multiply_1Dslice(slice, factor)
+    print("Slice multiplied by {}: {}".format(factor, slice))
+    print(slice)
 
-    # # slice = multiply_1Dslice([1,2,3], 2)
-    # # print(slice)
-    #
-    # a_slice1D = [1, 2, 3, 4, 5, 6, 7, 9, 8]
-    #
+    """
+    find_min
+    returns the indexes
+    """
+    print("\nfind_min".upper())
+    slice = [10, 20, 30, 40, 50, 60, 70, 80]
+    print("Slice {}".format(slice))
+
+    filter_num = 40
+
+    slice_max_5 = find_max(slice, filter_num)
+    print("Slice max {}".format(slice_max_5))
+
+    slice_min_5 = find_min(slice, filter_num)
+    print("Slice min {}".format(slice_min_5))
+    """
+    zeros
+    """
+    print("\nzeros".upper())
+    slice = zeros(10)
+    print(slice)
+
+
     # numbers = [1, 3, 4, 2]
     #
     # # Sorting list of Integers in ascending
@@ -140,8 +211,6 @@ if __name__ == "__main__":
     # sorted_slice1D = sort_1Dslice(a_slice1D)
     # print(a_slice1D)
     #
-    # b_slice1D = find_max(sorted_slice1D, 5)
-    # c_slice1D = find_min(sorted_slice1D, 5)
     #
     # print(sorted_slice1D)
     # print(b_slice1D)
