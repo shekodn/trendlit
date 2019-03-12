@@ -102,12 +102,12 @@ def zeros(num_of_zeros):
     arr = np_arr.tolist()
     return arr
 
+
 def randoms(num_of_randoms, max):
     np.random.seed(0)  # seed for reproducibility
     np_arr = np.random.randint(max, size=num_of_randoms)  # One-dimensional array
     arr = np_arr.tolist()
     return arr
-
 
 
 if __name__ == "__main__":
@@ -222,7 +222,6 @@ if __name__ == "__main__":
     print("\nrandoms".upper())
     slice = randoms(10, 100)
     print(slice)
-
 
     # numbers = [1, 3, 4, 2]
     #
