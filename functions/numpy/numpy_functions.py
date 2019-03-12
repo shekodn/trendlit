@@ -102,6 +102,13 @@ def zeros(num_of_zeros):
     arr = np_arr.tolist()
     return arr
 
+def randoms(num_of_randoms, max):
+    np.random.seed(0)  # seed for reproducibility
+    np_arr = np.random.randint(max, size=num_of_randoms)  # One-dimensional array
+    arr = np_arr.tolist()
+    return arr
+
+
 
 if __name__ == "__main__":
 
@@ -113,6 +120,16 @@ if __name__ == "__main__":
     a = suck_csv(file_name)
     print(type(a))
     print(a)
+
+    """
+    to_table
+    will create table to html_table (TODO)
+    """
+    # print("\nto_table".upper())
+    #
+    # for value in a:
+    #     for index in slice:
+    #         print index
 
     """
     sort_slice
@@ -198,6 +215,12 @@ if __name__ == "__main__":
     """
     print("\nzeros".upper())
     slice = zeros(10)
+    print(slice)
+    """
+    randoms
+    """
+    print("\nrandoms".upper())
+    slice = randoms(10, 100)
     print(slice)
 
 
