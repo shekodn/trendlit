@@ -1,6 +1,8 @@
 # TOKENS
 reserved_words = {
     # reserved words code
+    "max": "MAX",
+    "min": "MIN",
     "program": "PROGRAM",
     "script": "SCRIPT",
     # Data types
@@ -378,17 +380,101 @@ def p_params1(p):
 
 
 def p_predef(p):
-    """predef : AVG
-        | FIND_MAX
-        | FIND_MIN
-        | MEDIAN
-        | MODE
-        | MULTIPLY_1DSLICE
-        | POW
-        | RANDOMS
-        | SORT_SLICE
-        | SUCK_CSV
-        | ZEROS"""
+    """predef : predef_avg
+        | predef_find_max
+        | predef_find_min
+        | predef_median
+        | predef_mode
+        | predef_find_mult_slice
+        | predef_pow
+        | predef_randoms
+        | predef_sort_slice
+        | predef_suck_csv
+        | predef_zeros"""
+
+
+def p_predef_avg(p):
+    """predef_avg : AVG OPAREN ID CPAREN"""
+
+
+def p_predef_find_max(p):
+    """predef_find_max : FIND_MAX OPAREN ID COMMA predef_find_max_args CPAREN"""
+
+
+def p_predef_find_max_args(p):
+    """predef_find_max_args : ID
+        | CTEI"""
+
+
+def p_predef_find_min(p):
+    """predef_find_min : FIND_MIN OPAREN ID COMMA predef_find_min_args CPAREN"""
+
+
+def p_predef_find_min_args(p):
+    """predef_find_min_args : ID
+        | CTEI"""
+
+
+def p_predef_find_mult_slice(p):
+    """predef_find_mult_slice : MULTIPLY_1DSLICE OPAREN ID COMMA predef_find_mult_slice_args CPAREN"""
+
+
+def p_predef_find_mult_slice_args(p):
+    """predef_find_mult_slice_args : ID
+        | CTEI"""
+
+
+def p_predef_median(p):
+    """predef_median : MEDIAN OPAREN ID CPAREN"""
+
+
+def p_predef_mode(p):
+    """predef_mode : MODE OPAREN ID CPAREN"""
+
+
+def p_predef_pow(p):
+    """predef_pow : POW OPAREN predef_pow_args COMMA predef_pow_args CPAREN"""
+
+
+def p_predef_pow_args(p):
+    """predef_pow_args : ID
+        | CTEI"""
+
+
+def p_predef_randoms(p):
+    """predef_randoms : RANDOMS OPAREN predef_randoms_args CPAREN"""
+
+
+def p_predef_randoms_args(p):
+    """predef_randoms_args : ID
+        | CTEI"""
+
+
+def p_predef_zeros(p):
+    """predef_zeros : ZEROS OPAREN predef_zeros_args CPAREN"""
+
+
+def p_predef_zeros_args(p):
+    """predef_zeros_args : ID
+        | CTEI"""
+
+
+def p_predef_sort_slice(p):
+    """predef_sort_slice : SORT_SLICE OPAREN ID COMMA predef_sort_slice_option CPAREN"""
+
+
+def p_predef_sort_slice_option(p):
+    """predef_sort_slice_option : MAX
+        | MIN"""
+
+
+def p_predef_suck_csv(p):
+    """predef_suck_csv : SUCK_CSV OPAREN predef_suck_csv_args CPAREN"""
+
+
+def p_predef_suck_csv_args(p):
+    """predef_suck_csv_args : ID
+        | CTESTR"""
 
 
 def p_writing(p):
