@@ -78,7 +78,7 @@ call1 ::= 'OPAREN' params 'CPAREN'
 params ::= expression params1
 params1 ::= 'COMMA' params | empty
 
-predef ::= 'SUCK_CSV' | 'SORT_SLICE' | 'SORT_2D_SLICE' | 'MEDIAN' | 'MODE' | 'AVG' | 'POW'
+predef ::= 'AVG' | 'FIND_MAX' | 'FIND_MIN' | 'MEDIAN' | 'MODE' | 'MULTIPLY_1DSLICE' | 'POW' | 'RANDOMS' | 'SORT_SLICE' | 'SUCK_CSV' | 'ZEROS'
 
 writing ::= 'EVAL' 'OPAREN' expression 'CPAREN'
 
