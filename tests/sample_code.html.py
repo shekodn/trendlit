@@ -17,7 +17,8 @@ program the_name_of_the_program
         int d = 1, e = 2, f = 3
         # int int_var = 1+0 # FAILURE EXAMPLE
         bool flag = True
-        bool flag = False
+        bool flag2 = False
+        bool flag3 #declare with no value
         # int my_slice [2] = [1+2,30] # FAILURE EXAMPLE
 
         int i = 1
@@ -45,17 +46,17 @@ program the_name_of_the_program
         # int mode = mode_1Dslice(mode_slice1D) - TODO
 
         ### avg
-        int avg_slice1D [5] = [4, 3, 1, 7, 0]
-        # int avg = avg(avg_slice1D) - TODO
+        int average_slice1D [5] = [4, 3, 1, 7, 0]
+        # int avg = avg(average_slice1D) - TODO
 
         ### pow
         int pow_a = 2
         int pow_b = 3
         # int pow_ans = avg(pow_a,pow_b) - TODO
 
-        ### multiply_1Dslice
-        int multiply_1Dslice [3] = [1, 2, 3]
-        int multiply_1Dslice_factor = 2
+        ### multiply_1Dslice1
+        int multiply_1Dslice1 [3] = [1, 2, 3]
+        int multiply_1Dslice1_factor = 2
 
         # find
         int find_slice [8] = [10, 20, 30, 40, 50, 60, 70, 80]
@@ -69,10 +70,12 @@ program the_name_of_the_program
         # int slice_max = find_max(slice, filter_num) - TODO
 
         ### zeros
-        # int zeros[10] = zeros(10) - TODO
+        int slice_zeros[10]
+         # = zeros(10) - TODO
 
         ### randoms
-        # int randoms[10] = randoms(10) - TODO
+        int slice_randoms[10]
+        # = randoms(10) - TODO
 
         # You can add and modify elements of your array/matrix
         another_slice[0] = 1+2
@@ -149,46 +152,43 @@ program the_name_of_the_program
         # int slice1D [5] = [20, 2, -1, 1, 34]
         median_1Dslice(slice1D)
         eval(med)
-        #
+
         # ### mode
         # int mode_slice1D [9] = [5, 2, 2, 1, 1, 4, 1, 4, 4]
         mode_1Dslice(mode_slice1D)
         eval(mode)
-        #
-        # ### avg
-        # int avg_slice1D [5] = [4, 3, 1, 7, 0]
-        # int avg = avg(avg_slice1D)
+
+        ### avg
+        # int avg = avg(average_slice1D)
         # eval(avg)
-        #
-        # ### pow
-        # pow_a = 2
-        # pow_b = 3
-        # int pow_ans = avg(pow_a,pow_b)
-        # eval(pow_ans)
-        #
-        # ### multiply_1Dslice
-        # int multiply_1Dslice [3] = [1, 2, 3]
-        # int multiply_1Dslice_factor = 2
-        # # TODO - When you generate a slice, do you overwrite it or do you create
-        # # a new one (See GO's documentation)
-        # multiply_1Dslice = multiply_1Dslice(multiply_1Dslice, multiply_1Dslice_factor)
-        # eval(multiply_1Dslice)
-        #
-        # ### find_min
-        # slice_min = find_min(slice, filter_num)
-        # eval(slice_min)
-        #
-        # ### find_max
-        # slice_max = find_max(slice, filter_num)
-        # eval(slice_max)
-        #
-        # ### zeros
-        # zeros = zeros(10)
-        # eval(zeros)
-        #
-        # ### randoms
-        # randoms[10] = randoms(10)
-        # eval(randoms)
+
+        ### pow
+        pow_a = 2
+        pow_b = 3
+        pow_ans = avg(pow_a,pow_b)
+        eval(pow_ans)
+
+        ### multiply_1Dslice
+        # TODO - When you generate a slice, do you overwrite it or do you create
+        # a new one (See GO's documentation)
+        multiply_1Dslice1 = multiply_1Dslice1(multiply_1Dslice1, multiply_1Dslice1_factor)
+        eval(multiply_1Dslice1)
+
+        ### find_min
+        slice_min = find_min(slice, filter_num)
+        eval(slice_min)
+
+        ### find_max
+        slice_max = find_max(slice, filter_num)
+        eval(slice_max)
+
+        ### zeros
+        slice_zeros = zeros(10)
+        eval(slice_zeros)
+
+        ### randoms
+        slice_randoms[10] = randoms(10)
+        eval(slice_randoms)
 
     }
 
