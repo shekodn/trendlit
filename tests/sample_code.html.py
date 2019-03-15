@@ -13,6 +13,7 @@ program the_name_of_the_program
         str sex = "F"
         double height = 1.6
 
+        int a = avg(average_slice1D) # TODO: do we want this?
         # int a,b,c # TODO: do we want this?
         int d = 1, e = 2, f = 3
         # int int_var = 1+0 # FAILURE EXAMPLE
@@ -159,13 +160,15 @@ program the_name_of_the_program
         eval(mode)
 
         ### avg
-        # int avg = avg(average_slice1D)
-        # eval(avg)
+        average = avg(average_slice1D)
+        # pow_ans = avg(pow_a,pow_b) # FAILURE EXAMPLE
+        eval(average)
+        eval(avg(average_slice1D))
 
         ### pow
         pow_a = 2
         pow_b = 3
-        pow_ans = avg(pow_a,pow_b)
+        pow_ans = pow(pow_a,pow_b)
         eval(pow_ans)
 
         ### multiply_1Dslice

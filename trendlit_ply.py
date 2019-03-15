@@ -363,7 +363,7 @@ def p_module2(p):
 
 def p_call(p):
     """call : ID call1
-        | predef call1"""
+        | predef"""
 
 
 def p_call1(p):

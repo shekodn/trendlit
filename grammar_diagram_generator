@@ -72,7 +72,7 @@ module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' module1
 module1 ::= block | 'COLON' type 'OBRACE' declareBlock module2 'CBRACE'
 module2 ::= statement module2 | 'SPIT' expression
 
-call ::= 'ID' call1 | predef call1
+call ::= 'ID' call1 | predef
 call1 ::= 'OPAREN' params 'CPAREN'
 
 params ::= expression params1
