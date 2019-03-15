@@ -61,7 +61,7 @@ def avg(slice1D):
     np_avg = np.average(slice1D)
     avg = np_avg.tolist()
 
-    return type(avg)
+    return avg
 
 
 def multiply_1Dslice(list, num):
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     """
     median
     """
-    print("\nsort_slice".upper())
+    print("\nmedian".upper())
     slice1D = [20, 2, -1, 1, 34]
     print("slice1D : ", slice1D)
     median = median_1Dslice(slice1D)
@@ -185,7 +185,7 @@ if __name__ == "__main__":
     print(ans)
 
     """
-    Multiply each element of the slice
+    Multiplies each element of a slice by a factor
     """
     print("\nMultiply slice".upper())
     slice = [1, 2, 3]
@@ -222,37 +222,3 @@ if __name__ == "__main__":
     print("\nrandoms".upper())
     slice = randoms(10, 100)
     print(slice)
-
-    # numbers = [1, 3, 4, 2]
-    #
-    # # Sorting list of Integers in ascending
-    # # numbers.sort()
-    # #
-    # # print(numbers)
-    #
-    # sorted_slice1D = sort_1Dslice(a_slice1D)
-    # print(a_slice1D)
-    #
-    #
-    # print(sorted_slice1D)
-    # print(b_slice1D)
-    # print(c_slice1D)
-
-    # aux = np.array(a)
-    #
-    #
-    # dtype = [('brand', 'S10'), ('name', 'S10'), ('model', 'S10')]
-    #
-    # aux = np.array(aux, dtype=dtype)       # create a structured array
-    # np.sort(aux, order='brand')
-    # print("\n")
-    # print(type(aux))
-    # print(aux)
-    # dtype = [('name', 'S10'), ('height', float), ('age', int)]
-    # dtype2 = [['name', 'S10'], ['height', float], ['age', int]]
-    # print(type(dtype))
-    # print(type(dtype2))
-    # values = [('ArthurArthur', 1.8, 41), ('Lancelot', 1.9, 38),('Galahad', 1.7, 38)]
-    # a = np.array(values, dtype=dtype)       # create a structured array
-    # result = np.sort(a, order='height')
-    # print(result)

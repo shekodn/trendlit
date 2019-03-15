@@ -31,6 +31,48 @@ program the_name_of_the_program
         # int my_2D_slice [3][3] = [[]]
         # int another_2D_slice [3][3] = [[1,2,3][1,2,3][1,2,3]]
 
+        # VARS FOR FUNCTIONS
+        int test_slice [5] = [4,3,1,7,0]
+
+        ### median
+        int slice1D [5] = [20, 2, -1, 1, 34]
+        # median_1Dslice(slice1D) - TODO
+        int med = 1
+
+
+        ### mode
+        int mode_slice1D [9] = [5, 2, 2, 1, 1, 4, 1, 4, 4]
+        # int mode = mode_1Dslice(mode_slice1D) - TODO
+
+        ### avg
+        int avg_slice1D [5] = [4, 3, 1, 7, 0]
+        # int avg = avg(avg_slice1D) - TODO
+
+        ### pow
+        int pow_a = 2
+        int pow_b = 3
+        # int pow_ans = avg(pow_a,pow_b) - TODO
+
+        ### multiply_1Dslice
+        int multiply_1Dslice [3] = [1, 2, 3]
+        int multiply_1Dslice_factor = 2
+
+        # find
+        int find_slice [8] = [10, 20, 30, 40, 50, 60, 70, 80]
+        int find_filter_num = 40
+
+        ### find_min
+        # int slice_min = find_min(slice, filter_num) - TODO
+
+        ### find_max
+        # TODO - how to declare an array? with unkown size
+        # int slice_max = find_max(slice, filter_num) - TODO
+
+        ### zeros
+        # int zeros[10] = zeros(10) - TODO
+
+        ### randoms
+        # int randoms[10] = randoms(10) - TODO
 
         # You can add and modify elements of your array/matrix
         another_slice[0] = 1+2
@@ -87,34 +129,66 @@ program the_name_of_the_program
             eval("Hello " + nickname + "!")
         }
 
+        ####
         # BASIC STATISTICS FUNCTIONS
-        #oh yes we are very cool and we support some basic statistical functions
+        # Oh yes we are very cool and we support some basic statistical functions
+        ###
 
         # You can even import a table from an excel sheet into a matrix!
         # suck_csv receives an argument with the path to your csv file
         # int my_table [2][3] = suck_csv("C:\\Documents\car.csv")
 
-        # You can manipulate your slices by using some the default methods
-        sort_slice(test_slice, criteria)
-            #type = int, double, str, bool
-            # criteria = min/max
+        ### sort_slice
+        sort_slice(test_slice, max)
+        eval(test_slice)
 
-        # Get valuable insight from your data
-        median(test_slice) # will spit => 3
-            #type = int, double.
-        mode(test_slice) # would spit => 3
-            #type = int, double, str, bool
-        avg(test_slice) # would spit => 3.0
-            #type = int, double
+        sort_slice(test_slice, min)
+        eval(test_slice)
 
-        #Supported math function
-        # pow(type a, int b)
-        pow(a, b)
-            #type = int, double
-
-        # You can manipulate your sort_2D_slice by using some the default methods
-        sort_2D_slice(my_table, criteria, column_index)
-            # criteria = min/max
+        # ### median
+        # int slice1D [5] = [20, 2, -1, 1, 34]
+        median_1Dslice(slice1D)
+        eval(med)
+        #
+        # ### mode
+        # int mode_slice1D [9] = [5, 2, 2, 1, 1, 4, 1, 4, 4]
+        mode_1Dslice(mode_slice1D)
+        eval(mode)
+        #
+        # ### avg
+        # int avg_slice1D [5] = [4, 3, 1, 7, 0]
+        # int avg = avg(avg_slice1D)
+        # eval(avg)
+        #
+        # ### pow
+        # pow_a = 2
+        # pow_b = 3
+        # int pow_ans = avg(pow_a,pow_b)
+        # eval(pow_ans)
+        #
+        # ### multiply_1Dslice
+        # int multiply_1Dslice [3] = [1, 2, 3]
+        # int multiply_1Dslice_factor = 2
+        # # TODO - When you generate a slice, do you overwrite it or do you create
+        # # a new one (See GO's documentation)
+        # multiply_1Dslice = multiply_1Dslice(multiply_1Dslice, multiply_1Dslice_factor)
+        # eval(multiply_1Dslice)
+        #
+        # ### find_min
+        # slice_min = find_min(slice, filter_num)
+        # eval(slice_min)
+        #
+        # ### find_max
+        # slice_max = find_max(slice, filter_num)
+        # eval(slice_max)
+        #
+        # ### zeros
+        # zeros = zeros(10)
+        # eval(zeros)
+        #
+        # ### randoms
+        # randoms[10] = randoms(10)
+        # eval(randoms)
 
     }
 
