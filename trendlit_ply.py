@@ -4,57 +4,63 @@ reserved_words = {
     "program": "PROGRAM",
     "script": "SCRIPT",
     # Data types
-    "str": "STR",
-    "int": "INT",
-    "double": "DOUBLE",
-    "bool": "BOOL",
-    "if": "IF",
-    "else": "ELSE",
-    "loop": "LOOP",
-    "True": "TRUE",
     "False": "FALSE",
-    "eval": "EVAL",
+    "True": "TRUE",
+    "bool": "BOOL",
+    "double": "DOUBLE",
+    "else": "ELSE",
+    "if": "IF",
+    "int": "INT",
+    "loop": "LOOP",
+    "str": "STR",
+    # Functions
     "def": "DEF",
+    "eval": "EVAL",
     "spit": "SPIT",
-    "suck_csv": "SUCK_CSV",
-    "sort_slice": "SORT_SLICE",
-    "sort_2D_slice": "SORT_2D_SLICE",
-    "median": "MEDIAN",
-    "mode": "MODE",
+    # Special Functions
     "avg": "AVG",
+    "find_max": "FIND_MAX",
+    "find_min": "FIND_MIN",
+    "median_1Dslice": "MEDIAN",
+    "mode_1Dslice": "MODE",
+    "multiply_1Dslice": "MULTIPLY_1DSLICE",
     "pow": "POW",
+    "randoms": "RANDOMS",
+    "sort_slice": "SORT_SLICE",
+    "suck_csv": "SUCK_CSV",
+    "zeros": "ZEROS",
     # reserved words html
+    "class": "CLASS",
+    "div": "DIV",
+    "embed": "EMBED",
     "h1": "H1",
     "h2": "H2",
-    "div": "DIV",
     "p": "P",
-    "class": "CLASS",
     "table": "TABLE",
-    "tr": "TR",
     "th": "TH",
-    "embed": "EMBED",
+    "tr": "TR",
 }
 
 tokens = list(reserved_words.values()) + [
-    "SIGN",
-    "OP",
-    "REL",
     "ASSOCIATIVE",
-    "EQ",
-    "COMMA",
-    "COLON",
-    "OPAREN",
-    "CPAREN",
-    "OBRACE",
     "CBRACE",
-    "OBRACK",
     "CBRACK",
-    "OEVALSCRIPT",
     "CEVALSCRIPT",
-    "CTESTR",
-    "ID",
-    "CTEI",
+    "COLON",
+    "COMMA",
+    "CPAREN",
     "CTED",
+    "CTEI",
+    "CTESTR",
+    "EQ",
+    "ID",
+    "OBRACE",
+    "OBRACK",
+    "OEVALSCRIPT",
+    "OP",
+    "OPAREN",
+    "REL",
+    "SIGN",
 ]
 
 t_SIGN = r"\+|-"
@@ -372,13 +378,17 @@ def p_params1(p):
 
 
 def p_predef(p):
-    """predef : SUCK_CSV
-        | SORT_SLICE
-        | SORT_2D_SLICE
+    """predef : AVG
+        | FIND_MAX
+        | FIND_MIN
         | MEDIAN
         | MODE
-        | AVG
-        | POW"""
+        | MULTIPLY_1DSLICE
+        | POW
+        | RANDOMS
+        | SORT_SLICE
+        | SUCK_CSV
+        | ZEROS"""
 
 
 def p_writing(p):
