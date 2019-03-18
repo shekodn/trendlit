@@ -1,3 +1,5 @@
+# --------------------- LEX ---------------------------
+
 # TOKENS
 reserved_words = {
     # reserved words code
@@ -143,6 +145,14 @@ import ply.lex as lex
 lex.lex()
 
 
+# ----------------------- YACC ------------------------
+
+procedure_directory = {}  # [name] = {type, var_table}
+
+curr_scope = ""  # The current scope inside the program
+curr_type = ""  # The current type used (module or var)
+
+
 def p_program(p):
     """program : PROGRAM ID program1"""
     print("it compiles !")
@@ -239,10 +249,10 @@ def p_constSlice2D(p):
 
 
 def p_type(p):
-    """type : STR
-        | INT
-        | DOUBLE
-        | BOOL"""
+    """type : STR snp_save_type
+        | INT snp_save_type
+        | DOUBLE snp_save_type
+        | BOOL snp_save_type"""
 
 
 def p_statement(p):
@@ -348,11 +358,11 @@ def p_cycle(p):
 
 
 def p_module(p):
-    """module : DEF ID OPAREN arguments CPAREN module1"""
+    """module : DEF ID snp_add_module OPAREN arguments CPAREN module1 snp_end_module"""
 
 
-def p_module1(p):
-    """module1 : block
+def p_module1(p):  # TODO: are we allowing func declaration inside a func ?
+    """module1 : snp_save_void_type block
         | COLON type OBRACE declareBlock module2 CBRACE"""
 
 
@@ -534,6 +544,49 @@ def p_empty(p):
 
 def p_error(p):
     print("Syntax error at '%s'" % p)
+
+
+# --- SEMANTIC NEURAL POINTS ---
+
+# Start of the module
+def p_snp_add_module(p):
+    """snp_add_module : empty"""
+    global procedure_directory, curr_scope
+    module_name = p[-1]  # get the last symbol read (left from this neural point)
+    # Check if module already exists and add it to the directory
+    if procedure_directory.has_key(module_name):
+        print(
+            "Module '%s' has already been declared" % module_name
+        )  # TODO : is this the best way to give an error?
+        exit(1)
+    else:
+        procedure_directory[module_name] = {
+            "type": curr_type,
+            "var_table": {},
+        }  # TODO : add more info later on
+        curr_scope = module_name
+
+
+# Save the last type defined
+def p_snp_save_type(p):
+    """snp_save_type : empty"""
+    global curr_type
+    curr_type = p[-1]
+
+
+# Save the last type as void (for modules)
+def p_snp_save_void_type(p):
+    """snp_save_void_type : empty"""
+    global curr_type
+    curr_type = "void"
+
+
+# End of the module deltes the var table
+def p_snp_end_module(p):
+    """snp_end_module : empty"""
+    global procedure_directory
+    # Delete var table for the module that ended
+    procedure_directory[curr_scope]["var_table"].clear()
 
 
 import ply.yacc as yacc
