@@ -24,7 +24,6 @@ program the_name_of_the_program
 
         int i = 1
         int int_var_name
-        int test_slice [5] = [4,3,1,7,0]
 
         bool legal # This is how you deine an uninitialized variable, trendlit by default will assign a false value
         # Slices and 2D Slices work as arrays and matrixes respectively

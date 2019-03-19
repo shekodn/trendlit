@@ -1,0 +1,9 @@
+program the_name_of_the_program
+    script {
+        # a comment
+        def my_function (int a, int b) : int {
+            str l_var = "my local var"
+            int l_var = 24
+            spit a + b
+        }
+    }
