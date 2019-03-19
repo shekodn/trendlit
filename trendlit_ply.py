@@ -169,7 +169,7 @@ def p_program2(p):
 
 
 def p_script(p):
-    """script : SCRIPT block"""
+    """script : SCRIPT snp_script_start block"""
 
 
 def p_block(p):
@@ -548,7 +548,21 @@ def p_error(p):
 
 # --- SEMANTIC NEURAL POINTS ---
 
-# Start of the module
+# Start of script global scope (adds global scope to directory)
+def p_snp_script_start(p):
+    """snp_script_start : empty"""
+    global procedure_directory, curr_scope, curr_type
+    # Set current values for global script
+    curr_scope = "global_script"
+    curr_type = "void"
+    # Add global script to the directory
+    procedure_directory[curr_scope] = {
+        "type": curr_type,
+        "var_table": {},
+    }  # TODO : add more info later on
+
+
+# Start of the module (add module to directory)
 def p_snp_add_module(p):
     """snp_add_module : empty"""
     global procedure_directory, curr_scope
