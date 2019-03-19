@@ -598,9 +598,10 @@ def p_snp_save_void_type(p):
 # End of the module deltes the var table
 def p_snp_end_module(p):
     """snp_end_module : empty"""
-    global procedure_directory
+    global procedure_directory, curr_scope
     # Delete var table for the module that ended
     procedure_directory[curr_scope]["var_table"].clear()
+    curr_scope = "global_script"
 
 
 import ply.yacc as yacc
