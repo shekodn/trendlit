@@ -196,8 +196,8 @@ def p_declareBlock(p):
 
 
 def p_declare(p):
-    """declare : type ID
-        | type ID initializeSlices
+    """declare : type ID snp_add_var
+        | type ID snp_add_var initializeSlices
         | initialize"""
 
 
@@ -206,8 +206,8 @@ def p_initialize(p):
 
 
 def p_initialize1(p):
-    """initialize1 : ID EQ value
-        | ID initializeSlices EQ constSlices"""
+    """initialize1 : ID snp_add_var EQ value
+        | ID snp_add_var initializeSlices EQ constSlices"""
 
 
 def p_initialize2(p):
@@ -548,6 +548,8 @@ def p_error(p):
 
 # --- SEMANTIC NEURAL POINTS ---
 
+# --- PROCEDURE/MODULE SEMANTIC ACTIONS---
+
 # Start of script global scope (adds global scope to directory)
 def p_snp_script_start(p):
     """snp_script_start : empty"""
@@ -602,6 +604,25 @@ def p_snp_end_module(p):
     # Delete var table for the module that ended
     procedure_directory[curr_scope]["var_table"].clear()
     curr_scope = "global_script"
+
+
+# --- VARIABLE SEMANTIC ACTIONS ---
+
+# Adds a variable defined to the current scope variable table
+def p_snp_add_var(p):
+    """snp_add_var : empty"""
+    global procedure_directory
+    var_name = p[-1]  # get the last symbol read (left from this neural point)
+    # Check if var already exists and add it to the table in currect scope
+    if procedure_directory[curr_scope]["var_table"].has_key(var_name):
+        print(
+            "Variable '%s' has already been declared" % var_name
+        )  # TODO : is this the best way to give an error?
+        exit(1)
+    else:
+        procedure_directory[curr_scope]["var_table"][var_name] = {
+            "type": curr_type
+        }  # TODO : add more info later on
 
 
 import ply.yacc as yacc

@@ -1,0 +1,6 @@
+program the_name_of_the_program
+    script {
+        # MODULES
+        str g_var= "my global var"
+        str g_var= "this should cause an error"
+    }
