@@ -426,7 +426,6 @@ def p_snp_add_module(p):
     global procedure_directory, curr_scope
     module_name = p[-1]  # get the last symbol read (left from this neural point)
     # Check if module already exists and add it to the directory
-    # if procedure_directory.has_key(module_name):
     if module_name in procedure_directory:
         print(
             "Module '%s' has already been declared" % module_name
@@ -471,7 +470,6 @@ def p_snp_add_var(p):
     global procedure_directory
     var_name = p[-1]  # get the last symbol read (left from this neural point)
     # Check if var already exists and add it to the table in currect scope
-    # if procedure_directory[curr_scope]["var_table"].has_key(var_name):
     if var_name in procedure_directory[curr_scope]["var_table"]:
         print(
             "Variable '%s' has already been declared" % var_name
@@ -486,18 +484,3 @@ def p_snp_add_var(p):
 import ply.yacc as yacc
 
 parser = yacc.yacc()
-
-# import sys
-#
-# if __name__ == "__main__":
-#     if len(sys.argv) > 1:
-#         file = sys.argv[1]
-#         try:
-#             f = open(file, "r")
-#             data = f.read()
-#             f.close()
-#             yacc.parse(data, tracking=True)
-#         except EOFError:
-#             print("EOFError")
-#     else:
-#         print("File missing")
