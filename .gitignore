@@ -5,3 +5,6 @@ parsetab.pyc
 
 ### Debug sample ###
 debug/sample
+
+### HELPERS ###
+helpers/*.pyc
