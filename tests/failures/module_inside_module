@@ -1,0 +1,20 @@
+program the_name_of_the_program
+
+    #This is a comment
+
+    script {
+        # You can declare global variables like this.
+        str global_var_name = "I am a global variable"
+
+        def sum (int a, int b) : int {
+            int result = a #This is a local variable
+            result = a + b
+
+            def less(){
+                eval("HI")
+            }
+            # int result = a + b # FAILURE EXAMPLE
+            spit result
+        }
+
+    }
