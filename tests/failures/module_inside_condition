@@ -1,0 +1,9 @@
+program the_name_of_the_program
+    script {
+        if (name is "Ana K") {
+            eval("She is cool")
+            def less() {
+                eval("HI")
+            }
+        }
+    }

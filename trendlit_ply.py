@@ -178,6 +178,7 @@ def p_block(p):
 
 def p_block1(p):
     """block1 : statement block1
+        | module block1
         | empty"""
 
 
@@ -195,7 +196,7 @@ def p_voidModuleBlock(p):
 
 
 def p_voidModuleBlock1(p):
-    """voidModuleBlock1 : moduleStatement voidModuleBlock1
+    """voidModuleBlock1 : statement voidModuleBlock1
         | empty"""
 
 
@@ -204,7 +205,7 @@ def p_returnModuleBlock(p):
 
 
 def p_returnModuleBlock1(p):
-    """returnModuleBlock1 : moduleStatement returnModuleBlock1
+    """returnModuleBlock1 : statement returnModuleBlock1
         | SPIT expression"""
 
 
@@ -274,16 +275,10 @@ def p_type(p):
 
 
 def p_statement(p):
-    """statement : moduleStatement
-        | module"""
-
-
-def p_moduleStatement(p):
-    """moduleStatement : assignment
+    """statement : assignment
         | condition
         | cycle
         | call
-        | module
         | writing"""
 
 
@@ -562,6 +557,7 @@ def p_empty(p):
 
 def p_error(p):
     print("Syntax error at '%s'" % p)
+    exit(1)
 
 
 # --- SEMANTIC NEURAL POINTS ---
