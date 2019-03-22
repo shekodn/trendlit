@@ -178,6 +178,7 @@ def p_block(p):
 
 def p_block1(p):
     """block1 : statement block1
+        | module block1
         | empty"""
 
 
@@ -188,6 +189,24 @@ def p_simpleBlock(p):
 def p_simpleBlock1(p):
     """simpleBlock1 : statement simpleBlock1
         | empty"""
+
+
+def p_voidModuleBlock(p):
+    """voidModuleBlock : snp_save_void_type OBRACE declareBlock voidModuleBlock1 CBRACE"""
+
+
+def p_voidModuleBlock1(p):
+    """voidModuleBlock1 : statement voidModuleBlock1
+        | empty"""
+
+
+def p_returnModuleBlock(p):
+    """returnModuleBlock : COLON type OBRACE declareBlock returnModuleBlock1 CBRACE"""
+
+
+def p_returnModuleBlock1(p):
+    """returnModuleBlock1 : statement returnModuleBlock1
+        | SPIT expression"""
 
 
 def p_declareBlock(p):
@@ -260,7 +279,6 @@ def p_statement(p):
         | condition
         | cycle
         | call
-        | module
         | writing"""
 
 
@@ -361,14 +379,9 @@ def p_module(p):
     """module : DEF ID snp_add_module OPAREN arguments CPAREN module1 snp_end_module"""
 
 
-def p_module1(p):  # TODO: are we allowing func declaration inside a func ?
-    """module1 : snp_save_void_type block
-        | COLON type OBRACE declareBlock module2 CBRACE"""
-
-
-def p_module2(p):
-    """module2 : statement module2
-        | SPIT expression"""
+def p_module1(p):
+    """module1 : voidModuleBlock
+        | returnModuleBlock"""
 
 
 def p_call(p):
@@ -544,6 +557,7 @@ def p_empty(p):
 
 def p_error(p):
     print("Syntax error at '%s'" % p)
+    exit(1)
 
 
 # --- SEMANTIC NEURAL POINTS ---

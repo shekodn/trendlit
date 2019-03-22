@@ -5,7 +5,7 @@ program2 ::= htmltag program2 | empty
 script ::= 'SCRIPT' block
 
 block ::= 'OBRACE' declareBlock block1 'CBRACE'
-block1 ::= statement block1 | empty
+block1 ::= statement block1 | module block1 | empty
 
 /*
   Variable declaration/initialization not supported here
@@ -13,6 +13,20 @@ block1 ::= statement block1 | empty
 */
 simpleBlock ::= 'OBRACE' simpleBlock1 'CBRACE'
 simpleBlock1 ::= statement simpleBlock1 | empty
+
+/*
+  Defining new modules not supported here
+  Used in void modules.
+*/
+voidModuleBlock ::= 'OBRACE' declareBlock voidModuleBlock1 'CBRACE'
+voidModuleBlock1 ::= statement voidModuleBlock1 | empty
+
+/*
+  Defining new modules not supported here
+  Used in modules that return something.
+*/
+returnModuleBlock ::= 'COLON' type 'OBRACE' declareBlock returnModuleBlock1 'CBRACE'
+returnModuleBlock1 ::= statement returnModuleBlock1 | 'SPIT' expression
 
 declareBlock ::= declare declareBlock | empty
 declare ::= type 'ID' | type 'ID' initializeSlices | initialize
@@ -33,7 +47,7 @@ constSlice2D ::=  'OBRACK' constSlice1D 'COMMA' 'CBRACK' | 'OBRACK' constSlice1D
 
 type ::= 'STR' | 'INT' | 'DOUBLE' | 'BOOL'
 
-statement ::= assignment | condition | cycle | call | module | writing
+statement ::= assignment | condition | cycle | call | writing
 
 /*
 assignment:
@@ -69,8 +83,7 @@ condition1 ::= 'ELSE' simpleBlock | empty
 cycle ::= 'LOOP' 'OPAREN' expression 'CPAREN' simpleBlock
 
 module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' module1
-module1 ::= block | 'COLON' type 'OBRACE' declareBlock module2 'CBRACE'
-module2 ::= statement module2 | 'SPIT' expression
+module1 ::= voidModuleBlock | returnModuleBlock
 
 call ::= 'ID' call1 | predef
 call1 ::= 'OPAREN' params 'CPAREN'
