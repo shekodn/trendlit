@@ -1,4 +1,4 @@
-from helpers.cube_helper import token_to_code, type_to_code
+from semantic_cube.semantic_cube_helper import token_to_code, type_to_code
 
 type_int = type_to_code.get("int")
 type_double = type_to_code.get("double")
@@ -7,7 +7,7 @@ type_error = type_to_code.get("error")
 type_none = -1
 
 
-class semantic_cube(object):
+class Cube:
     def __init__(self):
         self.cube = {
             # INT with all other primitive data types.
@@ -143,7 +143,8 @@ class semantic_cube(object):
             (type_bool, type_double, token_to_code.get("=")): type_error,
         }
 
-
-# if __name__ == "__main__":
-#     print("type_int ", type_int)
-#     print("type_error ", type_error)
+    def is_in_cube(self, operType1, operType2, op):
+        if (operType1, operType2, op) not in self.cube:
+            return False
+        else:
+            return True

@@ -1,151 +1,7 @@
-# --------------------- LEX ---------------------------
+#!/usr/bin/python3
 
-# TOKENS
-reserved_words = {
-    # reserved words code
-    "max": "MAX",
-    "min": "MIN",
-    "program": "PROGRAM",
-    "script": "SCRIPT",
-    # Data types
-    "False": "FALSE",
-    "True": "TRUE",
-    "bool": "BOOL",
-    "double": "DOUBLE",
-    "else": "ELSE",
-    "if": "IF",
-    "int": "INT",
-    "loop": "LOOP",
-    "str": "STR",
-    # Functions
-    "def": "DEF",
-    "eval": "EVAL",
-    "spit": "SPIT",
-    # Special Functions
-    "avg": "AVG",
-    "find_max": "FIND_MAX",
-    "find_min": "FIND_MIN",
-    "median_1Dslice": "MEDIAN",
-    "mode_1Dslice": "MODE",
-    "multiply_1Dslice": "MULTIPLY_1DSLICE",
-    "pow": "POW",
-    "randoms": "RANDOMS",
-    "sort_slice": "SORT_SLICE",
-    "suck_csv": "SUCK_CSV",
-    "zeros": "ZEROS",
-    # reserved words html
-    "class": "CLASS",
-    "div": "DIV",
-    "embed": "EMBED",
-    "h1": "H1",
-    "h2": "H2",
-    "p": "P",
-    "table": "TABLE",
-    "th": "TH",
-    "tr": "TR",
-}
+from lexer.lexer import lexer, tokens
 
-tokens = list(reserved_words.values()) + [
-    "ASSOCIATIVE",
-    "CBRACE",
-    "CBRACK",
-    "CEVALSCRIPT",
-    "COLON",
-    "COMMA",
-    "CPAREN",
-    "CTED",
-    "CTEI",
-    "CTESTR",
-    "EQ",
-    "ID",
-    "OBRACE",
-    "OBRACK",
-    "OEVALSCRIPT",
-    "OP",
-    "OPAREN",
-    "REL",
-    "SIGN",
-]
-
-t_SIGN = r"\+|-"
-t_OP = r"\*|/"
-t_ASSOCIATIVE = r"or|and"
-t_EQ = r"="
-t_COMMA = r","
-t_COLON = r":"
-t_OPAREN = r"\("
-t_CPAREN = r"\)"
-t_OBRACE = r"\{"
-t_CBRACE = r"\}"
-t_OBRACK = r"\["
-t_CBRACK = r"\]"
-
-
-def t_OEVALSCRIPT(t):
-    r"<\^"
-    return t
-
-
-def t_REL(t):
-    r"is|not|>=|<=|>|<"
-    return t
-
-
-def t_CEVALSCRIPT(t):
-    r"\^>"
-    return t
-
-
-def t_ID(t):
-    r"[A-Za-z_][A-Za-z0-9_]*"
-    t.type = reserved_words.get(t.value, "ID")
-    return t
-
-
-def t_CTED(t):
-    r"(-?[0-9]+[.])[0-9]+"
-    return t
-
-
-def t_CTEI(t):
-    r"-?[0-9]+"
-    return t
-
-
-def t_CTESTR(t):
-    r"\"[^\"]*\""
-    return t
-
-
-# Ignored
-t_ignore = " \t"
-
-
-def t_newline(t):
-    r"\n+"
-    t.lexer.lineno += t.value.count("\n")
-
-
-def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
-
-
-# Discarded tokens
-# Reference: https://www.dabeaz.com/ply/ply.html#ply_nn8
-def t_COMMENT(t):
-    r"\#.*"
-    pass
-    # No return value. Token discarded
-
-
-# Build the lexer
-import ply.lex as lex
-
-lex.lex()
-
-
-# ----------------------- YACC ------------------------
 
 procedure_directory = {}  # [name] = {type, var_table}
 
@@ -584,7 +440,7 @@ def p_snp_add_module(p):
     global procedure_directory, curr_scope
     module_name = p[-1]  # get the last symbol read (left from this neural point)
     # Check if module already exists and add it to the directory
-    if procedure_directory.has_key(module_name):
+    if module_name in procedure_directory:
         print(
             "Module '%s' has already been declared" % module_name
         )  # TODO : is this the best way to give an error?
@@ -628,7 +484,7 @@ def p_snp_add_var(p):
     global procedure_directory
     var_name = p[-1]  # get the last symbol read (left from this neural point)
     # Check if var already exists and add it to the table in currect scope
-    if procedure_directory[curr_scope]["var_table"].has_key(var_name):
+    if var_name in procedure_directory[curr_scope]["var_table"]:
         print(
             "Variable '%s' has already been declared" % var_name
         )  # TODO : is this the best way to give an error?
@@ -641,19 +497,4 @@ def p_snp_add_var(p):
 
 import ply.yacc as yacc
 
-yacc.yacc()
-
-import sys
-
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        file = sys.argv[1]
-        try:
-            f = open(file, "r")
-            data = f.read()
-            f.close()
-            yacc.parse(data, tracking=True)
-        except EOFError:
-            print("EOFError")
-    else:
-        print("File missing")
+parser = yacc.yacc()
