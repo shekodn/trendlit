@@ -1,29 +1,24 @@
 program the_name_of_the_program
 
     script {
-      int main_one = 1
-      int main_two = 2
-      int main_three
-      int main_four
+        # =, 1, _, main_one
+        int main_one = 1
 
-      main_three = main_one + main_two
-      main_four = main_two * main_two
+        # =, 2, _, main_two
+        int main_two = 2
 
-      main_four = main_two * main_two
+        # =, 0, _, main_three
+        int main_three
 
-      def func1() {
-        int func1_one = 1
-        int func1_two = 2
-        int func1_three
-        int func1_four
+        # =, 0, _, main_four
+        int main_four
 
-        func1_three = func1_one + func1_two
-        func1_four = func1_two * func1_two
+        main_three = main_one + main_two
+        # +, main_one, main_two, t1
+        # =, t1, _, main_three
 
-        func1_four = func1_two * func1_two
-
-      }
-
-
+        main_four = main_two * main_two
+        # *, main_two, main_two, t2
+        # =, t2, _, main_four
 
     }
