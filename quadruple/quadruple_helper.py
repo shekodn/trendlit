@@ -2,6 +2,7 @@
 
 from quadruple.quadruple import Quadruple
 from stack.stack import Stack
+from semantic_cube.semantic_cube_helper import token_to_code, code_to_token, type_to_code
 
 
 class QuadrupleHelper(object):
@@ -43,7 +44,7 @@ class QuadrupleHelper(object):
         return self.stack_tokens.top()
 
     def push_type(self, type):
-        self.stack_types.push(type)
+        self.stack_types.push(type_to_code.get(type))
 
     def pop_type(self):
         return self.stack_types.pop()

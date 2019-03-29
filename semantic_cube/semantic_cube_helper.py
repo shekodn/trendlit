@@ -49,22 +49,20 @@ code_to_token = {
 
 type_to_code = {
     "bool": 1,
-    "char": 2,
+    "str": 2,
     "class": 3,
     "double": 4,
     "error": 5,
     "int": 6,
-    "object": 7,
-    "void": 8,
+    "void": 7,
 }
 
 code_to_type = {
     1: "bool",
-    2: "char",
+    2: "str",
     3: "class",
     4: "double",
     5: "error",
     6: "int",
-    7: "object",
-    8: "void",
+    7: "void",
 }
