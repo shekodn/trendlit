@@ -1,12 +1,16 @@
 #!/usr/bin/python3
 
 from lexer.lexer import lexer, tokens
+from quadruple.quadruple_helper import *
+from quadruple.quadruple import *
 
 
 procedure_directory = {}  # [name] = {type, var_table}
 
 curr_scope = ""  # The current scope inside the program
 curr_type = ""  # The current type used (module or var)
+
+quad_helper = QuadrupleHelper()
 
 
 def p_program(p):
