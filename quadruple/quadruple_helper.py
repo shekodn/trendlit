@@ -1,18 +1,7 @@
 #!/usr/bin/python3
 
-from quadruple import Quadruple
-
-# import sys
-# sys.path.append('../')
-# print(sys.path)
-
-from semantic_cube.semantic_cube_helper import code_to_token, token_to_code
-
-
-# from stack.stack import Stack
-
-
-# from stack.stack import Stack
+from quadruple.quadruple import Quadruple
+from stack.stack import Stack
 
 
 class QuadrupleHelper(object):
@@ -87,7 +76,3 @@ class QuadrupleHelper(object):
             )
             cont = cont + 1
         file.close()
-
-
-# if __name__ == '__main__':
-#     print("Quad")
