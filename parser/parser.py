@@ -3,6 +3,7 @@
 from lexer.lexer import lexer, tokens
 from quadruple.quadruple_helper import *
 from quadruple.quadruple import *
+from semantic_cube.semantic_cube import Cube
 
 
 procedure_directory = {}  # [name] = {type, var_table}
@@ -11,6 +12,7 @@ curr_scope = ""  # The current scope inside the program
 curr_type = ""  # The current type used (module or var)
 
 quad_helper = QuadrupleHelper()
+semantic_cube = Cube()
 
 
 def p_program(p):
@@ -81,7 +83,7 @@ def p_declare(p):
 
 
 def p_initialize(p):
-    """initialize : type initialize1 initialize2"""
+    """initialize : type initialize1 snp_add_quad initialize2"""
 
 
 def p_initialize1(p):
@@ -544,6 +546,28 @@ def p_snp_push_pending_token(p):
     """snp_push_pending_token : empty"""
     token = p[-1]
     quad_helper.push_token(token)
+
+def p_snp_add_quad(p):
+    """snp_add_quad : empty"""
+    # TODO = add logic for precedence here?
+    right_operand = quad_helper.pop_operand() # TODO: type int
+    right_operand_type = quad_helper.pop_type()
+    left_operand = quad_helper.pop_operand() # TODO: type str
+    left_operand_type = quad_helper.pop_type()
+    token = quad_helper.pop_token()
+
+    if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token): # TODO: revisar orden de operandos
+        print("baila!")
+        quad_helper.add_quad(token, right_operand, -1, left_operand)
+        print("quad_helper.queue_quad \n")
+        print(quad_helper.queue_quad[quad_helper.quad_cont-1])
+    else:
+        print("no baila!!")
+
+    # quad_helper.add_quad(token, right_operand, __, left_operand)
+    # print(f"token {token}, right_operand {right_operand}, __, left_operand {left_operand}")
+
+
 
 
 def is_var_in_current_scope(var_name):
