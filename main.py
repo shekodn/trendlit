@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import sys
-from parser.parser import parser, yacc, procedure_directory, is_compiling
+from parser.parser import parser, yacc, procedure_directory
 from semantic_cube.semantic_cube import (
     Cube,
     type_int,
@@ -21,7 +21,6 @@ if __name__ == "__main__":
             print("procedure_directory\n")
             for key, value in procedure_directory.items() :
                 print (key, value, "\n")
-                print("is_compiling: ", is_compiling)
                 print("---")
 
         except EOFError:
