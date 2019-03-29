@@ -11,8 +11,9 @@ default:
 # TODO Run all trendlit_tests inside OUR_TESTS directory. Currently it only runs the first argument
 
 run:
-	${RUNMAIN} our_tests/test_sample_code.tl
-	${RUNMAIN} our_tests/test_many_declared_local_vars.tl
+	${RUNMAIN} our_tests/estatutos_secuenciales.tl
+# ${RUNMAIN} our_tests/test_sample_code.tl
+# ${RUNMAIN} our_tests/test_many_declared_local_vars.tl
 # ${RUNMAIN} ${ALL_TRENDLIT_MODULES} This should produce the tests for everything
 # TODO find a cleaner solution
 # % : test_%.tl
