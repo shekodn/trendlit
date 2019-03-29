@@ -483,6 +483,8 @@ def p_snp_add_var(p):
     """snp_add_var : empty"""
     global procedure_directory
     var_name = p[-1]  # get the last symbol read (left from this neural point)
+    print(f"var_name {var_name}, current_scope, {curr_scope}")
+    print(procedure_directory[curr_scope])
     # Check if var already exists and add it to the table in currect scope
     if var_name in procedure_directory[curr_scope]["var_table"]:
         print(
