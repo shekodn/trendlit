@@ -9,3 +9,5 @@ debug/sample
 
 __pycache__/
 *.py[cod]
+
+*.obj

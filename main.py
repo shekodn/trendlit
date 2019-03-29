@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import sys
-from parser.parser import parser, yacc, procedure_directory
+from parser.parser import parser, yacc, procedure_directory, quad_helper
 from semantic_cube.semantic_cube import (
     Cube,
     type_int,
@@ -18,11 +18,7 @@ if __name__ == "__main__":
             data = f.read()
             f.close()
             yacc.parse(data, tracking=True)
-            print("procedure_directory\n")
-            for key, value in procedure_directory.items() :
-                print (key, value, "\n")
-                print("---")
-
+            quad_helper.print_to_file(".quad.obj")
         except EOFError:
             print("EOFError")
     else:

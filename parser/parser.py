@@ -4,7 +4,7 @@ from lexer.lexer import lexer, tokens
 from quadruple.quadruple_helper import *
 from quadruple.quadruple import *
 from semantic_cube.semantic_cube import Cube
-
+from error.error_helper import ErrorHelper
 
 procedure_directory = {}  # [name] = {type, var_table}
 
@@ -12,13 +12,18 @@ curr_scope = ""  # The current scope inside the program
 curr_type = ""  # The current type used (module or var)
 
 quad_helper = QuadrupleHelper()
+error_helper = ErrorHelper()
 semantic_cube = Cube()
 
 
 def p_program(p):
     """program : PROGRAM ID program1"""
-    print("it compiles !")
-
+    if (error_helper.error_cont is 0):
+        print("No errors: it compiles !")
+    else:
+        print(f"Number of errors: {error_helper.error_cont}")
+        error_helper.print_errors()
+        # print(error_helper.print_errors())
 
 def p_program1(p):
     """program1 : script program2
@@ -489,8 +494,8 @@ def p_snp_add_var(p):
     """snp_add_var : empty"""
     global procedure_directory
     var_name = p[-1]  # get the last symbol read (left from this neural point)
-    print(f"var_name {var_name}, current_scope, {curr_scope}")
-    print(procedure_directory[curr_scope])
+    # print(f"var_name {var_name}, current_scope, {curr_scope}")
+    print(procedure_directory[curr_scope], "\n")
     # Check if var already exists and add it to the table in currect scope
     if is_var_in_current_scope(var_name):
         print(
@@ -514,8 +519,9 @@ def p_snp_push_pending_operand(p):
         quad_helper.push_type(type)
     else:
         quad_helper.push_type(curr_type)
-    print("OPERAND", quad_helper.top_operand())
-    print("TYPE", quad_helper.top_type())
+    # For debbuging
+    # print("OPERAND", quad_helper.top_operand())
+    # print("TYPE", quad_helper.top_type())
 
 
 def p_snp_save_type_int(p):
@@ -547,27 +553,25 @@ def p_snp_push_pending_token(p):
     token = p[-1]
     quad_helper.push_token(token)
 
+
 def p_snp_add_quad(p):
     """snp_add_quad : empty"""
     # TODO = add logic for precedence here?
-    right_operand = quad_helper.pop_operand() # TODO: type int
+    right_operand = quad_helper.pop_operand()  # TODO: type int
     right_operand_type = quad_helper.pop_type()
-    left_operand = quad_helper.pop_operand() # TODO: type str
+    left_operand = quad_helper.pop_operand()  # TODO: type str
     left_operand_type = quad_helper.pop_type()
     token = quad_helper.pop_token()
 
-    if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token): # TODO: revisar orden de operandos
-        print("baila!")
+    if semantic_cube.is_in_cube(
+        right_operand_type, left_operand_type, token
+    ):  # TODO: revisar orden de operandos
         quad_helper.add_quad(token, right_operand, -1, left_operand)
-        print("quad_helper.queue_quad \n")
-        print(quad_helper.queue_quad[quad_helper.quad_cont-1])
+        print("baila")
     else:
-        print("no baila!!")
-
-    # quad_helper.add_quad(token, right_operand, __, left_operand)
-    # print(f"token {token}, right_operand {right_operand}, __, left_operand {left_operand}")
-
-
+        #Error
+        error_helper.add_error(301)
+        # print("print", error_helper.queue_error[0].message)
 
 
 def is_var_in_current_scope(var_name):

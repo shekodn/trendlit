@@ -61,15 +61,22 @@ class QuadrupleHelper(object):
         """
         file = open(file_name, "w")
         cont = 0  # for debugging purposes.
+        print("\nQuadruples:")
         for quad in self.queue_quad:
             file.write(str(quad))
             file.write("\n")
+            # TODO: Every quad should be an INT bc it is a memory address
             # Print for debugging.
+            # print(type(code_to_token.get(quad.token)), code_to_token.get(quad.token))
+            # print(type(quad.operand1), quad.operand1)
+            # print(type(quad.operand2), quad.operand2)
+            # print(type(quad.operand3), quad.operand3)
+
             print(
-                "%d) %s, %d, %s, %d"
+                "%d) %s, %s, %d, %s"
                 % (
                     cont,
-                    codeToOper.get(quad.token),
+                    code_to_token.get(quad.token),
                     quad.operand1,
                     quad.operand2,
                     quad.operand3,

@@ -1,20 +1,20 @@
 class Quadruple(object):
-    def __init__(self, op, oper1, oper2, oper3):
-        self.op = op
-        self.oper1 = oper1
-        self.oper2 = oper2
-        self.oper3 = oper3
+    def __init__(self, token, operand1, operand2, operand3):
+        self.token = token
+        self.operand1 = operand1
+        self.operand2 = operand2
+        self.operand3 = operand3
 
     def __str__(self):
-        print (type(self.op), type(self.oper1), type(self.oper2), type(self.oper3))
-        return "%d %s %d %s" % (self.op, self.oper1, self.oper2, self.oper3)
+        # print (type(self.token), type(self.operand1), type(self.operand2), type(self.operand3))
+        return "%d %s %d %s" % (self.token, self.operand1, self.operand2, self.operand3)
 
     def is_quadruple(self):
         my_int = 666
-        a = type(self.op) == type(my_int)
-        b = type(self.oper1) == type(my_int)
-        c = type(self.oper2) == type(my_int)
-        d = type(self.oper3) == type(my_int)
+        a = type(self.token) == type(my_int)
+        b = type(self.operand1) == type(my_int)
+        c = type(self.operand2) == type(my_int)
+        d = type(self.operand3) == type(my_int)
 
         if a and b and c and d:
             return True
