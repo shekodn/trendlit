@@ -1,18 +1,29 @@
 #!/usr/bin/python3
 from error.error import Error
 
+# Errors
+unknwon_error = "Unkown"
+type_mismatch = "No baila"
+syntax_error = "Sintax error:"
+
 error_to_code = {
+    # Unkown 0
+    unknwon_error: 0,
     # Lexer 100
-    # Parser 200
+    # Sintax 200
+    syntax_error: 201,
     # Semantic 300
-    "no baila" : 301
+    type_mismatch: 301,
 }
 
 code_to_error = {
+    # Unkown 0
+    0: unknwon_error,
     # Lexer 100
-    # Parser 200
+    # Sintax 200
+    201: syntax_error,
     # Semantic 300
-    301 : "no baila"
+    301: type_mismatch,
 }
 
 
@@ -21,15 +32,13 @@ class ErrorHelper(object):
         self.queue_error = []
         self.error_cont = 0
 
-    def add_error(self, code):
-        error = Error(code)
+    def add_error(self, code, custom_message=""):
+        error = Error(code, custom_message)
         self.queue_error.append(error)
         self.error_cont = self.error_cont + 1
 
     def print_errors(self):
-        error_code = self.queue_error[0].code
-        error_message = code_to_error.get(error_code) # TODO: convert to message using mapping
-        print(error_message)
+        for error in self.queue_error:
+            error_message = code_to_error.get(error.code)
 
-        # for error in self.queue_error:
-        #     print(f"Code: {self.code}: {self.message}")
+            print(f"Error code: {error.code} -> {error_message} {error.custom_message}")
