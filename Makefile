@@ -9,11 +9,12 @@ ALL_ERROR_MODULES=$(wildcard error/*.py)
 ALL_LEXER_MODULES=$(wildcard lexer/*.py)
 ALL_PARSER_MODULES=$(wildcard parser/*.py)
 ALL_QUADRUPLE_MODULES=$(wildcard quadruple/*.py)
+ALL_ROOT_MODULES=$(wildcard *.py)
 ALL_SEMANTIC_CUBE_MODULES=$(wildcard semantic_cube/*.py)
 ALL_STACK_MODULES=$(wildcard stack/*.py)
 ALL_TEST_MODULES=$(wildcard tests/test_*.py)
 
-ALL_MODULES=$(ALL_ERROR_MODULES) $(ALL_LEXER_MODULES) $(ALL_PARSER_MODULES) $(ALL_QUADRUPLE_MODULES) $(ALL_SEMANTIC_CUBE_MODULES) $(ALL_STACK_MODULES) $(ALL_TEST_MODULES)
+ALL_MODULES=$(ALL_ERROR_MODULES) $(ALL_LEXER_MODULES) $(ALL_PARSER_MODULES) $(ALL_QUADRUPLE_MODULES) $(ALL_ROOT_MODULES) $(ALL_SEMANTIC_CUBE_MODULES) $(ALL_STACK_MODULES) $(ALL_TEST_MODULES)
 
 # Path from all .tl files (inside our_tests)
 ALL_TL_FILES=$(wildcard our_tests/*.tl)
@@ -33,8 +34,11 @@ format: ##Applies BLACK to all py files in defined modules.
 ##prepare: Applies FORMAT TEST.
 prepare: format test
 
+run: ##Run all .tl files
+	${RUNMAIN} ${ALL_TL_FILES}
+
 show: ##Show all .tl files
-	@echo $(ALL_TL_FILENAMES)
+	@echo ${ALL_TL_FILENAMES}
 
 test: ##Run all automated tests (unnitest framework).
 	@echo 'Test triggered'

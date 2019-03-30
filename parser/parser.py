@@ -18,11 +18,6 @@ semantic_cube = Cube()
 
 def p_program(p):
     """program : PROGRAM ID program1"""
-    if error_helper.error_cont is 0:
-        print("No errors: it compiles !")
-    else:
-        print(f"Number of errors: {error_helper.error_cont}")
-        error_helper.print_errors()
 
 
 def p_program1(p):

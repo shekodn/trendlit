@@ -3,20 +3,30 @@ import sys
 from parser.parser import parser, yacc, procedure_directory, quad_helper, error_helper
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        file = sys.argv[1]
-        try:
-            f = open(file, "r")
-            data = f.read()
-            f.close()
-            yacc.parse(data, tracking=True)
-            if error_helper.error_cont is 0:
-                print("Generating obj file!\n")
-                quad_helper.print_to_file(".quad.obj")
-            else:
-                print("\nTry Harder\n")
 
-        except EOFError:
-            print("EOFError")
+    files = sys.argv[1:]
+
+    if len(files) > 0:
+
+        print("Attempting to compile the following files:")
+        print(f"{files}\n")
+
+        for file in files:
+            try:
+                f = open(file, "r")
+                data = f.read()
+                f.close()
+                yacc.parse(data, tracking=True)
+
+                if error_helper.error_cont is 0:
+                    print(f"{file} compiles!\n")
+                    quad_helper.print_to_file(".quad.obj")
+                else:
+                    print(f"{file} does not compile. Please try harder")
+                    print(f"Number of errors: {error_helper.error_cont}")
+                    error_helper.print_errors()
+
+            except EOFError:
+                print("EOFError")
     else:
         print("File missing")
