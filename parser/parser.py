@@ -18,12 +18,13 @@ semantic_cube = Cube()
 
 def p_program(p):
     """program : PROGRAM ID program1"""
-    if (error_helper.error_cont is 0):
+    if error_helper.error_cont is 0:
         print("No errors: it compiles !")
     else:
         print(f"Number of errors: {error_helper.error_cont}")
         error_helper.print_errors()
         # print(error_helper.print_errors())
+
 
 def p_program1(p):
     """program1 : script program2
@@ -426,7 +427,6 @@ def p_error(p):
     print("Syntax error at '%s'" % p)
     exit(1)
 
-
 # --- SEMANTIC NEURAL POINTS ---
 
 # --- PROCEDURE/MODULE SEMANTIC ACTIONS---
@@ -452,10 +452,8 @@ def p_snp_add_module(p):
     module_name = p[-1]  # get the last symbol read (left from this neural point)
     # Check if module already exists and add it to the directory
     if module_name in procedure_directory:
-        print(
-            "Module '%s' has already been declared" % module_name
-        )  # TODO : is this the best way to give an error?
-        exit(1)
+        error_message = f"Module {module_name} has already been declared"
+        error_helper.add_error(0, error_message)
     else:
         procedure_directory[module_name] = {
             "type": curr_type,
@@ -498,10 +496,8 @@ def p_snp_add_var(p):
     print(procedure_directory[curr_scope], "\n")
     # Check if var already exists and add it to the table in currect scope
     if is_var_in_current_scope(var_name):
-        print(
-            "Variable '%s' has already been declared" % var_name
-        )  # TODO : is this the best way to give an error?
-        exit(1)
+        error_message = f"Variable {var_name} has already been declared"
+        error_helper.add_error(0, error_message)
     else:
         procedure_directory[curr_scope]["var_table"][var_name] = {
             "type": curr_type
@@ -567,11 +563,8 @@ def p_snp_add_quad(p):
         right_operand_type, left_operand_type, token
     ):  # TODO: revisar orden de operandos
         quad_helper.add_quad(token, right_operand, -1, left_operand)
-        print("baila")
     else:
-        #Error
         error_helper.add_error(301)
-        # print("print", error_helper.queue_error[0].message)
 
 
 def is_var_in_current_scope(var_name):
