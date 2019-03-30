@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import sys
-from parser.parser import parser, yacc, procedure_directory, quad_helper
+from parser.parser import parser, yacc, procedure_directory, quad_helper, error_helper
 from semantic_cube.semantic_cube import (
     Cube,
     type_int,
@@ -18,7 +18,12 @@ if __name__ == "__main__":
             data = f.read()
             f.close()
             yacc.parse(data, tracking=True)
-            quad_helper.print_to_file(".quad.obj")
+            if error_helper.error_cont is 0:
+                print("Generating obj file!\n")
+                quad_helper.print_to_file(".quad.obj")
+            else:
+                print("\nTry Harder\n")
+
         except EOFError:
             print("EOFError")
     else:
