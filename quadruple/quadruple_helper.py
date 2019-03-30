@@ -2,7 +2,11 @@
 
 from quadruple.quadruple import Quadruple
 from stack.stack import Stack
-from semantic_cube.semantic_cube_helper import token_to_code, code_to_token, type_to_code
+from semantic_cube.semantic_cube_helper import (
+    token_to_code,
+    code_to_token,
+    type_to_code,
+)
 
 
 class QuadrupleHelper(object):
@@ -61,7 +65,6 @@ class QuadrupleHelper(object):
         """
         file = open(file_name, "w")
         cont = 0  # for debugging purposes.
-        print("\nQuadruples:")
         for quad in self.queue_quad:
             file.write(str(quad))
             file.write("\n")
@@ -71,16 +74,16 @@ class QuadrupleHelper(object):
             # print(type(quad.operand1), quad.operand1)
             # print(type(quad.operand2), quad.operand2)
             # print(type(quad.operand3), quad.operand3)
-
-            print(
-                "%d) %s, %s, %d, %s"
-                % (
-                    cont,
-                    code_to_token.get(quad.token),
-                    quad.operand1,
-                    quad.operand2,
-                    quad.operand3,
-                )
-            )
-            cont = cont + 1
+            # Uncomment for debbuging
+            # print(
+            #     "%d) %s, %s, %d, %s"
+            #     % (
+            #         cont,
+            #         code_to_token.get(quad.token),
+            #         quad.operand1,
+            #         quad.operand2,
+            #         quad.operand3,
+            #     )
+            # )
+            # cont = cont + 1
         file.close()
