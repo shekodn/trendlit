@@ -23,7 +23,6 @@ def p_program(p):
     else:
         print(f"Number of errors: {error_helper.error_cont}")
         error_helper.print_errors()
-        # print(error_helper.print_errors())
 
 
 def p_program1(p):
@@ -426,6 +425,7 @@ def p_empty(p):
 def p_error(p):
     print("Syntax error at '%s'" % p)
     exit(1)
+
 
 # --- SEMANTIC NEURAL POINTS ---
 
