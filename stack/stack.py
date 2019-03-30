@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from quadruple.quadruple import Quadruple
 
+
 class Stack(object):
     def __init__(self):
         self.stack = []
