@@ -1,3 +1,4 @@
+# this file should contain 0 errors
 program the_name_of_the_program
 
     script {
