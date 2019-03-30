@@ -492,8 +492,9 @@ def p_snp_add_var(p):
     """snp_add_var : empty"""
     global procedure_directory
     var_name = p[-1]  # get the last symbol read (left from this neural point)
+    # For debbuging
     # print(f"var_name {var_name}, current_scope, {curr_scope}")
-    print(procedure_directory[curr_scope], "\n")
+    # print(procedure_directory[curr_scope], "\n")
     # Check if var already exists and add it to the table in currect scope
     if is_var_in_current_scope(var_name):
         error_message = f"Variable {var_name} has already been declared"
