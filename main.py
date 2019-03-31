@@ -26,6 +26,8 @@ if __name__ == "__main__":
                     print(f"{file} does not compile. Please try harder")
                     print(f"Number of errors: {error_helper.error_cont}")
                     error_helper.print_errors()
+                error_helper.reset()
+                print("--------------------------------------------")
 
             except EOFError:
                 print("EOFError")
