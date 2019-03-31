@@ -39,8 +39,6 @@ class OurTestCase(unittest.TestCase):
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
 
-    # DEBUG: This should pass
-    # override equals
     def test_tl_file_2_pass_estatutos_secuenciales(self):
         file_name = TESTING_PREFIX + "2_pass_estatutos_secuenciales.tl"
         expected_errors = 0
