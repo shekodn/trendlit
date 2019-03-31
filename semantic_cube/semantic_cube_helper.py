@@ -57,12 +57,6 @@ type_to_code = {
     "void": 7,
 }
 
-code_to_type = {
-    1: "bool",
-    2: "str",
-    3: "class",
-    4: "double",
-    5: "error",
-    6: "int",
-    7: "void",
-}
+code_to_type = {1: "bool", 2: "str", 3: "double", 5: "int"}
+
+type_to_init_value = {"bool": False, "str": "", "double": 0.0, "int": 0}
