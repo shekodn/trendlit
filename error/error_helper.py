@@ -42,3 +42,6 @@ class ErrorHelper(object):
             error_message = code_to_error.get(error.code)
 
             print(f"Error code: {error.code} -> {error_message} {error.custom_message}")
+
+    def reset(self):
+        self.__init__()
