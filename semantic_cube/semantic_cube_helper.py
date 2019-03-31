@@ -49,22 +49,14 @@ code_to_token = {
 
 type_to_code = {
     "bool": 1,
-    "char": 2,
+    "str": 2,
     "class": 3,
     "double": 4,
     "error": 5,
     "int": 6,
-    "object": 7,
-    "void": 8,
+    "void": 7,
 }
 
-code_to_type = {
-    1: "bool",
-    2: "char",
-    3: "class",
-    4: "double",
-    5: "error",
-    6: "int",
-    7: "object",
-    8: "void",
-}
+code_to_type = {1: "bool", 2: "str", 3: "double", 5: "int"}
+
+type_to_init_value = {"bool": False, "str": "", "double": 0.0, "int": 0}

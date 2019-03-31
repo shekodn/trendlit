@@ -1,17 +1,24 @@
 #!/usr/bin/python3
 
 from lexer.lexer import lexer, tokens
-
+from quadruple.quadruple_helper import *
+from quadruple.quadruple import *
+from semantic_cube.semantic_cube import Cube
+from semantic_cube.semantic_cube_helper import token_to_code, type_to_init_value
+from error.error_helper import ErrorHelper
 
 procedure_directory = {}  # [name] = {type, var_table}
 
 curr_scope = ""  # The current scope inside the program
 curr_type = ""  # The current type used (module or var)
 
+quad_helper = QuadrupleHelper()
+error_helper = ErrorHelper()
+semantic_cube = Cube()
+
 
 def p_program(p):
     """program : PROGRAM ID program1"""
-    print("it compiles !")
 
 
 def p_program1(p):
@@ -71,17 +78,17 @@ def p_declareBlock(p):
 
 
 def p_declare(p):
-    """declare : type ID snp_add_var
+    """declare : type ID snp_add_var snp_push_solitary_operand
         | type ID snp_add_var initializeSlices
         | initialize"""
 
 
 def p_initialize(p):
-    """initialize : type initialize1 initialize2"""
+    """initialize : type initialize1 snp_add_quad initialize2"""
 
 
 def p_initialize1(p):
-    """initialize1 : ID snp_add_var EQ value
+    """initialize1 : ID snp_add_var snp_push_pending_operand EQ snp_push_pending_token value
         | ID snp_add_var initializeSlices EQ constSlices"""
 
 
@@ -198,11 +205,11 @@ def p_value(p):
     """value : ID
         | valueSlice
         | call
-        | CTEI
-        | CTED
-        | CTESTR
-        | FALSE
-        | TRUE"""
+        | CTEI snp_save_type_int snp_push_pending_operand
+        | CTED snp_save_type_double snp_push_pending_operand
+        | CTESTR snp_save_type_str snp_push_pending_operand
+        | FALSE snp_save_type_bool snp_push_pending_operand
+        | TRUE snp_save_type_bool snp_push_pending_operand"""
 
 
 def p_valueSlice(p):
@@ -441,10 +448,8 @@ def p_snp_add_module(p):
     module_name = p[-1]  # get the last symbol read (left from this neural point)
     # Check if module already exists and add it to the directory
     if module_name in procedure_directory:
-        print(
-            "Module '%s' has already been declared" % module_name
-        )  # TODO : is this the best way to give an error?
-        exit(1)
+        error_message = f"Module {module_name} has already been declared"
+        error_helper.add_error(0, error_message)
     else:
         procedure_directory[module_name] = {
             "type": curr_type,
@@ -483,16 +488,99 @@ def p_snp_add_var(p):
     """snp_add_var : empty"""
     global procedure_directory
     var_name = p[-1]  # get the last symbol read (left from this neural point)
+    # For debbuging
+    # print(f"var_name {var_name}, current_scope, {curr_scope}")
+    # print(procedure_directory[curr_scope], "\n")
     # Check if var already exists and add it to the table in currect scope
-    if var_name in procedure_directory[curr_scope]["var_table"]:
-        print(
-            "Variable '%s' has already been declared" % var_name
-        )  # TODO : is this the best way to give an error?
-        exit(1)
+    if is_var_in_current_scope(var_name):
+        error_message = f"Variable {var_name} has already been declared"
+        error_helper.add_error(0, error_message)
     else:
         procedure_directory[curr_scope]["var_table"][var_name] = {
             "type": curr_type
         }  # TODO : add more info later on
+
+
+# --- MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION) ---
+def p_snp_push_pending_operand(p):
+    """snp_push_pending_operand : empty"""
+    operand_id = p[-2]
+    quad_helper.push_operand(operand_id)
+
+    if is_var_in_current_scope(operand_id):
+        type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
+        quad_helper.push_type(type)
+    else:
+        quad_helper.push_type(curr_type)
+    # For debbuging
+    # print("OPERAND", quad_helper.top_operand())
+    # print("TYPE", quad_helper.top_type())
+
+
+def p_snp_save_type_int(p):
+    """snp_save_type_int : empty"""
+    global curr_type
+    curr_type = "int"
+
+
+def p_snp_save_type_double(p):
+    """snp_save_type_double : empty"""
+    global curr_type
+    curr_type = "double"
+
+
+def p_snp_save_type_str(p):
+    """snp_save_type_str : empty"""
+    global curr_type
+    curr_type = "str"
+
+
+def p_snp_save_type_bool(p):
+    """snp_save_type_bool : empty"""
+    global curr_type
+    curr_type = "bool"
+
+
+def p_snp_push_pending_token(p):
+    """snp_push_pending_token : empty"""
+    token = p[-1]
+    quad_helper.push_token(token)
+
+
+def p_snp_push_solitary_operand(p):
+    """snp_push_solitary_operand : empty"""
+
+    """
+    Variables declared without a corresponding initialization are zero-valued.
+    For example, the zero value for an int is 0
+    """
+    operand_id = p[-2]
+    type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
+    default_initial_value = type_to_init_value.get(type)
+    operator = token_to_code.get("=")
+
+    quad_helper.add_quad(operator, default_initial_value, -1, operand_id)
+
+
+def p_snp_add_quad(p):
+    """snp_add_quad : empty"""
+    # TODO = add logic for precedence here?
+    right_operand = quad_helper.pop_operand()  # TODO: type int
+    right_operand_type = quad_helper.pop_type()
+    left_operand = quad_helper.pop_operand()  # TODO: type str
+    left_operand_type = quad_helper.pop_type()
+    token = quad_helper.pop_token()
+
+    if semantic_cube.is_in_cube(
+        right_operand_type, left_operand_type, token
+    ):  # TODO: revisar orden de operandos
+        quad_helper.add_quad(token, right_operand, -1, left_operand)
+    else:
+        error_helper.add_error(301)
+
+
+def is_var_in_current_scope(var_name):
+    return var_name in procedure_directory[curr_scope]["var_table"]
 
 
 import ply.yacc as yacc

@@ -1,25 +1,50 @@
+.DEFAULT_GOAL := help
+
 RUNTEST=python3 -m unittest
 RUNMAIN= python3 main.py
 
-ALL_TRENDLIT_MODULES=$(patsubst %.tl, %.tl, $(wildcard our_tests/test_*.tl))
-ALL_TEST_MODULES=$(patsubst %.py, %.py, $(wildcard tests/test_*.py))
+# All .py files inside each module name
+# https://www.gnu.org/software/make/manual/html_node/Wildcard-Function.html
+ALL_ERROR_MODULES=$(wildcard error/*.py)
+ALL_LEXER_MODULES=$(wildcard lexer/*.py)
+ALL_PARSER_MODULES=$(wildcard parser/*.py)
+ALL_QUADRUPLE_MODULES=$(wildcard quadruple/*.py)
+ALL_ROOT_MODULES=$(wildcard *.py)
+ALL_SEMANTIC_CUBE_MODULES=$(wildcard semantic_cube/*.py)
+ALL_STACK_MODULES=$(wildcard stack/*.py)
+ALL_TEST_MODULES=$(wildcard tests/test_*.py)
 
-# RUN 'make' before commiting to make sure anything broke during our changes
-default:
-	make run  && make test
+ALL_MODULES=$(ALL_ERROR_MODULES) $(ALL_LEXER_MODULES) $(ALL_PARSER_MODULES) $(ALL_QUADRUPLE_MODULES) $(ALL_ROOT_MODULES) $(ALL_SEMANTIC_CUBE_MODULES) $(ALL_STACK_MODULES) $(ALL_TEST_MODULES)
 
-# TODO Run all trendlit_tests inside OUR_TESTS directory. Currently it only runs the first argument
+# Path from all .tl files (inside our_tests)
+ALL_TL_FILES=$(wildcard our_tests/*.tl)
+# Names from all .tl files (inside our_tests)
+ALL_TL_FILENAMES=$(patsubst our_tests/%, %, $(wildcard our_tests/*.tl))
 
-run:
-	${RUNMAIN} our_tests/test_sample_code.tl
-	${RUNMAIN} our_tests/test_many_declared_local_vars.tl
-# ${RUNMAIN} ${ALL_TRENDLIT_MODULES} This should produce the tests for everything
-# TODO find a cleaner solution
-# % : test_%.tl
-# 	${RUNMAIN} test_$@
+ALL_OBJECT_FILES=$(wildcard object_code/.*.obj)
 
-# Runs all tests (unnitest framework) inside TESTS directory
-test:
+help: ##Show this help.
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+
+clean: ##Removes generated files (eg. .obj)
+	@echo 'Clean triggered'
+	@echo ${ALL_OBJECT_FILES}
+	@rm -r ${ALL_OBJECT_FILES}
+
+
+format: ##Applies BLACK to all py files in defined modules.
+	@echo 'Format triggered'
+	@black ${ALL_MODULES}
+
+##prepare: Applies FORMAT TEST.
+prepare: format test
+
+run: ##Run all .tl files
+	${RUNMAIN} ${ALL_TL_FILES}
+
+show: ##Show all .tl files
+	@echo ${ALL_TL_FILENAMES}
+
+test: ##Run all automated tests (unnitest framework).
+	@echo 'Test triggered'
 	${RUNTEST} ${ALL_TEST_MODULES}
-# % : test_%.py
-# 	${RUNTEST} test_$@
