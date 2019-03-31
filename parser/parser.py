@@ -4,6 +4,7 @@ from lexer.lexer import lexer, tokens
 from quadruple.quadruple_helper import *
 from quadruple.quadruple import *
 from semantic_cube.semantic_cube import Cube
+from semantic_cube.semantic_cube_helper import token_to_code, type_to_init_value
 from error.error_helper import ErrorHelper
 
 procedure_directory = {}  # [name] = {type, var_table}
@@ -77,7 +78,7 @@ def p_declareBlock(p):
 
 
 def p_declare(p):
-    """declare : type ID snp_add_var
+    """declare : type ID snp_add_var snp_push_solitary_operand
         | type ID snp_add_var initializeSlices
         | initialize"""
 
@@ -544,6 +545,21 @@ def p_snp_push_pending_token(p):
     """snp_push_pending_token : empty"""
     token = p[-1]
     quad_helper.push_token(token)
+
+
+def p_snp_push_solitary_operand(p):
+    """snp_push_solitary_operand : empty"""
+
+    """
+    Variables declared without a corresponding initialization are zero-valued.
+    For example, the zero value for an int is 0
+    """
+    operand_id = p[-2]
+    type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
+    default_initial_value = type_to_init_value.get(type)
+    operator = token_to_code.get("=")
+
+    quad_helper.add_quad(operator, default_initial_value, -1, operand_id)
 
 
 def p_snp_add_quad(p):
