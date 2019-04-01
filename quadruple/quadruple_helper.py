@@ -60,6 +60,9 @@ class QuadrupleHelper(object):
     def fill(self, quadruple_index, value):
         self.queue_quad[quadruple_index].operand3 = value
 
+    def reset(self):
+        self.__init__()
+
     def print_to_file(self, file_name):
         """
         Description: Generates .obj file
