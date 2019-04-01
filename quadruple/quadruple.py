@@ -7,7 +7,7 @@ class Quadruple(object):
 
     def __str__(self):
         # print (type(self.token), type(self.operand1), type(self.operand2), type(self.operand3))
-        return "%d %s %d %s" % (self.token, self.operand1, self.operand2, self.operand3)
+        return "%d %s %s %s" % (self.token, self.operand1, self.operand2, self.operand3)
 
     def is_quadruple(self):
         my_int = 666

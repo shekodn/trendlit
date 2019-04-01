@@ -13,6 +13,8 @@ program the_name_of_the_program
       # =, 0, _, main_four
       int main_four
 
+      main_three = 1 + 2
+
       main_three = main_one + main_two
       # +, main_one, main_two, t1
       # =, t1, _, main_three

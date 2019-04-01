@@ -84,7 +84,7 @@ def p_declare(p):
 
 
 def p_initialize(p):
-    """initialize : type initialize1 snp_add_quad initialize2"""
+    """initialize : type initialize1 snp_add_assignation_quad initialize2"""
 
 
 def p_initialize1(p):
@@ -167,27 +167,34 @@ def p_expression(p):
     """expression : exp expression1"""
 
 
+# ASSOCIATIVE => "or|and"
 def p_expression1(p):
     """expression1 : REL exp
         | ASSOCIATIVE exp
         | empty"""
 
 
+# Reference: Mathematical Expressions
+# snp_check_precedence_and_create_quadruple => STEP 4
 def p_exp(p):
-    """exp : term exp1"""
+    """exp : term snp_check_precedence_and_create_quadruple_for_sign exp1"""
 
 
+# Reference: Mathematical Expressions
+# snp_push_pending_token => STEP 2
 def p_exp1(p):
-    """exp1 : SIGN exp exp1
+    """exp1 : SIGN snp_push_pending_token exp exp1
         | empty"""
 
 
 def p_term(p):
-    """term : factor term1"""
+    """term : factor snp_check_precedence_and_create_quadruple_for_op term1"""
 
 
+# Reference: Mathematical Expressions
+# snp_push_pending_token => STEP 3
 def p_term1(p):
-    """term1 : OP term term1
+    """term1 : OP snp_push_pending_token term term1
         | empty"""
 
 
@@ -202,7 +209,7 @@ def p_factor1(p):
 
 
 def p_value(p):
-    """value : ID
+    """value : ID snp_push_pending_operand
         | valueSlice
         | call
         | CTEI snp_save_type_int snp_push_pending_operand
@@ -514,6 +521,7 @@ def p_snp_push_pending_operand(p):
         quad_helper.push_type(curr_type)
     # For debbuging
     # print("OPERAND", quad_helper.top_operand())
+    # # print("REAL TYPE", operand_id )
     # print("TYPE", quad_helper.top_type())
 
 
@@ -562,9 +570,13 @@ def p_snp_push_solitary_operand(p):
     quad_helper.add_quad(operator, default_initial_value, -1, operand_id)
 
 
-def p_snp_add_quad(p):
-    """snp_add_quad : empty"""
+def p_snp_add_assignation_quad(p):
+    """snp_add_assignation_quad : empty"""
     # TODO = add logic for precedence here?
+    add_quadruple_assignation()
+
+
+def add_quadruple_assignation():
     right_operand = quad_helper.pop_operand()  # TODO: type int
     right_operand_type = quad_helper.pop_type()
     left_operand = quad_helper.pop_operand()  # TODO: type str
@@ -573,8 +585,55 @@ def p_snp_add_quad(p):
 
     if semantic_cube.is_in_cube(
         right_operand_type, left_operand_type, token
-    ):  # TODO: revisar orden de operandos
-        quad_helper.add_quad(token, right_operand, -1, left_operand)
+    ):  # baila?
+        quad_helper.add_quad(token, right_operand, -1, left_operand)  # assignation
+    else:
+        error_helper.add_error(301)
+
+
+# sign => "+|-"
+def p_snp_check_precedence_and_create_quadruple_for_sign(p):
+    """snp_check_precedence_and_create_quadruple_for_sign : empty"""
+    if quad_helper.top_token() is (token_to_code.get("+") or token_to_code.get("-")):
+        add_quadruple_expression()
+
+
+# op => "*|/"
+def p_snp_check_precedence_and_create_quadruple_for_op(p):
+    """snp_check_precedence_and_create_quadruple_for_op : empty"""
+    if quad_helper.top_token() is (token_to_code.get("*") or token_to_code.get("/")):
+        add_quadruple_expression()
+
+
+# rel => "is|not|>=|<=|>|<"
+# TODO : here!
+# def p_snp_check_precedence_and_create_quadruple_for_rel(p):
+#     """snp_check_precedence_and_create_quadruple_for_rel : empty"""
+#     # if quad_helper.top_token() is (
+#     #     token_to_code.get("is")
+#     #     or token_to_code.get("not")
+#     #     or token_to_code.get(">=")
+#     #     or token_to_code.get("<=")
+#     #     or token_to_code.get(">")
+#     #     or token_to_code.get("<")
+#     # ):
+#     #     add_quadruple_expression()
+
+
+def add_quadruple_expression():
+    right_operand = quad_helper.pop_operand()  # TODO: type int
+    right_operand_type = quad_helper.pop_type()
+    # TODO: TESTTTT
+    left_operand = quad_helper.pop_operand()  # TODO: type str
+    left_operand_type = quad_helper.pop_type()
+    token = quad_helper.pop_token()
+
+    if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
+        print("RIGHT", right_operand, "TYPE", type(right_operand))
+        quad_helper.add_quad(
+            token, left_operand, right_operand, quad_helper.temp_cont
+        )  # assignation
+        quad_helper.temp_cont = quad_helper.temp_cont + 1
     else:
         error_helper.add_error(301)
 

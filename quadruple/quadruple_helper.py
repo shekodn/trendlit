@@ -19,6 +19,7 @@ class QuadrupleHelper(object):
         self.stack_types.push(999)
         self.queue_quad = []
         self.quad_cont = 0
+        self.temp_cont = 10000
 
     # token = Numeric code representation of an operator.
     # operand1 = Memory address of operand 1.
@@ -74,16 +75,16 @@ class QuadrupleHelper(object):
             # print(type(quad.operand1), quad.operand1)
             # print(type(quad.operand2), quad.operand2)
             # print(type(quad.operand3), quad.operand3)
-            # Uncomment for debbuging
-            # print(
-            #     "%d) %s, %s, %d, %s"
-            #     % (
-            #         cont,
-            #         code_to_token.get(quad.token),
-            #         quad.operand1,
-            #         quad.operand2,
-            #         quad.operand3,
-            #     )
-            # )
-            # cont = cont + 1
+            # # Uncomment for debbuging
+            print(
+                "%s %s, %s, %s, %s"
+                % (
+                    cont,
+                    code_to_token.get(quad.token),
+                    quad.operand1,
+                    quad.operand2,
+                    quad.operand3,
+                )
+            )
+            cont = cont + 1
         file.close()
