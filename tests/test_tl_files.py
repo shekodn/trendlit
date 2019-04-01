@@ -25,24 +25,31 @@ def aux_tl_file(file_name, expected_number_of_errors):
 
 
 class OurTestCase(unittest.TestCase):
-    def test_tl_file_0_pass_estatutos_secuenciales(self):
-        file_name = TESTING_PREFIX + "0_pass_estatutos_secuenciales.tl"
+
+    def test_0_0_pass_estatutos_secuenciales(self):
+        file_name = TESTING_PREFIX + "0_0_pass_estatutos_secuenciales.tl"
         expected_errors = 0
         result = aux_tl_file(file_name, expected_errors)
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
 
-    def test_tl_file_1_fail_estatutos_secuenciales(self):
-        file_name = TESTING_PREFIX + "1_fail_estatutos_secuenciales.tl"
+    def test_0_1_pass_estatutos_secuenciales(self):
+        file_name = TESTING_PREFIX + "0_1_pass_estatutos_secuenciales.tl"
+        expected_errors = 0
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
+
+    def test_1_0_fail_estatutos_secuenciales(self):
+        file_name = TESTING_PREFIX + "1_0_fail_estatutos_secuenciales.tl"
         expected_errors = 1
         result = aux_tl_file(file_name, expected_errors)
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
 
-    def test_tl_file_2_pass_estatutos_secuenciales(self):
-        file_name = TESTING_PREFIX + "2_pass_estatutos_secuenciales.tl"
+    def test_2_0_pass_estatutos_secuenciales(self):
+        file_name = TESTING_PREFIX + "2_0_pass_estatutos_secuenciales.tl"
         expected_errors = 0
         result = aux_tl_file(file_name, expected_errors)
         print(f"\nTESTING: {file_name}\n")
-        print(result, expected_errors)
         self.assertEqual(result, expected_errors)
