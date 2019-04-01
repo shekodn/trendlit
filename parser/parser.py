@@ -4,7 +4,7 @@ from lexer.lexer import lexer, tokens
 from quadruple.quadruple_helper import *
 from quadruple.quadruple import *
 from semantic_cube.semantic_cube import Cube
-from semantic_cube.semantic_cube_helper import token_to_code, type_to_init_value
+from semantic_cube.semantic_cube_helper import code_to_type, token_to_code, type_to_init_value
 from error.error_helper import ErrorHelper
 
 procedure_directory = {}  # [name] = {type, var_table}
@@ -146,7 +146,7 @@ def p_statement(p):
 
 
 def p_assignment(p):
-    """assignment : ID assignmentSlice EQ expression"""
+    """assignment : ID snp_push_pending_operand assignmentSlice EQ snp_push_pending_token expression snp_add_assignation_quad"""
 
 
 def p_assignmentSlice(p):
@@ -511,7 +511,8 @@ def p_snp_add_var(p):
 # --- MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION) ---
 def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
-    operand_id = p[-2]
+    # operand_id = p[-2]
+    operand_id = p[-2] if p[-2]!= None else p[-1]
     quad_helper.push_operand(operand_id)
 
     if is_var_in_current_scope(operand_id):
@@ -521,7 +522,6 @@ def p_snp_push_pending_operand(p):
         quad_helper.push_type(curr_type)
     # For debbuging
     # print("OPERAND", quad_helper.top_operand())
-    # # print("REAL TYPE", operand_id )
     # print("TYPE", quad_helper.top_type())
 
 
@@ -629,11 +629,13 @@ def add_quadruple_expression():
     token = quad_helper.pop_token()
 
     if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
-        print("RIGHT", right_operand, "TYPE", type(right_operand))
         quad_helper.add_quad(
             token, left_operand, right_operand, quad_helper.temp_cont
-        )  # assignation
-        quad_helper.temp_cont = quad_helper.temp_cont + 1
+        )  # expression
+        quad_helper.push_operand(quad_helper.temp_cont) #add the result (temp var) to the operand stack
+        result_type = semantic_cube.cube[right_operand_type, left_operand_type, token]
+        quad_helper.push_type(code_to_type.get(result_type)) #add the result type (temp var) to the type stack
+        quad_helper.temp_cont = quad_helper.temp_cont + 1 # increase counter for temp/result vars
     else:
         error_helper.add_error(301)
 

@@ -19,7 +19,7 @@ class QuadrupleHelper(object):
         self.stack_types.push(999)
         self.queue_quad = []
         self.quad_cont = 0
-        self.temp_cont = 10000
+        self.temp_cont = 10001
 
     # token = Numeric code representation of an operator.
     # operand1 = Memory address of operand 1.
