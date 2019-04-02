@@ -225,18 +225,18 @@ program the_name_of_the_program
                 th {"Year"}
                 th {"Model"}
             }
-            # embed my_embed_name {
-            #     int i
-            #     int j
-            #     loop (i not len(my_table)) {
-            #         tr {
-            #             loop (j not len(my_table[0])) {
-            #                 th { eval(my_table[i][j]) } # prints brand, year, model
-            #                 j = sum(j,1)
-            #             }
-            #         }
-            #         i = sum(i,1)
-            #     }
-            # }
+            embed my_embed_name {
+                int i
+                int j
+                loop (i not len(my_table)) {
+                    tr {}
+                        loop (j not len(my_table[0])) {
+                            th { eval(my_table[i][j]) } # prints brand, year, model
+                            j = sum(j,1)
+                        }
+                    }
+                    i = sum(i,1)
+                }
+            }
         }
     }
