@@ -12,8 +12,4 @@ program the_name_of_the_program
         D = 10 < 20
         C = A + B
         # D = A > B
-      # if(D) {
-      #     eval(D is 2)
-      # }
-
     }
