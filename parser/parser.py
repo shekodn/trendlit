@@ -4,7 +4,11 @@ from lexer.lexer import lexer, tokens
 from quadruple.quadruple_helper import *
 from quadruple.quadruple import *
 from semantic_cube.semantic_cube import Cube
-from semantic_cube.semantic_cube_helper import code_to_type, token_to_code, type_to_init_value
+from semantic_cube.semantic_cube_helper import (
+    code_to_type,
+    token_to_code,
+    type_to_init_value,
+)
 from error.error_helper import ErrorHelper
 
 procedure_directory = {}  # [name] = {type, var_table}
@@ -164,14 +168,15 @@ def p_assignmentSlice2D(p):
 
 
 def p_expression(p):
-    """expression : exp expression1"""
+    """expression : exp expression1 snp_check_precedence_and_create_quadruple_for_rel"""
 
 
 # ASSOCIATIVE => "or|and"
 def p_expression1(p):
-    """expression1 : REL exp
-        | ASSOCIATIVE exp
+    """expression1 : REL snp_push_pending_token exp
+        | ASSOCIATIVE snp_push_pending_token exp
         | empty"""
+    # TODO add single expression. Do we allow if(True) ???
 
 
 # Reference: Mathematical Expressions
@@ -233,7 +238,23 @@ def p_valueSlice2D(p):
 
 
 def p_condition(p):
-    """condition : IF OPAREN expression CPAREN simpleBlock condition1"""
+    """condition : IF OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock condition1"""
+
+# TODO snp for single IF
+def p_snp_conditional_statement_1(p):
+    """snp_conditional_statement_1 : empty"""
+    # expected_type = code_to_type.get(quad_helper.top_type())
+    top_oper = quad_helper.top_operand()
+    # top_token = quad_helper.top_token()
+    # expression = p[-3]
+    # print("expression ", p[-3], p[-2], p[-1])
+    print("snp_conditional_statement_1 ", top_oper)
+
+    # generateQuadForBinaryOperator(operatorList)
+
+    # type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
+    # print("snp_conditional_statement_1 type", type)
+
 
 
 def p_condition1(p):
@@ -582,10 +603,7 @@ def add_quadruple_assignation():
     left_operand = quad_helper.pop_operand()  # TODO: type str
     left_operand_type = quad_helper.pop_type()
     token = quad_helper.pop_token()
-
-    if semantic_cube.is_in_cube(
-        right_operand_type, left_operand_type, token
-    ):  # baila?
+    if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
         quad_helper.add_quad(token, right_operand, -1, left_operand)  # assignation
     else:
         error_helper.add_error(301)
@@ -607,17 +625,15 @@ def p_snp_check_precedence_and_create_quadruple_for_op(p):
 
 # rel => "is|not|>=|<=|>|<"
 # TODO : here!
-# def p_snp_check_precedence_and_create_quadruple_for_rel(p):
-#     """snp_check_precedence_and_create_quadruple_for_rel : empty"""
-#     # if quad_helper.top_token() is (
-#     #     token_to_code.get("is")
-#     #     or token_to_code.get("not")
-#     #     or token_to_code.get(">=")
-#     #     or token_to_code.get("<=")
-#     #     or token_to_code.get(">")
-#     #     or token_to_code.get("<")
-#     # ):
-#     #     add_quadruple_expression()
+def p_snp_check_precedence_and_create_quadruple_for_rel(p):
+    """snp_check_precedence_and_create_quadruple_for_rel : empty"""
+    # TODO refactor this IFs
+    if quad_helper.top_token() is (token_to_code.get(">") or token_to_code.get("<")):
+        add_quadruple_expression()
+    if quad_helper.top_token() is (token_to_code.get(">=") or token_to_code.get("<=")):
+        add_quadruple_expression()
+    if quad_helper.top_token() is (token_to_code.get("is") or token_to_code.get("not")):
+        add_quadruple_expression()
 
 
 def add_quadruple_expression():
@@ -629,13 +645,15 @@ def add_quadruple_expression():
     token = quad_helper.pop_token()
 
     if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
-        quad_helper.add_quad(
-            token, left_operand, right_operand, quad_helper.temp_cont
-        )  # expression
-        quad_helper.push_operand(quad_helper.temp_cont) #add the result (temp var) to the operand stack
+        quad_helper.add_quad(token, left_operand, right_operand, quad_helper.temp_cont)
+        # expression
+        quad_helper.push_operand(quad_helper.temp_cont)
+        # add the result (temp var) to the operand stack
         result_type = semantic_cube.cube[right_operand_type, left_operand_type, token]
-        quad_helper.push_type(code_to_type.get(result_type)) #add the result type (temp var) to the type stack
-        quad_helper.temp_cont = quad_helper.temp_cont + 1 # increase counter for temp/result vars
+        # add the result type (temp var) to the type stack
+        quad_helper.push_type(code_to_type.get(result_type))
+        # increase counter for temp/result vars
+        quad_helper.temp_cont = quad_helper.temp_cont + 1
     else:
         error_helper.add_error(301)
 
