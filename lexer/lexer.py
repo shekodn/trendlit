@@ -70,7 +70,7 @@ tokens = list(reserved_words.values()) + [
 ]
 
 t_SIGN = r"\+|-"
-t_OP = r"\*|/"
+t_OP = r"\*|/"  # * or /
 t_ASSOCIATIVE = r"or|and"
 t_EQ = r"="
 t_COMMA = r","

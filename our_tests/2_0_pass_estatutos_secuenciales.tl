@@ -13,5 +13,9 @@ program the_name_of_the_program
       bool F
       str G
       double H
-      eval(A * B + C)
+      eval(A)
+      # eval(A + B)
+      # eval(A + B)
+      eval(A > B)
+
     }

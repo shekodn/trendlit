@@ -27,6 +27,7 @@ if __name__ == "__main__":
                     print(f"Number of errors: {error_helper.error_cont}")
                     error_helper.print_errors()
                 error_helper.reset()
+                quad_helper.reset()
                 print("--------------------------------------------")
 
             except EOFError:

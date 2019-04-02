@@ -4,7 +4,11 @@ from lexer.lexer import lexer, tokens
 from quadruple.quadruple_helper import *
 from quadruple.quadruple import *
 from semantic_cube.semantic_cube import Cube
-from semantic_cube.semantic_cube_helper import token_to_code, type_to_init_value
+from semantic_cube.semantic_cube_helper import (
+    code_to_type,
+    token_to_code,
+    type_to_init_value,
+)
 from error.error_helper import ErrorHelper
 
 procedure_directory = {}  # [name] = {type, var_table}
@@ -46,7 +50,7 @@ def p_block1(p):
 
 
 def p_simpleBlock(p):
-    """simpleBlock : OBRACE simpleBlock1 CBRACE"""
+    """simpleBlock : OBRACE simpleBlock1 CBRACE snp_conditional_statement_2"""
 
 
 def p_simpleBlock1(p):
@@ -84,7 +88,7 @@ def p_declare(p):
 
 
 def p_initialize(p):
-    """initialize : type initialize1 snp_add_quad initialize2"""
+    """initialize : type initialize1 snp_add_assignation_quad initialize2"""
 
 
 def p_initialize1(p):
@@ -146,7 +150,7 @@ def p_statement(p):
 
 
 def p_assignment(p):
-    """assignment : ID assignmentSlice EQ expression"""
+    """assignment : ID snp_push_pending_operand assignmentSlice EQ snp_push_pending_token expression snp_add_assignation_quad"""
 
 
 def p_assignmentSlice(p):
@@ -164,30 +168,38 @@ def p_assignmentSlice2D(p):
 
 
 def p_expression(p):
-    """expression : exp expression1"""
+    """expression : exp expression1 snp_check_precedence_and_create_quadruple_for_rel"""
 
 
+# ASSOCIATIVE => "or|and"
 def p_expression1(p):
-    """expression1 : REL exp
-        | ASSOCIATIVE exp
+    """expression1 : REL snp_push_pending_token exp
+        | ASSOCIATIVE snp_push_pending_token exp
         | empty"""
+    # TODO add single expression. Do we allow if(True) ???
 
 
+# Reference: Mathematical Expressions
+# snp_check_precedence_and_create_quadruple => STEP 4
 def p_exp(p):
-    """exp : term exp1"""
+    """exp : term snp_check_precedence_and_create_quadruple_for_sign exp1"""
 
 
+# Reference: Mathematical Expressions
+# snp_push_pending_token => STEP 2
 def p_exp1(p):
-    """exp1 : SIGN exp exp1
+    """exp1 : SIGN snp_push_pending_token exp exp1
         | empty"""
 
 
 def p_term(p):
-    """term : factor term1"""
+    """term : factor snp_check_precedence_and_create_quadruple_for_op term1"""
 
 
+# Reference: Mathematical Expressions
+# snp_push_pending_token => STEP 3
 def p_term1(p):
-    """term1 : OP term term1
+    """term1 : OP snp_push_pending_token term term1
         | empty"""
 
 
@@ -202,7 +214,7 @@ def p_factor1(p):
 
 
 def p_value(p):
-    """value : ID
+    """value : ID snp_push_pending_operand
         | valueSlice
         | call
         | CTEI snp_save_type_int snp_push_pending_operand
@@ -226,7 +238,7 @@ def p_valueSlice2D(p):
 
 
 def p_condition(p):
-    """condition : IF OPAREN expression CPAREN simpleBlock condition1"""
+    """condition : IF OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock condition1"""
 
 
 def p_condition1(p):
@@ -504,7 +516,13 @@ def p_snp_add_var(p):
 # --- MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION) ---
 def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
-    operand_id = p[-2]
+
+    # TODO question for Ana Karen
+    # print("-2 ",p[-2], "-1 ", p[-1])
+    if (p[-2] != None) and (p[-2] != "("):
+        operand_id = p[-2]
+    else:
+        operand_id = p[-1]
     quad_helper.push_operand(operand_id)
 
     if is_var_in_current_scope(operand_id):
@@ -562,21 +580,105 @@ def p_snp_push_solitary_operand(p):
     quad_helper.add_quad(operator, default_initial_value, -1, operand_id)
 
 
-def p_snp_add_quad(p):
-    """snp_add_quad : empty"""
+def p_snp_add_assignation_quad(p):
+    """snp_add_assignation_quad : empty"""
     # TODO = add logic for precedence here?
+    add_quadruple_assignation()
+
+
+def add_quadruple_assignation():
     right_operand = quad_helper.pop_operand()  # TODO: type int
     right_operand_type = quad_helper.pop_type()
     left_operand = quad_helper.pop_operand()  # TODO: type str
     left_operand_type = quad_helper.pop_type()
     token = quad_helper.pop_token()
-
-    if semantic_cube.is_in_cube(
-        right_operand_type, left_operand_type, token
-    ):  # TODO: revisar orden de operandos
-        quad_helper.add_quad(token, right_operand, -1, left_operand)
+    if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
+        quad_helper.add_quad(token, right_operand, -1, left_operand)  # assignation
     else:
         error_helper.add_error(301)
+
+
+# sign => "+|-"
+def p_snp_check_precedence_and_create_quadruple_for_sign(p):
+    """snp_check_precedence_and_create_quadruple_for_sign : empty"""
+    if quad_helper.top_token() is (token_to_code.get("+") or token_to_code.get("-")):
+        add_quadruple_expression()
+
+
+# op => "*|/"
+def p_snp_check_precedence_and_create_quadruple_for_op(p):
+    """snp_check_precedence_and_create_quadruple_for_op : empty"""
+    if quad_helper.top_token() is (token_to_code.get("*") or token_to_code.get("/")):
+        add_quadruple_expression()
+
+
+# rel => "is|not|>=|<=|>|<"
+# TODO : here!
+def p_snp_check_precedence_and_create_quadruple_for_rel(p):
+    """snp_check_precedence_and_create_quadruple_for_rel : empty"""
+    # TODO refactor this IFs
+    if quad_helper.top_token() is (token_to_code.get(">") or token_to_code.get("<")):
+        add_quadruple_expression()
+    if quad_helper.top_token() is (token_to_code.get(">=") or token_to_code.get("<=")):
+        add_quadruple_expression()
+    if quad_helper.top_token() is (token_to_code.get("is") or token_to_code.get("not")):
+        add_quadruple_expression()
+
+
+def add_quadruple_expression():
+    right_operand = quad_helper.pop_operand()  # TODO: type int
+    right_operand_type = quad_helper.pop_type()
+    # TODO: TESTTTT
+    left_operand = quad_helper.pop_operand()  # TODO: type str
+    left_operand_type = quad_helper.pop_type()
+    token = quad_helper.pop_token()
+
+    # debbuging HERE
+    # print(right_operand, left_operand, token)
+    if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
+        quad_helper.add_quad(token, left_operand, right_operand, quad_helper.temp_cont)
+        # expression
+        quad_helper.push_operand(quad_helper.temp_cont)
+        # add the result (temp var) to the operand stack
+        result_type = semantic_cube.cube[right_operand_type, left_operand_type, token]
+        # add the result type (temp var) to the type stack
+        quad_helper.push_type(code_to_type.get(result_type))
+        # increase counter for temp/result vars
+        quad_helper.temp_cont = quad_helper.temp_cont + 1
+    else:
+        error_helper.add_error(301)
+
+
+# --- NON-LINEAR STATEMENTS (INTERMEDIATE REPRESENTATION) ---
+
+# --- CONDITIONALS ---
+
+# Actions to produce intermediate representation for non-linear statements using quadruples
+# snp for single IF
+def p_snp_conditional_statement_1(p):
+    """snp_conditional_statement_1 : empty"""
+    top_type_code = quad_helper.pop_type()
+
+    # Check if top_oper's type is type bool(1)
+    if code_to_type.get(top_type_code) is "bool":
+        result = quad_helper.pop_operand()
+        # debbuging
+        # print("result", result)
+        quad_helper.add_quad(token_to_code.get("GOTOF"), result, -1, "pending")
+        quad_helper.push_jump(quad_helper.quad_cont - 1)
+        # debbuging
+        # print("Jump", quad_helper.quad_cont)
+    else:
+        error_helper.add_error(
+            0, "Type Missmatch: Expression is not a bool"
+        )  # TODO define code and custom error message
+
+
+def p_snp_conditional_statement_2(p):
+    """snp_conditional_statement_2 : empty"""
+    end = quad_helper.pop_jump()
+    cont = quad_helper.quad_cont
+    quad_helper.fill(end, cont)
 
 
 def is_var_in_current_scope(var_name):

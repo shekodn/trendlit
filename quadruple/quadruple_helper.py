@@ -14,11 +14,14 @@ class QuadrupleHelper(object):
         self.stack_tokens = Stack()
         self.stack_operands = Stack()
         self.stack_types = Stack()
+        self.stack_jumps = Stack()
         self.stack_tokens.push(999)
         self.stack_operands.push(999)
         self.stack_types.push(999)
+        self.stack_jumps.push(999)
         self.queue_quad = []
         self.quad_cont = 0
+        self.temp_cont = 10001
 
     # token = Numeric code representation of an operator.
     # operand1 = Memory address of operand 1.
@@ -56,8 +59,20 @@ class QuadrupleHelper(object):
     def top_type(self):
         return self.stack_types.top()
 
+    def push_jump(self, jump):
+        self.stack_jumps.push(jump)
+
+    def pop_jump(self):
+        return self.stack_jumps.pop()
+
+    def top_jump(self):
+        return self.stack_jumps.top()
+
     def fill(self, quadruple_index, value):
         self.queue_quad[quadruple_index].operand3 = value
+
+    def reset(self):
+        self.__init__()
 
     def print_to_file(self, file_name):
         """
@@ -74,16 +89,16 @@ class QuadrupleHelper(object):
             # print(type(quad.operand1), quad.operand1)
             # print(type(quad.operand2), quad.operand2)
             # print(type(quad.operand3), quad.operand3)
-            # Uncomment for debbuging
-            # print(
-            #     "%d) %s, %s, %d, %s"
-            #     % (
-            #         cont,
-            #         code_to_token.get(quad.token),
-            #         quad.operand1,
-            #         quad.operand2,
-            #         quad.operand3,
-            #     )
-            # )
-            # cont = cont + 1
+            # # Uncomment for debbuging
+            print(
+                "%s %s, %s, %s, %s"
+                % (
+                    cont,
+                    code_to_token.get(quad.token),
+                    quad.operand1,
+                    quad.operand2,
+                    quad.operand3,
+                )
+            )
+            cont = cont + 1
         file.close()
