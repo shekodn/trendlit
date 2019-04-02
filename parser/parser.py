@@ -242,7 +242,7 @@ def p_condition(p):
 
 
 def p_condition1(p):
-    """condition1 : ELSE simpleBlock
+    """condition1 : ELSE snp_conditional_statement_3 simpleBlock
         | empty"""
 
 
@@ -679,6 +679,17 @@ def p_snp_conditional_statement_2(p):
     end = quad_helper.pop_jump()
     cont = quad_helper.quad_cont
     quad_helper.fill(end, cont)
+
+
+def p_snp_conditional_statement_3(p):
+    """snp_conditional_statement_3 : empty"""
+    quad_helper.add_quad(token_to_code.get("GOTO"), -1, -1, "pending")
+    count = quad_helper.quad_cont
+    false = quad_helper.push_jump(count - 1)
+    # debbuging
+    # print(count, false)
+    # print(quad_helper.top_jump())
+    # quad_helper.fill(false, count)
 
 
 def is_var_in_current_scope(var_name):
