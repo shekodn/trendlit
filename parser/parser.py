@@ -240,21 +240,24 @@ def p_valueSlice2D(p):
 def p_condition(p):
     """condition : IF OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock condition1"""
 
-# TODO snp for single IF
+
+# snp for single IF
 def p_snp_conditional_statement_1(p):
     """snp_conditional_statement_1 : empty"""
-    # expected_type = code_to_type.get(quad_helper.top_type())
-    top_oper = quad_helper.top_operand()
-    # top_token = quad_helper.top_token()
-    # expression = p[-3]
-    # print("expression ", p[-3], p[-2], p[-1])
-    print("snp_conditional_statement_1 ", top_oper)
+    top_type_code = quad_helper.pop_type()
 
-    # generateQuadForBinaryOperator(operatorList)
-
-    # type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
-    # print("snp_conditional_statement_1 type", type)
-
+    # Check if top_oper's type is type bool(1)
+    if code_to_type.get(top_type_code) == "bool":
+        result = quad_helper.pop_operand()
+        print("result", result)
+        quad_helper.add_quad(token_to_code.get("GOTOF"), result, -1, "will_be_filled")
+        quad_helper.push_jump(quad_helper.quad_cont)
+        # debbuging
+        # print("Jump", quad_helper.quad_cont)
+    else:
+        error_helper.add_error(
+            0, "Type Missmatch: Expression is not a bool"
+        )  # TODO define code and custom error message
 
 
 def p_condition1(p):
@@ -532,8 +535,13 @@ def p_snp_add_var(p):
 # --- MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION) ---
 def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
-    # operand_id = p[-2]
-    operand_id = p[-2] if p[-2]!= None else p[-1]
+
+    # TODO question for Ana Karen
+    # print("-2 ",p[-2], "-1 ", p[-1])
+    if (p[-2] != None) and (p[-2] != "("):
+        operand_id = p[-2]
+    else:
+        operand_id = p[-1]
     quad_helper.push_operand(operand_id)
 
     if is_var_in_current_scope(operand_id):
@@ -644,6 +652,8 @@ def add_quadruple_expression():
     left_operand_type = quad_helper.pop_type()
     token = quad_helper.pop_token()
 
+    # debbuging HERE
+    # print(right_operand, left_operand, token)
     if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
         quad_helper.add_quad(token, left_operand, right_operand, quad_helper.temp_cont)
         # expression
