@@ -47,15 +47,8 @@ code_to_token = {
     403: "GOTOT",
 }
 
-type_to_code = {
-    "bool": 1,
-    "str": 2,
-    "double": 3,
-    "error": 4,
-    "int": 5,
-    "void": 6,
-}
+type_to_code = {"bool": 1, "str": 2, "double": 3, "error": 4, "int": 5, "void": 6}
 
-code_to_type = {1: "bool", 2: "str", 3: "double", 4: "error", 5: "int", 6:"void"}
+code_to_type = {1: "bool", 2: "str", 3: "double", 4: "error", 5: "int", 6: "void"}
 
 type_to_init_value = {"bool": False, "str": "", "double": 0.0, "int": 0}
