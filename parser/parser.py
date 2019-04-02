@@ -50,7 +50,7 @@ def p_block1(p):
 
 
 def p_simpleBlock(p):
-    """simpleBlock : OBRACE simpleBlock1 CBRACE"""
+    """simpleBlock : OBRACE simpleBlock1 CBRACE snp_conditional_statement_2"""
 
 
 def p_simpleBlock1(p):
@@ -239,25 +239,6 @@ def p_valueSlice2D(p):
 
 def p_condition(p):
     """condition : IF OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock condition1"""
-
-
-# snp for single IF
-def p_snp_conditional_statement_1(p):
-    """snp_conditional_statement_1 : empty"""
-    top_type_code = quad_helper.pop_type()
-
-    # Check if top_oper's type is type bool(1)
-    if code_to_type.get(top_type_code) == "bool":
-        result = quad_helper.pop_operand()
-        print("result", result)
-        quad_helper.add_quad(token_to_code.get("GOTOF"), result, -1, "will_be_filled")
-        quad_helper.push_jump(quad_helper.quad_cont)
-        # debbuging
-        # print("Jump", quad_helper.quad_cont)
-    else:
-        error_helper.add_error(
-            0, "Type Missmatch: Expression is not a bool"
-        )  # TODO define code and custom error message
 
 
 def p_condition1(p):
@@ -666,6 +647,38 @@ def add_quadruple_expression():
         quad_helper.temp_cont = quad_helper.temp_cont + 1
     else:
         error_helper.add_error(301)
+
+
+# --- NON-LINEAR STATEMENTS (INTERMEDIATE REPRESENTATION) ---
+
+# --- CONDITIONALS ---
+
+# Actions to produce intermediate representation for non-linear statements using quadruples
+# snp for single IF
+def p_snp_conditional_statement_1(p):
+    """snp_conditional_statement_1 : empty"""
+    top_type_code = quad_helper.pop_type()
+
+    # Check if top_oper's type is type bool(1)
+    if code_to_type.get(top_type_code) is "bool":
+        result = quad_helper.pop_operand()
+        # debbuging
+        # print("result", result)
+        quad_helper.add_quad(token_to_code.get("GOTOF"), result, -1, "pending")
+        quad_helper.push_jump(quad_helper.quad_cont - 1)
+        # debbuging
+        # print("Jump", quad_helper.quad_cont)
+    else:
+        error_helper.add_error(
+            0, "Type Missmatch: Expression is not a bool"
+        )  # TODO define code and custom error message
+
+
+def p_snp_conditional_statement_2(p):
+    """snp_conditional_statement_2 : empty"""
+    end = quad_helper.pop_jump()
+    cont = quad_helper.quad_cont
+    quad_helper.fill(end, cont)
 
 
 def is_var_in_current_scope(var_name):

@@ -59,3 +59,17 @@ class OurTestCase(unittest.TestCase):
         result = aux_tl_file(file_name, expected_errors)
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
+
+    def test_2_2_pass_estatutos_secuenciales_eval(self):
+        file_name = TESTING_PREFIX + "2_2_pass_estatutos_secuenciales_eval.tl"
+        expected_errors = 0
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
+
+    def test_3_0_pass_estatutos_condicionales_if(self):
+        file_name = TESTING_PREFIX + "3_0_pass_estatutos_condicionales_if.tl"
+        expected_errors = 0
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
