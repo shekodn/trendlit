@@ -1,4 +1,9 @@
 # Example in Non-linear statements (Intermediate representation)
+# + 1  2 1001
+# > 1001  4 1002
+# + 2 3 1003
+# > 1 2 1004
+# GOTOF
 program the_name_of_the_program
 
     script {
@@ -16,24 +21,5 @@ program the_name_of_the_program
           eval(2 + 3)
       }
      eval(2 + 1)
-
-    # TODO - ELDAs example
-      # if (A + B > D) {
-        # if (A < B) {
-        #    B = B + D
-        # }
-        # else {
-        #    C = A + B
-        #  }
-      #   eval(2 + 4)
-      #
-      #   # A = B + C
-      #
-      #  }
-      # # else {
-      # #       A = B + C
-      # #   }
-      #  D = B + A
-
 
     } # closes script
