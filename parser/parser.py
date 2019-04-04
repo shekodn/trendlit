@@ -50,7 +50,7 @@ def p_block1(p):
 
 
 def p_simpleBlock(p):
-    """simpleBlock : OBRACE simpleBlock1 CBRACE snp_conditional_statement_2"""
+    """simpleBlock : OBRACE simpleBlock1 CBRACE"""
 
 
 def p_simpleBlock1(p):
@@ -238,7 +238,7 @@ def p_valueSlice2D(p):
 
 
 def p_condition(p):
-    """condition : IF OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock condition1"""
+    """condition : IF OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock condition1 snp_conditional_statement_2"""
 
 
 def p_condition1(p):
@@ -684,12 +684,13 @@ def p_snp_conditional_statement_2(p):
 def p_snp_conditional_statement_3(p):
     """snp_conditional_statement_3 : empty"""
     quad_helper.add_quad(token_to_code.get("GOTO"), -1, -1, "pending")
+    false = quad_helper.pop_jump()
     count = quad_helper.quad_cont
-    false = quad_helper.push_jump(count - 1)
+    quad_helper.push_jump(count - 1)
     # debbuging
-    # print(count, false)
+    # print(count-1, false)
     # print(quad_helper.top_jump())
-    # quad_helper.fill(false, count)
+    quad_helper.fill(false, count)
 
 
 def is_var_in_current_scope(var_name):
