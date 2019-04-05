@@ -20,7 +20,8 @@ token_to_code = {
     "GOTO": 401,
     "GOTOF": 402,
     "GOTOT": 403,
-    "(": 1001
+    "false_bottom" : 999,
+    "(": 1001,
 }
 
 
@@ -46,6 +47,10 @@ code_to_token = {
     401: "GOTO",
     402: "GOTOF",
     403: "GOTOT",
+    999 : "false_bottom",
+    1001 : "(",
+
+
 }
 
 type_to_code = {"bool": 1, "str": 2, "double": 3, "error": 4, "int": 5, "void": 6}

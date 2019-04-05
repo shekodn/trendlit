@@ -204,7 +204,7 @@ def p_term1(p):
 
 
 def p_factor(p):
-    """factor : OPAREN expression CPAREN
+    """factor : OPAREN snp_push_pending_token expression CPAREN snp_clean_stack_until_false_bottom
         | factor1"""
 
 
@@ -519,11 +519,13 @@ def p_snp_push_pending_operand(p):
 
     # TODO question for Ana Karen
     # print("-2 ",p[-2], "-1 ", p[-1])
-    if (p[-2] != None) and (p[-2] != "("):
+    if (p[-2] != None):
+    # and (p[-2] != "("):
         operand_id = p[-2]
     else:
         operand_id = p[-1]
     quad_helper.push_operand(operand_id)
+
 
     if is_var_in_current_scope(operand_id):
         type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
@@ -562,6 +564,7 @@ def p_snp_save_type_bool(p):
 def p_snp_push_pending_token(p):
     """snp_push_pending_token : empty"""
     token = p[-1]
+    print("pushed token", token)
     quad_helper.push_token(token)
 
 
@@ -601,28 +604,67 @@ def add_quadruple_assignation():
 # sign => "+|-"
 def p_snp_check_precedence_and_create_quadruple_for_sign(p):
     """snp_check_precedence_and_create_quadruple_for_sign : empty"""
-    if quad_helper.top_token() is (token_to_code.get("+") or token_to_code.get("-")):
+    top = quad_helper.top_token()
+    add = token_to_code.get("+")
+    sub = token_to_code.get("-")
+    is_sign = (top is add) or (top is sub)
+    if is_sign:
         add_quadruple_expression()
 
 
 # op => "*|/"
 def p_snp_check_precedence_and_create_quadruple_for_op(p):
     """snp_check_precedence_and_create_quadruple_for_op : empty"""
-    if quad_helper.top_token() is (token_to_code.get("*") or token_to_code.get("/")):
+
+    top = quad_helper.top_token()
+    division = token_to_code.get("/")
+    product = token_to_code.get("*")
+    is_op = (top is division) or (top is product)
+
+    if is_op:
         add_quadruple_expression()
 
 
 # rel => "is|not|>=|<=|>|<"
-# TODO : here!
 def p_snp_check_precedence_and_create_quadruple_for_rel(p):
     """snp_check_precedence_and_create_quadruple_for_rel : empty"""
-    # TODO refactor this IFs
-    if quad_helper.top_token() is (token_to_code.get(">") or token_to_code.get("<")):
+
+    top = quad_helper.top_token()
+    eq = token_to_code.get("is")
+    noteq = token_to_code.get("not")
+    get = token_to_code.get(">=")
+    let = token_to_code.get("<=")
+    gt = token_to_code.get(">")
+    lt = token_to_code.get("<")
+
+    is_rel = (
+        (top is eq)
+        or (top is noteq)
+        or (top is get)
+        or (top is let)
+        or (top is gt)
+        or (top is lt)
+    )
+
+    if is_rel:
         add_quadruple_expression()
-    if quad_helper.top_token() is (token_to_code.get(">=") or token_to_code.get("<=")):
-        add_quadruple_expression()
-    if quad_helper.top_token() is (token_to_code.get("is") or token_to_code.get("not")):
-        add_quadruple_expression()
+
+def p_snp_clean_stack_until_false_bottom(p):
+    """snp_clean_stack_until_false_bottom : empty"""
+    # print("snp_clean_stack_until_false_bottom", quad_helper.stack_tokens.size())
+    code_left_parenthesis = token_to_code.get("(")
+    print(quad_helper.top_token(), code_left_parenthesis)
+
+    # print("false_bottom: ", quad_helper.top_token())
+    false_bottom = token_to_code.get("false_bottom")
+    print("false_bottom", false_bottom)
+    while ((quad_helper.top_token() != code_left_parenthesis) or (quad_helper.top_token() != 999)):
+    # while quad_helper.top_token() != 999:
+
+        # print("popped: ", code_to_token.get(quad_helper.pop_token()))
+        print("popped: ", quad_helper.pop_token())
+        print("remaining tokens ", quad_helper.stack_tokens.size())
+
 
 
 def add_quadruple_expression():
@@ -631,7 +673,14 @@ def add_quadruple_expression():
     # TODO: TESTTTT
     left_operand = quad_helper.pop_operand()  # TODO: type str
     left_operand_type = quad_helper.pop_type()
-    token = quad_helper.pop_token()
+    false_bottom = token_to_code.get("(")
+    if quad_helper.top_token() is false_bottom:
+        print("false bottom:", quad_helper.top_token())
+        quad_helper.pop_token()
+        token = quad_helper.pop_token()
+    else:
+        token = quad_helper.pop_token()
+    # token = quad_helper.pop_token()
 
     # debbuging HERE
     # print(right_operand, left_operand, token)
