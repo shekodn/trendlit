@@ -633,7 +633,6 @@ def p_snp_add_assignation_quad(p):
     add_quadruple_assignation()
 
 
-
 def add_quadruple_assignation():
     right_operand = quad_helper.pop_operand()  # TODO: type int
     right_operand_type = quad_helper.pop_type()
@@ -787,7 +786,10 @@ def p_snp_conditional_statement_3(p):
     # print(count-1, false)
     # print(quad_helper.top_jump())
     quad_helper.fill(false, count)
+
+
 # LOOPS
+
 
 def p_snp_while_1(p):
     """snp_while_1 : empty"""
@@ -797,11 +799,12 @@ def p_snp_while_1(p):
 
 def p_snp_while_3(p):
     """snp_while_3 : empty"""
-    end  = quad_helper.pop_jump()
+    end = quad_helper.pop_jump()
     ret = quad_helper.pop_jump()
     quad_helper.add_quad(token_to_code.get("GOTO"), -1, -1, ret)
     count = quad_helper.quad_cont
     quad_helper.fill(end, count)
+
 
 def is_var_in_current_scope(var_name):
     return var_name in procedure_directory[curr_scope]["var_table"]
