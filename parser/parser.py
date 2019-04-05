@@ -518,14 +518,23 @@ def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
 
     # TODO question for Ana Karen
+    # FIXME
+    # Separate this function to avoid confusion
     # print("-2 ",p[-2], "-1 ", p[-1])
-    if (p[-2] != None):
-    # and (p[-2] != "("):
+    if p[-2] != None:
         operand_id = p[-2]
+        operand_id_2 = p[-1]
+        quad_helper.push_operand(operand_id)
+        quad_helper.push_operand(operand_id_2)
+        # debbuging
+        # print("if operand_id: ", operand_id)
+        # print("if operand_id_2: ", operand_id_2)
+        # print("p-2", p[-2], "p-1", p[-1])
     else:
         operand_id = p[-1]
-    quad_helper.push_operand(operand_id)
-
+        quad_helper.push_operand(operand_id)
+        # debbuging
+        # print("else operand_id: ", operand_id)
 
     if is_var_in_current_scope(operand_id):
         type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
@@ -535,6 +544,34 @@ def p_snp_push_pending_operand(p):
     # For debbuging
     # print("OPERAND", quad_helper.top_operand())
     # print("TYPE", quad_helper.top_type())
+
+
+# def p_snp_push_pending_operand_1(p):
+#     """snp_push_pending_operand_1 : empty"""
+#     print("snp_push_pending_operand_1")
+#     # TODO question for Ana Karen
+#     # FIXME
+#     # Separate this function to avoid confusion
+#     if p[-2] != None:
+#         operand_id = p[-2]
+#         # debbuging
+#         print("if operand_id: ", operand_id)
+#
+#     else:
+#         operand_id = p[-1]
+#         print("else operand_id: ", operand_id)
+#     quad_helper.push_operand(operand_id)
+#         # debbuging
+#         # print("else operand_id: ", operand_id)
+#
+#     if is_var_in_current_scope(operand_id):
+#         type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
+#         quad_helper.push_type(type)
+#     else:
+#         quad_helper.push_type(curr_type)
+#     # For debbuging
+#     # print("OPERAND", quad_helper.top_operand())
+#     # print("TYPE", quad_helper.top_type())
 
 
 def p_snp_save_type_int(p):
@@ -564,7 +601,8 @@ def p_snp_save_type_bool(p):
 def p_snp_push_pending_token(p):
     """snp_push_pending_token : empty"""
     token = p[-1]
-    print("pushed token", token)
+    # debbuging
+    # print("pushed token", token)
     quad_helper.push_token(token)
 
 
@@ -595,6 +633,17 @@ def add_quadruple_assignation():
     left_operand = quad_helper.pop_operand()  # TODO: type str
     left_operand_type = quad_helper.pop_type()
     token = quad_helper.pop_token()
+
+    if left_operand is None:
+        # print("LEFT IS NONE", left_operand)
+        left_operand = quad_helper.pop_operand()
+        # print("LEFT NOT NONE", left_operand)
+    if right_operand is None:
+        # print("RIGHT IS NONE", right_operand)
+        right_operand = quad_helper.pop_operand()
+        # print("RIGHT NOT NONE", right_operand)
+        # print("add_quadruple_assignation pop:  ", left_operand_type)
+
     if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
         quad_helper.add_quad(token, right_operand, -1, left_operand)  # assignation
     else:
@@ -649,22 +698,11 @@ def p_snp_check_precedence_and_create_quadruple_for_rel(p):
     if is_rel:
         add_quadruple_expression()
 
+
 def p_snp_clean_stack_until_false_bottom(p):
     """snp_clean_stack_until_false_bottom : empty"""
-    # print("snp_clean_stack_until_false_bottom", quad_helper.stack_tokens.size())
-    code_left_parenthesis = token_to_code.get("(")
-    print(quad_helper.top_token(), code_left_parenthesis)
-
-    # print("false_bottom: ", quad_helper.top_token())
-    false_bottom = token_to_code.get("false_bottom")
-    print("false_bottom", false_bottom)
-    while ((quad_helper.top_token() != code_left_parenthesis) or (quad_helper.top_token() != 999)):
-    # while quad_helper.top_token() != 999:
-
-        # print("popped: ", code_to_token.get(quad_helper.pop_token()))
-        print("popped: ", quad_helper.pop_token())
-        print("remaining tokens ", quad_helper.stack_tokens.size())
-
+    # CPAREN ", "stack should pop until finding ')' or '(' ")
+    quad_helper.pop_token()
 
 
 def add_quadruple_expression():
@@ -674,6 +712,8 @@ def add_quadruple_expression():
     left_operand = quad_helper.pop_operand()  # TODO: type str
     left_operand_type = quad_helper.pop_type()
     false_bottom = token_to_code.get("(")
+    # debbuging
+    # print("quad_helper.top_token()", quad_helper.top_token())
     if quad_helper.top_token() is false_bottom:
         print("false bottom:", quad_helper.top_token())
         quad_helper.pop_token()
