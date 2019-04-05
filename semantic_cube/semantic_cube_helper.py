@@ -20,6 +20,7 @@ token_to_code = {
     "GOTO": 401,
     "GOTOF": 402,
     "GOTOT": 403,
+    "(": 1001
 }
 
 
