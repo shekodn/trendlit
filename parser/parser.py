@@ -623,8 +623,15 @@ def p_snp_push_solitary_operand(p):
 
 def p_snp_add_assignation_quad(p):
     """snp_add_assignation_quad : empty"""
-    # TODO = add logic for precedence here?
+    # FIXME
+    # This conditional fixes part of the issue between making sure expressions work and
+    # the 'None' appearing as opperands
+    # @Ana Karen
+    while quad_helper.top_operand() is None:
+        quad_helper.pop_operand()
+        print("None popped")
     add_quadruple_assignation()
+
 
 
 def add_quadruple_assignation():
