@@ -21,7 +21,7 @@ ALL_TL_FILES=$(wildcard our_tests/*.tl)
 # Names from all .tl files (inside our_tests)
 ALL_TL_FILENAMES=$(patsubst our_tests/%, %, $(wildcard our_tests/*.tl))
 
-ALL_OBJECT_FILES=$(wildcard object_code/.*.obj)
+ALL_OBJECT_FILES=$(wildcard object_code/*.obj)
 
 help: ##Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -37,7 +37,7 @@ format: ##Applies BLACK to all py files in defined modules.
 	@black ${ALL_MODULES}
 
 ##prepare: Applies FORMAT TEST.
-prepare: format test
+prepare: format run test
 
 run: ##Run all .tl files
 	${RUNMAIN} ${ALL_TL_FILES}
