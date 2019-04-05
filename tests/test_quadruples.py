@@ -1,7 +1,9 @@
 import unittest  # Reference: https://docs.python.org/2/library/unittest.html
 from quadruple.quadruple import Quadruple
+import filecmp
 
-TESTING_PREFIX = "tests/tl_test_quadruples/"
+OBJECT_CODE = "object_code/"
+TESTING_CODE = "tests/tl_test_quadruples/"
 
 
 def aux_tl_file(file_name, name_of_test):
@@ -20,24 +22,19 @@ def aux_tl_file(file_name, name_of_test):
 
 
 class QuadruplesTestCase(unittest.TestCase):
-    def test_quadruple_1(self):
+    def test_quadruple_2_3_pass_estatutos_secuenciales_eval(self):
 
-        """
-        IN:
-        A * B + C
+        file1_name = TESTING_CODE + "2_3_pass_estatutos_secuenciales_eval.tl.test"
+        file2_name = OBJECT_CODE + "2_3_pass_estatutos_secuenciales_eval.tl.obj"
 
-        OUT:
-        * A B t1
-        + t1 C t2
-        """
-        # quad = Quadruple()
-        # operation = quad.token
-        # operan1 = quad.operand1
-        # operand2 = quad.operand2
-        # result = quad.operand3
+        result = filecmp.cmp(file1_name, file2_name)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
 
-        # file_name =
-        # name_of_test =
-        # result = aux_tl_file()
+    def test_quadruple_2_4_pass_estatutos_secuenciales_eval(self):
+        file1_name = TESTING_CODE + "2_4_pass_estatutos_secuenciales_eval.tl.test"
+        file2_name = OBJECT_CODE + "2_4_pass_estatutos_secuenciales_eval.tl.obj"
 
-        self.assertEqual(True, True)
+        result = filecmp.cmp(file1_name, file2_name)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
