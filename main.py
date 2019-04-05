@@ -21,7 +21,7 @@ if __name__ == "__main__":
                 if error_helper.error_cont is 0:
                     print(f"{file} compiles!\n")
                     _, file_name = file.split("/")
-                    quad_helper.print_to_file(f"object_code/.{file_name}.obj")
+                    quad_helper.print_to_file(f"object_code/{file_name}.obj")
                 else:
                     print(f"{file} does not compile. Please try harder")
                     print(f"Number of errors: {error_helper.error_cont}")
