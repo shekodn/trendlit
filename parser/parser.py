@@ -214,7 +214,7 @@ def p_factor1(p):
 
 
 def p_value(p):
-    """value : ID snp_push_pending_operand
+    """value : ID snp_checks_for_previous_declaration snp_push_pending_operand
         | valueSlice
         | call
         | CTEI snp_save_type_int snp_push_pending_operand
@@ -629,7 +629,7 @@ def p_snp_add_assignation_quad(p):
     # @Ana Karen
     while quad_helper.top_operand() is None:
         quad_helper.pop_operand()
-        print("None popped")
+        # print("None popped")
     add_quadruple_assignation()
 
 
@@ -743,6 +743,12 @@ def add_quadruple_expression():
     else:
         error_helper.add_error(301)
 
+def p_snp_checks_for_previous_declaration(p):
+    """snp_checks_for_previous_declaration : empty"""
+    var = p[-1]
+    is_decalred = is_var_in_current_scope(var) or is_var_in_global_scope(var)
+    if not is_decalred:
+        error_helper.add_error(302, f"{var} doesn't exist")
 
 # --- NON-LINEAR STATEMENTS (INTERMEDIATE REPRESENTATION) ---
 
@@ -808,6 +814,9 @@ def p_snp_while_3(p):
 
 def is_var_in_current_scope(var_name):
     return var_name in procedure_directory[curr_scope]["var_table"]
+
+def is_var_in_global_scope(var_name):
+    return var_name in procedure_directory["global_script"]["var_table"]
 
 
 import ply.yacc as yacc
