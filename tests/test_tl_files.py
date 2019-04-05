@@ -4,7 +4,6 @@ from parser.parser import parser, yacc, procedure_directory, quad_helper, error_
 TESTING_PREFIX = "our_tests/"
 
 
-
 # def __eq__(self, other):
 #     """Overrides the default implementation"""
 #     if isinstance(other, Number):
