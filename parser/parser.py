@@ -376,7 +376,7 @@ def p_predef_suck_csv_args(p):
 
 
 def p_writing(p):
-    """writing : EVAL OPAREN expression CPAREN"""
+    """writing : EVAL snp_push_pending_token OPAREN expression CPAREN snp_add_eval_quad"""
 
 
 def p_arguments(p):
@@ -513,6 +513,12 @@ def p_snp_add_var(p):
         }  # TODO : add more info later on
 
 
+# ---  ESTATUTOS SECUENCIALES ---
+def p_snp_add_eval_quad(p):
+    """snp_add_eval_quad : empty"""
+    quad_helper.add_quad(quad_helper.pop_token(), -1, -1, quad_helper.pop_operand())
+
+
 # --- MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION) ---
 def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
@@ -556,9 +562,9 @@ def p_snp_save_type_bool(p):
 def p_snp_push_pending_token(p):
     """snp_push_pending_token : empty"""
     token = p[-1]
-    # debbuging
-    # print("pushed token", token)
     quad_helper.push_token(token)
+    # debbuging
+    # print("pushed token", quad_helper.top_token())
 
 
 def p_snp_push_solitary_operand(p):

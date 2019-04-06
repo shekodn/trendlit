@@ -22,6 +22,16 @@ def aux_tl_file(file_name, name_of_test):
 
 
 class QuadruplesTestCase(unittest.TestCase):
+    def test_quadruple_2_2_pass_estatutos_secuenciales_eval(self):
+
+        file1_name = TESTING_CODE + "2_2_pass_estatutos_secuenciales_eval.tl.test"
+        file2_name = OBJECT_CODE + "2_2_pass_estatutos_secuenciales_eval.tl.obj"
+
+        print(f"\nTESTING QUADRUPLES: {file1_name}\n")
+        result = filecmp.cmp(file1_name, file2_name)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
     def test_quadruple_2_3_pass_estatutos_secuenciales_eval(self):
 
         file1_name = TESTING_CODE + "2_3_pass_estatutos_secuenciales_eval.tl.test"
