@@ -4,8 +4,9 @@ program the_name_of_the_program
       # =, 0, _, main_one
 
       int main_one = 0
-      # str A
+      # =, 0, _, A
       int A
+      # =, 0, _, B
       int B
       # int C
       # int D
