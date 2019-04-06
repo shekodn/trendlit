@@ -250,6 +250,7 @@ def p_condition1(p):
 def p_cycle(p):
     """cycle : LOOP snp_while_1 OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock snp_while_3"""
 
+
 def p_doCycle(p):
     """doCycle : DO snp_while_1 simpleBlock LOOP OPAREN expression CPAREN snp_do_while_gotot"""
 
@@ -760,6 +761,7 @@ def p_snp_while_3(p):
     quad_helper.add_quad(token_to_code.get("GOTO"), -1, -1, ret)
     count = quad_helper.quad_cont
     quad_helper.fill(end, count)
+
 
 def p_snp_do_while_gotot(p):
     """snp_do_while_gotot : empty"""
