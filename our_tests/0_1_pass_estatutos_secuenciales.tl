@@ -5,8 +5,8 @@ program the_name_of_the_program
 
       int main_one = 0
       # str A
-      # int A
-      # int B
+      int A
+      int B
       # int C
       # int D
       # int E
