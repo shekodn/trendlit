@@ -516,7 +516,7 @@ def p_snp_add_var(p):
 # --- MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION) ---
 def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
-    operand_id = p[-2] if p[-2]!= None else p[-1]
+    operand_id = p[-2] if p[-1]== None else p[-1]
     quad_helper.push_operand(operand_id)
 
     if is_var_in_current_scope(operand_id):
@@ -697,12 +697,11 @@ def p_snp_checks_for_previous_declaration(p):
 def p_snp_conditional_statement_1(p):
     """snp_conditional_statement_1 : empty"""
     top_type_code = quad_helper.pop_type()
+    result = quad_helper.pop_operand()
 
     # Check if top_oper's type is type bool(1)
     if code_to_type.get(top_type_code) is "bool":
-        result = quad_helper.pop_operand()
         # debbuging
-        # print("result", result)
         quad_helper.add_quad(token_to_code.get("GOTOF"), result, -1, "pending")
         quad_helper.push_jump(quad_helper.quad_cont - 1)
         # debbuging
