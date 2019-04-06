@@ -39,13 +39,13 @@ class QuadruplesTestCase(unittest.TestCase):
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
 
-    # def test_quadruple_3_4_pass_estatutos_condicionales_if_else(self):
-    #     file1_name = TESTING_CODE + "3_4_pass_estatutos_condicionales_if_else.tl.test"
-    #     file2_name = OBJECT_CODE + "3_4_pass_estatutos_condicionales_if_else.tl.obj"
-    #
-    #     result = filecmp.cmp(file1_name, file2_name)
-    #     should_files_be_equal = True
-    #     self.assertEqual(should_files_be_equal, result)
+    def test_quadruple_3_4_pass_estatutos_condicionales_if_else(self):
+        file1_name = TESTING_CODE + "3_4_pass_estatutos_condicionales_if_else.tl.test"
+        file2_name = OBJECT_CODE + "3_4_pass_estatutos_condicionales_if_else.tl.obj"
+
+        result = filecmp.cmp(file1_name, file2_name)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
 
     def test_quadruple_3_0_1_pass_estatutos_condicionales_if(self):
         file1_name = TESTING_CODE + "3_0_1_pass_estatutos_condicionales_if.tl.test"
