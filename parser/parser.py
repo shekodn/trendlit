@@ -15,6 +15,8 @@ procedure_directory = {}  # [name] = {type, var_table}
 
 curr_scope = ""  # The current scope inside the program
 curr_type = ""  # The current type used (module or var)
+curr_module_param_counter = 0
+curr_module_var_counter = 0
 
 quad_helper = QuadrupleHelper()
 error_helper = ErrorHelper()
@@ -59,7 +61,7 @@ def p_simpleBlock1(p):
 
 
 def p_voidModuleBlock(p):
-    """voidModuleBlock : snp_save_void_type OBRACE declareBlock voidModuleBlock1 CBRACE"""
+    """voidModuleBlock : snp_save_void_type OBRACE declareBlock snp_add_quad_cont_to_table voidModuleBlock1 CBRACE"""
 
 
 def p_voidModuleBlock1(p):
@@ -68,7 +70,7 @@ def p_voidModuleBlock1(p):
 
 
 def p_returnModuleBlock(p):
-    """returnModuleBlock : COLON type OBRACE declareBlock returnModuleBlock1 CBRACE"""
+    """returnModuleBlock : COLON type OBRACE declareBlock snp_add_quad_cont_to_table returnModuleBlock1 CBRACE"""
 
 
 def p_returnModuleBlock1(p):
@@ -256,7 +258,7 @@ def p_doCycle(p):
 
 
 def p_module(p):
-    """module : DEF ID snp_add_module OPAREN arguments CPAREN module1 snp_end_module"""
+    """module : DEF ID snp_add_module OPAREN arguments CPAREN snp_add_params_count_to_table module1 snp_end_module"""
 
 
 def p_module1(p):
@@ -384,13 +386,17 @@ def p_writing(p):
     """writing : EVAL snp_push_pending_token OPAREN expression CPAREN snp_add_eval_quad"""
 
 
+# snp_add_var is the equivalent of snp #2 and #3 from Intermediate code actions
+# for module definitions
 def p_arguments(p):
-    """arguments : type ID arguments1
+    """arguments : type ID snp_add_var snp_counts_params arguments1
         | empty"""
 
 
+# snp_add_var is the equivalent of snp #2 and #3 from Intermediate code actions
+# for module definitions
 def p_arguments1(p):
-    """arguments1 : COMMA type ID arguments1
+    """arguments1 : COMMA type ID snp_add_var snp_counts_params arguments1
         | empty"""
 
 
@@ -454,6 +460,8 @@ def p_snp_script_start(p):
     # Add global script to the directory
     procedure_directory[curr_scope] = {
         "type": curr_type,
+        "params_count": 0,
+        "starting_quad": -1,
         "var_table": {},
     }  # TODO : add more info later on
 
@@ -470,6 +478,8 @@ def p_snp_add_module(p):
     else:
         procedure_directory[module_name] = {
             "type": curr_type,
+            "params_count": 0,
+            "starting_quad": -1,
             "var_table": {},
         }  # TODO : add more info later on
         curr_scope = module_name
@@ -506,8 +516,6 @@ def p_snp_add_var(p):
     global procedure_directory
     var_name = p[-1]  # get the last symbol read (left from this neural point)
     # For debbuging
-    # print(f"var_name {var_name}, current_scope, {curr_scope}")
-    # print(procedure_directory[curr_scope], "\n")
     # Check if var already exists and add it to the table in currect scope
     if is_var_in_current_scope(var_name):
         error_message = f"Variable {var_name} has already been declared"
@@ -516,6 +524,9 @@ def p_snp_add_var(p):
         procedure_directory[curr_scope]["var_table"][var_name] = {
             "type": curr_type
         }  # TODO : add more info later on
+    # For debbuging
+    print(f"var_name {var_name}, current_scope, {curr_scope}")
+    print(procedure_directory[curr_scope], "\n")
 
 
 # ---  ESTATUTOS SECUENCIALES ---
@@ -777,6 +788,43 @@ def p_snp_do_while_gotot(p):
             0, "Type Missmatch: Expression is not a bool"
         )  # TODO define code and custom error message
 
+
+###Intermediate Code Actions for a Module Definition
+def p_snp_counts_params(p):
+    """snp_counts_params : empty"""
+    global curr_module_param_counter
+    curr_module_param_counter = curr_module_param_counter + 1
+
+
+# snp_add_params_count_to_table is snp #4 in Intermediate Code Actions for Module Definition
+def p_snp_add_params_count_to_table(p):
+    """snp_add_params_count_to_table : empty"""
+    global curr_module_param_counter, procedure_directory
+    # add counter value to table
+    procedure_directory[curr_scope]["params_count"] = curr_module_param_counter
+    # clears counter
+    curr_module_param_counter = 0
+    # debbuging
+    counter = procedure_directory[curr_scope]["params_count"]
+    print(f"current scope: {curr_scope} counter: {counter}")
+
+# Aux function to get snp #5 in Intermediate Code Actions for Module Definition
+def get_count_of_local_vars(scope):
+    num_total_vars = len(procedure_directory[scope]["var_table"])
+    num_params = procedure_directory[scope]["params_count"]
+    num_local_vars = num_total_vars - num_params
+
+    if num_local_vars < 0:
+        num_local_vars = 0
+
+    return num_local_vars
+
+# snp #6 in Intermediate Code Actions for Module Definition
+def p_snp_add_quad_cont_to_table(p):
+    """snp_add_quad_cont_to_table : empty"""
+    global procedure_directory
+    procedure_directory[curr_scope]["starting_quad"] = quad_helper.quad_cont
+    print("I start from: ", procedure_directory[curr_scope]["starting_quad"])
 
 def is_var_in_current_scope(var_name):
     return var_name in procedure_directory[curr_scope]["var_table"]
