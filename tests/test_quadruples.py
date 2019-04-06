@@ -27,6 +27,7 @@ class QuadruplesTestCase(unittest.TestCase):
         file1_name = TESTING_CODE + "2_3_pass_estatutos_secuenciales_eval.tl.test"
         file2_name = OBJECT_CODE + "2_3_pass_estatutos_secuenciales_eval.tl.obj"
 
+        print(f"\nTESTING QUADRUPLES: {file1_name}\n")
         result = filecmp.cmp(file1_name, file2_name)
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
@@ -35,6 +36,7 @@ class QuadruplesTestCase(unittest.TestCase):
         file1_name = TESTING_CODE + "2_4_pass_estatutos_secuenciales_eval.tl.test"
         file2_name = OBJECT_CODE + "2_4_pass_estatutos_secuenciales_eval.tl.obj"
 
+        print(f"\nTESTING QUADRUPLES: {file1_name}\n")
         result = filecmp.cmp(file1_name, file2_name)
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
@@ -43,6 +45,7 @@ class QuadruplesTestCase(unittest.TestCase):
         file1_name = TESTING_CODE + "3_4_pass_estatutos_condicionales_if_else.tl.test"
         file2_name = OBJECT_CODE + "3_4_pass_estatutos_condicionales_if_else.tl.obj"
 
+        print(f"\nTESTING QUADRUPLES: {file1_name}\n")
         result = filecmp.cmp(file1_name, file2_name)
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
@@ -51,6 +54,7 @@ class QuadruplesTestCase(unittest.TestCase):
         file1_name = TESTING_CODE + "3_0_1_pass_estatutos_condicionales_if.tl.test"
         file2_name = OBJECT_CODE + "3_0_1_pass_estatutos_condicionales_if.tl.obj"
 
+        print(f"\nTESTING QUADRUPLES: {file1_name}\n")
         result = filecmp.cmp(file1_name, file2_name)
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
