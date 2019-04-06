@@ -516,25 +516,8 @@ def p_snp_add_var(p):
 # --- MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION) ---
 def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
-
-    # TODO question for Ana Karen
-    # FIXME
-    # Separate this function to avoid confusion
-    # print("-2 ",p[-2], "-1 ", p[-1])
-    if p[-2] != None:
-        operand_id = p[-2]
-        operand_id_2 = p[-1]
-        quad_helper.push_operand(operand_id)
-        quad_helper.push_operand(operand_id_2)
-        # debbuging
-        # print("if operand_id: ", operand_id)
-        # print("if operand_id_2: ", operand_id_2)
-        # print("p-2", p[-2], "p-1", p[-1])
-    else:
-        operand_id = p[-1]
-        quad_helper.push_operand(operand_id)
-        # debbuging
-        # print("else operand_id: ", operand_id)
+    operand_id = p[-2] if p[-2]!= None else p[-1]
+    quad_helper.push_operand(operand_id)
 
     if is_var_in_current_scope(operand_id):
         type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
@@ -544,34 +527,6 @@ def p_snp_push_pending_operand(p):
     # For debbuging
     # print("OPERAND", quad_helper.top_operand())
     # print("TYPE", quad_helper.top_type())
-
-
-# def p_snp_push_pending_operand_1(p):
-#     """snp_push_pending_operand_1 : empty"""
-#     print("snp_push_pending_operand_1")
-#     # TODO question for Ana Karen
-#     # FIXME
-#     # Separate this function to avoid confusion
-#     if p[-2] != None:
-#         operand_id = p[-2]
-#         # debbuging
-#         print("if operand_id: ", operand_id)
-#
-#     else:
-#         operand_id = p[-1]
-#         print("else operand_id: ", operand_id)
-#     quad_helper.push_operand(operand_id)
-#         # debbuging
-#         # print("else operand_id: ", operand_id)
-#
-#     if is_var_in_current_scope(operand_id):
-#         type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
-#         quad_helper.push_type(type)
-#     else:
-#         quad_helper.push_type(curr_type)
-#     # For debbuging
-#     # print("OPERAND", quad_helper.top_operand())
-#     # print("TYPE", quad_helper.top_type())
 
 
 def p_snp_save_type_int(p):
@@ -623,13 +578,6 @@ def p_snp_push_solitary_operand(p):
 
 def p_snp_add_assignation_quad(p):
     """snp_add_assignation_quad : empty"""
-    # FIXME
-    # This conditional fixes part of the issue between making sure expressions work and
-    # the 'None' appearing as opperands
-    # @Ana Karen
-    while quad_helper.top_operand() is None:
-        quad_helper.pop_operand()
-        # print("None popped")
     add_quadruple_assignation()
 
 
