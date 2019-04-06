@@ -588,16 +588,6 @@ def add_quadruple_assignation():
     left_operand_type = quad_helper.pop_type()
     token = quad_helper.pop_token()
 
-    if left_operand is None:
-        # print("LEFT IS NONE", left_operand)
-        left_operand = quad_helper.pop_operand()
-        # print("LEFT NOT NONE", left_operand)
-    if right_operand is None:
-        # print("RIGHT IS NONE", right_operand)
-        right_operand = quad_helper.pop_operand()
-        # print("RIGHT NOT NONE", right_operand)
-        # print("add_quadruple_assignation pop:  ", left_operand_type)
-
     if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
         quad_helper.add_quad(token, right_operand, -1, left_operand)  # assignation
     else:
