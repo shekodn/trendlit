@@ -145,6 +145,7 @@ def p_statement(p):
     """statement : assignment
         | condition
         | cycle
+        | doCycle
         | call
         | writing"""
 
@@ -248,6 +249,9 @@ def p_condition1(p):
 
 def p_cycle(p):
     """cycle : LOOP snp_while_1 OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock snp_while_3"""
+
+def p_doCycle(p):
+    """doCycle : DO simpleBlock LOOP OPAREN expression CPAREN"""
 
 
 def p_module(p):

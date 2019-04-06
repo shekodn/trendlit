@@ -17,6 +17,7 @@ reserved_words = {
     "else": "ELSE",
     "if": "IF",
     "int": "INT",
+    "do": "DO",
     "loop": "LOOP",
     "str": "STR",
     # Functions

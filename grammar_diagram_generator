@@ -82,6 +82,9 @@ condition1 ::= 'ELSE' simpleBlock | empty
 
 cycle ::= 'LOOP' 'OPAREN' expression 'CPAREN' simpleBlock
 
+doCycle ::= 'DO' simpleBlock 'LOOP' 'OPAREN' expression 'CPAREN'
+
+
 module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' module1
 module1 ::= voidModuleBlock | returnModuleBlock
 
