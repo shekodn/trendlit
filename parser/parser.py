@@ -516,7 +516,7 @@ def p_snp_add_var(p):
 # --- MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION) ---
 def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
-    operand_id = p[-2] if p[-1]== None else p[-1]
+    operand_id = p[-2] if p[-1] == None else p[-1]
     quad_helper.push_operand(operand_id)
 
     if is_var_in_current_scope(operand_id):
@@ -681,12 +681,14 @@ def add_quadruple_expression():
     else:
         error_helper.add_error(301)
 
+
 def p_snp_checks_for_previous_declaration(p):
     """snp_checks_for_previous_declaration : empty"""
     var = p[-1]
     is_decalred = is_var_in_current_scope(var) or is_var_in_global_scope(var)
     if not is_decalred:
         error_helper.add_error(302, f"{var} doesn't exist")
+
 
 # --- NON-LINEAR STATEMENTS (INTERMEDIATE REPRESENTATION) ---
 
@@ -751,6 +753,7 @@ def p_snp_while_3(p):
 
 def is_var_in_current_scope(var_name):
     return var_name in procedure_directory[curr_scope]["var_table"]
+
 
 def is_var_in_global_scope(var_name):
     return var_name in procedure_directory["global_script"]["var_table"]

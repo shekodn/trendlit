@@ -25,8 +25,8 @@ code_to_error = {
     # Sintax 200
     201: syntax_error,
     # Semantic 300
-    301 : type_mismatch,
-    302 :var_not_defined,
+    301: type_mismatch,
+    302: var_not_defined,
 }
 
 
