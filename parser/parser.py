@@ -251,7 +251,7 @@ def p_cycle(p):
     """cycle : LOOP snp_while_1 OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock snp_while_3"""
 
 def p_doCycle(p):
-    """doCycle : DO simpleBlock LOOP OPAREN expression CPAREN"""
+    """doCycle : DO snp_while_1 simpleBlock LOOP OPAREN expression CPAREN snp_do_while_gotot"""
 
 
 def p_module(p):
@@ -706,6 +706,7 @@ def p_snp_checks_for_previous_declaration(p):
 
 # Actions to produce intermediate representation for non-linear statements using quadruples
 # snp for single IF
+# Equivalent to snp_while_2
 def p_snp_conditional_statement_1(p):
     """snp_conditional_statement_1 : empty"""
     top_type_code = quad_helper.pop_type()
@@ -759,6 +760,20 @@ def p_snp_while_3(p):
     quad_helper.add_quad(token_to_code.get("GOTO"), -1, -1, ret)
     count = quad_helper.quad_cont
     quad_helper.fill(end, count)
+
+def p_snp_do_while_gotot(p):
+    """snp_do_while_gotot : empty"""
+    top_type_code = quad_helper.pop_type()
+    result = quad_helper.pop_operand()
+    ret = quad_helper.pop_jump()
+
+    # Check if top_oper's type is type bool(1)
+    if code_to_type.get(top_type_code) is "bool":
+        quad_helper.add_quad(token_to_code.get("GOTOT"), result, -1, ret)
+    else:
+        error_helper.add_error(
+            0, "Type Missmatch: Expression is not a bool"
+        )  # TODO define code and custom error message
 
 
 def is_var_in_current_scope(var_name):
