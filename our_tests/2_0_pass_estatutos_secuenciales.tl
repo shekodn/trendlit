@@ -1,6 +1,5 @@
-# A * B + C
-# * A B t1
-# + t1 C t2
+# Don't move, otherwise the TEST will break
+
 
 program the_name_of_the_program
 
@@ -14,8 +13,9 @@ program the_name_of_the_program
       str G
       double H
       eval(A)
-      # eval(A + B)
-      # eval(A + B)
+      eval(1)
+      eval(True)
+      eval(A + B)
       eval(A > B)
 
     }
