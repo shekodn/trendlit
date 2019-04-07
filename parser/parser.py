@@ -61,7 +61,7 @@ def p_simpleBlock1(p):
 
 
 def p_voidModuleBlock(p):
-    """voidModuleBlock : snp_save_void_type OBRACE declareBlock snp_add_quad_cont_to_table voidModuleBlock1 CBRACE"""
+    """voidModuleBlock : snp_save_void_type snp_save_type_to_module_table OBRACE declareBlock snp_add_quad_cont_to_table voidModuleBlock1 CBRACE"""
 
 
 def p_voidModuleBlock1(p):
@@ -70,7 +70,7 @@ def p_voidModuleBlock1(p):
 
 
 def p_returnModuleBlock(p):
-    """returnModuleBlock : COLON type OBRACE declareBlock snp_add_quad_cont_to_table returnModuleBlock1 CBRACE"""
+    """returnModuleBlock : COLON type snp_save_type_to_module_table OBRACE declareBlock snp_add_quad_cont_to_table returnModuleBlock1 CBRACE"""
 
 
 def p_returnModuleBlock1(p):
@@ -472,6 +472,8 @@ def p_snp_add_module(p):
     global procedure_directory, curr_scope
     module_name = p[-1]  # get the last symbol read (left from this neural point)
     # Check if module already exists and add it to the directory
+    # debbuging
+    # print("procedure_directory", procedure_directory, "module_name:", module_name)
     if module_name in procedure_directory:
         error_message = f"Module {module_name} has already been declared"
         error_helper.add_error(0, error_message)
@@ -483,6 +485,12 @@ def p_snp_add_module(p):
             "var_table": {},
         }  # TODO : add more info later on
         curr_scope = module_name
+
+# Save the last type defined
+def p_snp_save_type_to_module_table(p):
+    """snp_save_type_to_module_table : empty"""
+    global procedure_directory
+    procedure_directory[curr_scope]["type"] = curr_type
 
 
 # Save the last type defined
@@ -500,12 +508,28 @@ def p_snp_save_void_type(p):
 
 
 # End of the module deltes the var table
+# snp #7 in Intermediate Code Actions for Module Definition
 def p_snp_end_module(p):
     """snp_end_module : empty"""
     global procedure_directory, curr_scope
-    # Delete var table for the module that ended
+    curr_module_type = procedure_directory[curr_scope]["type"]
+    # debbuging
+    # print(f"CURR SCOPE: {curr_scope}")
+    # print(f"TABLE: {procedure_directory}")
+    # print("CURR TYPEEEE",curr_module_type)
     procedure_directory[curr_scope]["var_table"].clear()
     curr_scope = "global_script"
+    if curr_module_type is "void": # VOID MODULE
+        # Delete var table for the module that ended
+        quad_helper.add_quad(token_to_code.get("ENDPROC"), -1, -1, -1)
+    else: # RETURNING MODULE
+        return_value = quad_helper.pop_operand()
+        return_type = code_to_type.get(quad_helper.pop_type())
+        if return_type != curr_module_type:
+            print(return_type, curr_module_type)
+            error_helper.add_error(301, f"Error in line {p.lexer.lineno}")
+        else:
+            quad_helper.add_quad(token_to_code.get("RET"), return_value, -1, "memory address")
 
 
 # --- VARIABLE SEMANTIC ACTIONS ---
@@ -525,8 +549,8 @@ def p_snp_add_var(p):
             "type": curr_type
         }  # TODO : add more info later on
     # For debbuging
-    print(f"var_name {var_name}, current_scope, {curr_scope}")
-    print(procedure_directory[curr_scope], "\n")
+    # print(f"var_name {var_name}, current_scope, {curr_scope}")
+    # print(procedure_directory[curr_scope], "\n")
 
 
 # ---  ESTATUTOS SECUENCIALES ---
@@ -824,7 +848,8 @@ def p_snp_add_quad_cont_to_table(p):
     """snp_add_quad_cont_to_table : empty"""
     global procedure_directory
     procedure_directory[curr_scope]["starting_quad"] = quad_helper.quad_cont
-    print("I start from: ", procedure_directory[curr_scope]["starting_quad"])
+    # debbuging
+    # print("I start from: ", procedure_directory[curr_scope]["starting_quad"])
 
 def is_var_in_current_scope(var_name):
     return var_name in procedure_directory[curr_scope]["var_table"]

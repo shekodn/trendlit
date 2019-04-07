@@ -20,6 +20,11 @@ token_to_code = {
     "GOTO": 401,
     "GOTOF": 402,
     "GOTOT": 403,
+    "GOSUB": 404,
+    "ERA": 501,
+    "PARAMETER":502,
+    "ENDPROC": 503,
+    "RET": 504,
     "false_bottom": 999,
     "(": 1001,
 }
@@ -47,6 +52,11 @@ code_to_token = {
     401: "GOTO",
     402: "GOTOF",
     403: "GOTOT",
+    404: "GOSUB",
+    501: "ERA",
+    502: "PARAMETER",
+    503: "ENDPROC",
+    504: "RET",
     999: "false_bottom",
     1001: "(",
 }
