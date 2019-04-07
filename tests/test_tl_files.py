@@ -73,3 +73,10 @@ class OurTestCase(unittest.TestCase):
         result = aux_tl_file(file_name, expected_errors)
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
+
+    def test_5_2_fail_returning_function_no_args(self):
+        file_name = TESTING_PREFIX + "5_2_fail_returning_function_no_args.tl"
+        expected_errors = 1
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
