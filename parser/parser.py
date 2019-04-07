@@ -265,16 +265,17 @@ def p_module1(p):
 
 
 def p_call(p):
-    """call : ID call1
+    """call : ID snp_verify_module_existance call1
         | predef"""
 
 
 def p_call1(p):
-    """call1 : OPAREN params CPAREN"""
+    """call1 : OPAREN snp_add_era_size_quad params CPAREN"""
 
 
 def p_params(p):
-    """params : expression params1"""
+    """params : expression params1
+        | empty"""
 
 
 def p_params1(p):
@@ -913,6 +914,7 @@ def p_snp_add_params_count_to_table(p):
     # ]
     # print(f"current scope: {parser_helper.curr_scope} counter: {counter}")
 
+# --- INTERMEDIATECODE ACTIONS FOR MODULE DEFINITION (INTERMEDIATE REPRESENTATION) ---
 
 # snp #6 in Intermediate Code Actions for Module Definition
 def p_snp_add_quad_cont_to_table(p):
@@ -923,6 +925,35 @@ def p_snp_add_quad_cont_to_table(p):
     # debbuging
     # print("I start from: ", parser_helper.procedure_directory[parser_helper.curr_scope]["starting_quad"])
 
+# --- INTERMEDIATECODE ACTIONS FOR MODULE CALL (INTERMEDIATE REPRESENTATION) ---
+
+# snp #1 Module Call
+# Verify that the procedure exists in the Procedure Directory
+def p_snp_verify_module_existance(p):
+    """snp_verify_module_existance : empty"""
+    module_name = p[-1]
+    if not is_module_in_procedure_dir(module_name):
+        error_helper.add_error(303, f"{module_name} doesn't exist")
+
+# snp #2 Module Call
+# Generate ERA size (Activation Record expansion - NEW - size)
+# Add a pointer to the first prarameter type in the parameter table
+def p_snp_add_era_size_quad(p):
+    """snp_add_era_size_quad :  empty"""
+    quad_helper.add_quad(token_to_code.get("ERA"), -1, -1, -1)
+
+# snp #3 Module Call
+# Verify Argument type agains current parameter(#k) in parameter table
+# Generate action PARAMETER, Argument, Argument#k
+
+# snp #4 Module Call
+# Move to the next parameter (k++)
+
+# snp #5 Module Call
+# Verify that last parameter points to null (coherence in number of params)
+
+# snp #6 Module Call
+# Generate quad GOSUB, procedure_name, -1, intitial-address
 
 # --- HTML ---
 
@@ -948,6 +979,9 @@ def p_snp_push_eval_pending_token(p):
     quad_helper.push_token("eval")
     # For debbuging
     # print("Top token: ", quad_helper.top_token())
+
+def is_module_in_procedure_dir(module_name):
+    return module_name in parser_helper.procedure_directory
 
 
 import ply.yacc as yacc

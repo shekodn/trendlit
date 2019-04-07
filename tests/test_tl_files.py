@@ -74,6 +74,12 @@ class OurTestCase(unittest.TestCase):
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
 
+    def test_5_4_fail_call_non_existing_function(self):
+        file_name = TESTING_PREFIX + "5_4_fail_call_non_existing_function.tl"
+        expected_errors = 1
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
     def test_8_1_fail_gorritos_html(self):
         file_name = TESTING_PREFIX + "8_1_fail_gorritos_html.tl"
         expected_errors = 2

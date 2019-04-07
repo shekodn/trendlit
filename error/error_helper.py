@@ -6,6 +6,7 @@ unknwon_error = "Unkown"
 type_mismatch = "No baila"
 syntax_error = "Sintax error:"
 var_not_defined = "Var"
+module_not_defined = "Module"
 
 error_to_code = {
     # Unkown 0
@@ -16,6 +17,7 @@ error_to_code = {
     # Semantic 300
     type_mismatch: 301,
     var_not_defined: 302,
+    module_not_defined: 303,
 }
 
 code_to_error = {
@@ -27,6 +29,7 @@ code_to_error = {
     # Semantic 300
     301: type_mismatch,
     302: var_not_defined,
+    303: module_not_defined,
 }
 
 
