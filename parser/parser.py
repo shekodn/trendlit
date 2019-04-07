@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from lexer.lexer import lexer, tokens
+from parser.parser_helper import ParserHelper
 from quadruple.quadruple_helper import *
 from quadruple.quadruple import *
 from semantic_cube.semantic_cube import Cube
@@ -11,13 +12,7 @@ from semantic_cube.semantic_cube_helper import (
 )
 from error.error_helper import ErrorHelper
 
-procedure_directory = {}  # [name] = {type, var_table}
-
-curr_scope = ""  # The current scope inside the program
-curr_type = ""  # The current type used (module or var)
-curr_module_param_counter = 0
-curr_module_var_counter = 0
-
+parser_helper = ParserHelper()
 quad_helper = QuadrupleHelper()
 error_helper = ErrorHelper()
 semantic_cube = Cube()
@@ -453,13 +448,13 @@ def p_error(p):
 # Start of script global scope (adds global scope to directory)
 def p_snp_script_start(p):
     """snp_script_start : empty"""
-    global procedure_directory, curr_scope, curr_type
+    # global parser_helper.procedure_directory, parser_helper.curr_scope, parser_helper.curr_type
     # Set current values for global script
-    curr_scope = "global_script"
-    curr_type = "void"
+    parser_helper.curr_scope = "global_script"
+    parser_helper.curr_type = "void"
     # Add global script to the directory
-    procedure_directory[curr_scope] = {
-        "type": curr_type,
+    parser_helper.procedure_directory[parser_helper.curr_scope] = {
+        "type": parser_helper.curr_type,
         "params_count": 0,
         "starting_quad": -1,
         "var_table": {},
@@ -469,67 +464,70 @@ def p_snp_script_start(p):
 # Start of the module (add module to directory)
 def p_snp_add_module(p):
     """snp_add_module : empty"""
-    global procedure_directory, curr_scope
+    # global parser_helper.procedure_directory, parser_helper.curr_scope
     module_name = p[-1]  # get the last symbol read (left from this neural point)
     # Check if module already exists and add it to the directory
     # debbuging
-    # print("procedure_directory", procedure_directory, "module_name:", module_name)
-    if module_name in procedure_directory:
+    # print("parser_helper.procedure_directory", parser_helper.procedure_directory, "module_name:", module_name)
+    if module_name in parser_helper.procedure_directory:
         error_message = f"Module {module_name} has already been declared"
         error_helper.add_error(0, error_message)
     else:
-        procedure_directory[module_name] = {
-            "type": curr_type,
+        parser_helper.procedure_directory[module_name] = {
+            "type": parser_helper.curr_type,
             "params_count": 0,
             "starting_quad": -1,
             "var_table": {},
         }  # TODO : add more info later on
-        curr_scope = module_name
+        parser_helper.curr_scope = module_name
+
 
 # Save the last type defined
 def p_snp_save_type_to_module_table(p):
     """snp_save_type_to_module_table : empty"""
-    global procedure_directory
-    procedure_directory[curr_scope]["type"] = curr_type
+    parser_helper.procedure_directory[parser_helper.curr_scope][
+        "type"
+    ] = parser_helper.curr_type
 
 
 # Save the last type defined
 def p_snp_save_type(p):
     """snp_save_type : empty"""
-    global curr_type
-    curr_type = p[-1]
+    parser_helper.curr_type = p[-1]
 
 
 # Save the last type as void (for modules)
 def p_snp_save_void_type(p):
     """snp_save_void_type : empty"""
-    global curr_type
-    curr_type = "void"
+    parser_helper.curr_type = "void"
 
 
 # End of the module deltes the var table
 # snp #7 in Intermediate Code Actions for Module Definition
 def p_snp_end_module(p):
     """snp_end_module : empty"""
-    global procedure_directory, curr_scope
-    curr_module_type = procedure_directory[curr_scope]["type"]
+    curr_module_type = parser_helper.procedure_directory[parser_helper.curr_scope][
+        "type"
+    ]
     # debbuging
-    # print(f"CURR SCOPE: {curr_scope}")
-    # print(f"TABLE: {procedure_directory}")
+    # print(f"CURR SCOPE: {parser_helper.curr_scope}")
+    # print(f"TABLE: {parser_helper.procedure_directory}")
     # print("CURR TYPEEEE",curr_module_type)
-    procedure_directory[curr_scope]["var_table"].clear()
-    curr_scope = "global_script"
-    if curr_module_type is "void": # VOID MODULE
+    parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"].clear()
+    parser_helper.curr_scope = "global_script"
+    if curr_module_type is "void":  # VOID MODULE
         # Delete var table for the module that ended
         quad_helper.add_quad(token_to_code.get("ENDPROC"), -1, -1, -1)
-    else: # RETURNING MODULE
+    else:  # RETURNING MODULE
         return_value = quad_helper.pop_operand()
         return_type = code_to_type.get(quad_helper.pop_type())
         if return_type != curr_module_type:
             print(return_type, curr_module_type)
             error_helper.add_error(301, f"Error in line {p.lexer.lineno}")
         else:
-            quad_helper.add_quad(token_to_code.get("RET"), return_value, -1, "memory address")
+            quad_helper.add_quad(
+                token_to_code.get("RET"), return_value, -1, "memory address"
+            )
 
 
 # --- VARIABLE SEMANTIC ACTIONS ---
@@ -537,7 +535,6 @@ def p_snp_end_module(p):
 # Adds a variable defined to the current scope variable table
 def p_snp_add_var(p):
     """snp_add_var : empty"""
-    global procedure_directory
     var_name = p[-1]  # get the last symbol read (left from this neural point)
     # For debbuging
     # Check if var already exists and add it to the table in currect scope
@@ -545,12 +542,14 @@ def p_snp_add_var(p):
         error_message = f"Variable {var_name} has already been declared"
         error_helper.add_error(0, error_message)
     else:
-        procedure_directory[curr_scope]["var_table"][var_name] = {
-            "type": curr_type
+        parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+            var_name
+        ] = {
+            "type": parser_helper.curr_type
         }  # TODO : add more info later on
     # For debbuging
-    # print(f"var_name {var_name}, current_scope, {curr_scope}")
-    # print(procedure_directory[curr_scope], "\n")
+    # print(f"var_name {var_name}, current_scope, {parser_helper.curr_scope}")
+    # print(parser_helper.procedure_directory[parser_helper.curr_scope], "\n")
 
 
 # ---  ESTATUTOS SECUENCIALES ---
@@ -566,10 +565,12 @@ def p_snp_push_pending_operand(p):
     quad_helper.push_operand(operand_id)
 
     if is_var_in_current_scope(operand_id):
-        type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
+        type = parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+            operand_id
+        ]["type"]
         quad_helper.push_type(type)
     else:
-        quad_helper.push_type(curr_type)
+        quad_helper.push_type(parser_helper.curr_type)
     # For debbuging
     # print("OPERAND", quad_helper.top_operand())
     # print("TYPE", quad_helper.top_type())
@@ -577,26 +578,22 @@ def p_snp_push_pending_operand(p):
 
 def p_snp_save_type_int(p):
     """snp_save_type_int : empty"""
-    global curr_type
-    curr_type = "int"
+    parser_helper.curr_type = "int"
 
 
 def p_snp_save_type_double(p):
     """snp_save_type_double : empty"""
-    global curr_type
-    curr_type = "double"
+    parser_helper.curr_type = "double"
 
 
 def p_snp_save_type_str(p):
     """snp_save_type_str : empty"""
-    global curr_type
-    curr_type = "str"
+    parser_helper.curr_type = "str"
 
 
 def p_snp_save_type_bool(p):
     """snp_save_type_bool : empty"""
-    global curr_type
-    curr_type = "bool"
+    parser_helper.curr_type = "bool"
 
 
 def p_snp_push_pending_token(p):
@@ -615,7 +612,9 @@ def p_snp_push_solitary_operand(p):
     For example, the zero value for an int is 0
     """
     operand_id = p[-2]
-    type = procedure_directory[curr_scope]["var_table"][operand_id]["type"]
+    type = parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+        operand_id
+    ]["type"]
     default_initial_value = type_to_init_value.get(type)
     operator = token_to_code.get("=")
 
@@ -816,26 +815,31 @@ def p_snp_do_while_gotot(p):
 ###Intermediate Code Actions for a Module Definition
 def p_snp_counts_params(p):
     """snp_counts_params : empty"""
-    global curr_module_param_counter
-    curr_module_param_counter = curr_module_param_counter + 1
+    parser_helper.curr_module_param_counter = (
+        parser_helper.curr_module_param_counter + 1
+    )
 
 
 # snp_add_params_count_to_table is snp #4 in Intermediate Code Actions for Module Definition
 def p_snp_add_params_count_to_table(p):
     """snp_add_params_count_to_table : empty"""
-    global curr_module_param_counter, procedure_directory
     # add counter value to table
-    procedure_directory[curr_scope]["params_count"] = curr_module_param_counter
+    parser_helper.procedure_directory[parser_helper.curr_scope][
+        "params_count"
+    ] = parser_helper.curr_module_param_counter
     # clears counter
-    curr_module_param_counter = 0
+    parser_helper.curr_module_param_counter = 0
     # debbuging
-    counter = procedure_directory[curr_scope]["params_count"]
-    print(f"current scope: {curr_scope} counter: {counter}")
+    counter = parser_helper.procedure_directory[parser_helper.curr_scope][
+        "params_count"
+    ]
+    print(f"current scope: {parser_helper.curr_scope} counter: {counter}")
+
 
 # Aux function to get snp #5 in Intermediate Code Actions for Module Definition
 def get_count_of_local_vars(scope):
-    num_total_vars = len(procedure_directory[scope]["var_table"])
-    num_params = procedure_directory[scope]["params_count"]
+    num_total_vars = len(parser_helper.procedure_directory[scope]["var_table"])
+    num_params = parser_helper.procedure_directory[scope]["params_count"]
     num_local_vars = num_total_vars - num_params
 
     if num_local_vars < 0:
@@ -843,20 +847,26 @@ def get_count_of_local_vars(scope):
 
     return num_local_vars
 
+
 # snp #6 in Intermediate Code Actions for Module Definition
 def p_snp_add_quad_cont_to_table(p):
     """snp_add_quad_cont_to_table : empty"""
-    global procedure_directory
-    procedure_directory[curr_scope]["starting_quad"] = quad_helper.quad_cont
+    parser_helper.procedure_directory[parser_helper.curr_scope][
+        "starting_quad"
+    ] = quad_helper.quad_cont
     # debbuging
-    # print("I start from: ", procedure_directory[curr_scope]["starting_quad"])
+    # print("I start from: ", parser_helper.procedure_directory[parser_helper.curr_scope]["starting_quad"])
+
 
 def is_var_in_current_scope(var_name):
-    return var_name in procedure_directory[curr_scope]["var_table"]
+    return (
+        var_name
+        in parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"]
+    )
 
 
 def is_var_in_global_scope(var_name):
-    return var_name in procedure_directory["global_script"]["var_table"]
+    return var_name in parser_helper.procedure_directory["global_script"]["var_table"]
 
 
 import ply.yacc as yacc

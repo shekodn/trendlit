@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import sys
-from parser.parser import parser, yacc, procedure_directory, quad_helper, error_helper
+from parser.parser import parser, yacc, quad_helper, error_helper, parser_helper
 
 if __name__ == "__main__":
 
@@ -28,6 +28,7 @@ if __name__ == "__main__":
                     error_helper.print_errors()
                 error_helper.reset()
                 quad_helper.reset()
+                parser_helper.reset()
                 print("--------------------------------------------")
 
             except EOFError:

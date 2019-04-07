@@ -22,7 +22,7 @@ token_to_code = {
     "GOTOT": 403,
     "GOSUB": 404,
     "ERA": 501,
-    "PARAMETER":502,
+    "PARAMETER": 502,
     "ENDPROC": 503,
     "RET": 504,
     "false_bottom": 999,

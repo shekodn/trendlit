@@ -1,5 +1,5 @@
 import unittest  # Reference: https://docs.python.org/2/library/unittest.html
-from parser.parser import parser, yacc, procedure_directory, quad_helper, error_helper
+from parser.parser import parser, yacc, quad_helper, error_helper
 
 TESTING_PREFIX = "our_tests/"
 
