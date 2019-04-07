@@ -925,6 +925,7 @@ def p_snp_add_quad_cont_to_table(p):
     # debbuging
     # print("I start from: ", parser_helper.procedure_directory[parser_helper.curr_scope]["starting_quad"])
 
+
 # --- INTERMEDIATECODE ACTIONS FOR MODULE CALL (INTERMEDIATE REPRESENTATION) ---
 
 # snp #1 Module Call
@@ -935,12 +936,14 @@ def p_snp_verify_module_existance(p):
     if not is_module_in_procedure_dir(module_name):
         error_helper.add_error(303, f"{module_name} doesn't exist")
 
+
 # snp #2 Module Call
 # Generate ERA size (Activation Record expansion - NEW - size)
 # Add a pointer to the first prarameter type in the parameter table
 def p_snp_add_era_size_quad(p):
     """snp_add_era_size_quad :  empty"""
     quad_helper.add_quad(token_to_code.get("ERA"), -1, -1, -1)
+
 
 # snp #3 Module Call
 # Verify Argument type agains current parameter(#k) in parameter table
@@ -979,6 +982,7 @@ def p_snp_push_eval_pending_token(p):
     quad_helper.push_token("eval")
     # For debbuging
     # print("Top token: ", quad_helper.top_token())
+
 
 def is_module_in_procedure_dir(module_name):
     return module_name in parser_helper.procedure_directory
