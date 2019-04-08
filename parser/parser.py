@@ -399,7 +399,7 @@ def p_arguments1(p):
 
 
 def p_htmltag(p):
-    """htmltag : tag OBRACE class htmltag1 CBRACE"""
+    """htmltag : tag OBRACE class htmltag1 CBRACE snp_close_html_tag"""
 
 
 def p_htmltag1(p):
@@ -410,13 +410,13 @@ def p_htmltag1(p):
 
 
 def p_tag(p):
-    """tag : H1
-        | H2
-        | DIV
-        | P
-        | TABLE
-        | TR
-        | TH"""
+    """tag : H1 snp_open_html_tag
+        | H2 snp_open_html_tag
+        | DIV snp_open_html_tag
+        | P snp_open_html_tag
+        | TABLE snp_open_html_tag
+        | TR snp_open_html_tag
+        | TH snp_open_html_tag"""
 
 
 def p_class(p):
@@ -868,6 +868,22 @@ def p_snp_add_quad_cont_to_table(p):
     ] = quad_helper.quad_cont
     # debbuging
     # print("I start from: ", parser_helper.procedure_directory[parser_helper.curr_scope]["starting_quad"])
+
+
+# --- CONDITIONALS ---
+
+
+def p_snp_open_html_tag(p):
+    """snp_open_html_tag : empty"""
+    html_tag = p[-1].upper()
+    quad_helper.push_tag(token_to_code.get(html_tag))
+    quad_helper.add_quad(token_to_code.get("eval"), -1, -1, token_to_code.get(html_tag))
+
+
+def p_snp_close_html_tag(p):
+    """snp_close_html_tag : empty"""
+    html_tag = quad_helper.pop_tag() + 1
+    quad_helper.add_quad(token_to_code.get("eval"), -1, -1, html_tag)
 
 
 def is_var_in_current_scope(var_name):

@@ -25,6 +25,15 @@ token_to_code = {
     "PARAMETER": 502,
     "ENDPROC": 503,
     "RET": 504,
+    # Html
+    "H1": 600,
+    "H2": 601,
+    "DIV": 602,
+    "P": 603,
+    "TABLE": 604,
+    "TR": 605,
+    "TH": 606,
+    # Aux
     "false_bottom": 999,
     "(": 1001,
 }
@@ -57,6 +66,22 @@ code_to_token = {
     502: "PARAMETER",
     503: "ENDPROC",
     504: "RET",
+    # Html
+    600: "H1",
+    601: "/H1",
+    602: "H2",
+    603: "/H2",
+    604: "DIV",
+    605: "/DIV",
+    606: "P",
+    607: "/P",
+    608: "TABLE",
+    609: "/TABLE",
+    610: "TR",
+    611: "/TR",
+    612: "TH",
+    613: "/TH",
+    # Aux
     999: "false_bottom",
     1001: "(",
 }
