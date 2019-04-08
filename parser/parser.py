@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+from memory.memory import Memory
 from lexer.lexer import lexer, tokens
 from parser.parser_helper import ParserHelper
 from quadruple.quadruple_helper import *
@@ -9,6 +9,8 @@ from semantic_cube.semantic_cube_helper import (
     code_to_type,
     token_to_code,
     type_to_init_value,
+    scope_to_code,
+    code_to_scope,
 )
 from error.error_helper import ErrorHelper
 
@@ -16,6 +18,7 @@ parser_helper = ParserHelper()
 quad_helper = QuadrupleHelper()
 error_helper = ErrorHelper()
 semantic_cube = Cube()
+memory = Memory()
 
 
 def p_program(p):
@@ -455,6 +458,7 @@ def p_snp_script_start(p):
     # Add global script to the directory
     parser_helper.procedure_directory[parser_helper.curr_scope] = {
         "type": parser_helper.curr_type,
+        "scope_type": scope_to_code.get("global"),
         "params_count": 0,
         "starting_quad": -1,
         "var_table": {},
@@ -475,6 +479,7 @@ def p_snp_add_module(p):
     else:
         parser_helper.procedure_directory[module_name] = {
             "type": parser_helper.curr_type,
+            "scope_type": scope_to_code.get("local"),
             "params_count": 0,
             "starting_quad": -1,
             "var_table": {},
@@ -542,14 +547,19 @@ def p_snp_add_var(p):
         error_message = f"Variable {var_name} has already been declared"
         error_helper.add_error(0, error_message)
     else:
+        scope_type = get_scope_type(parser_helper.curr_scope)
+        var_memory_address = memory.set_addr(scope_type, parser_helper.curr_type)
         parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             var_name
         ] = {
-            "type": parser_helper.curr_type
+            "type": parser_helper.curr_type,
+            "memory_address": var_memory_address,
         }  # TODO : add more info later on
     # For debbuging
-    # print(f"var_name {var_name}, current_scope, {parser_helper.curr_scope}")
-    # print(parser_helper.procedure_directory[parser_helper.curr_scope], "\n")
+    # print(
+    #     f"var_name {var_name}, current_scope, {parser_helper.curr_scope}, SCOPE TYPE: {scope_type}"
+    # )
+    # print("ProcDir for curr_scope:", parser_helper.procedure_directory, "\n")
 
 
 # ---  ESTATUTOS SECUENCIALES ---
@@ -714,11 +724,12 @@ def add_quadruple_expression():
     # debbuging HERE
     # print(right_operand, left_operand, token)
     if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
+        # add the result (temp var) to the operand stack
+        result_type = semantic_cube.cube[right_operand_type, left_operand_type, token]
+        # add the quad
         quad_helper.add_quad(token, left_operand, right_operand, quad_helper.temp_cont)
         # expression
         quad_helper.push_operand(quad_helper.temp_cont)
-        # add the result (temp var) to the operand stack
-        result_type = semantic_cube.cube[right_operand_type, left_operand_type, token]
         # add the result type (temp var) to the type stack
         quad_helper.push_type(code_to_type.get(result_type))
         # increase counter for temp/result vars
@@ -865,8 +876,31 @@ def is_var_in_current_scope(var_name):
     )
 
 
+# def get_memory_address_from_table(var_name):
+#     return parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+#         "memory_address"
+#     ]
+
+
 def is_var_in_global_scope(var_name):
     return var_name in parser_helper.procedure_directory["global_script"]["var_table"]
+
+
+def is_scope_global(scope_name):
+    return parser_helper.procedure_directory[scope_name][
+        "scope_type"
+    ] is scope_to_code.get("global")
+
+
+def get_scope_type(scope_name):
+    """
+        Description:
+        Params:
+            scope_name (str): the name of the scope
+        Return:
+            scope_type (int): returns 1 for global, 2 for local
+     """
+    return parser_helper.procedure_directory[scope_name]["scope_type"]
 
 
 import ply.yacc as yacc
