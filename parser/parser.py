@@ -544,11 +544,11 @@ def p_snp_add_var(p):
     var_name = p[-1]  # get the last symbol read (left from this neural point)
     # For debbuging
     # Check if var already exists and add it to the table in currect scope
-    if is_var_in_current_scope(var_name):
+    if parser_helper.is_var_in_current_scope(var_name):
         error_message = f"Variable {var_name} has already been declared"
         error_helper.add_error(0, error_message)
     else:
-        scope_type = get_scope_type(parser_helper.curr_scope)
+        scope_type = parser_helper.get_scope_type(parser_helper.curr_scope)
         var_memory_address = memory.set_addr(scope_type, parser_helper.curr_type)
         parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             var_name
@@ -575,7 +575,7 @@ def p_snp_push_pending_operand(p):
     operand_id = p[-2] if p[-1] == None else p[-1]
     quad_helper.push_operand(operand_id)
 
-    if is_var_in_current_scope(operand_id):
+    if parser_helper.is_var_in_current_scope(operand_id):
         type = parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             operand_id
         ]["type"]
@@ -742,7 +742,9 @@ def add_quadruple_expression():
 def p_snp_checks_for_previous_declaration(p):
     """snp_checks_for_previous_declaration : empty"""
     var = p[-1]
-    is_decalred = is_var_in_current_scope(var) or is_var_in_global_scope(var)
+    is_decalred = parser_helper.is_var_in_current_scope(
+        var
+    ) or parser_helper.is_var_in_global_scope(var)
     if not is_decalred:
         error_helper.add_error(302, f"{var} doesn't exist")
 
@@ -848,18 +850,6 @@ def p_snp_add_params_count_to_table(p):
     print(f"current scope: {parser_helper.curr_scope} counter: {counter}")
 
 
-# Aux function to get snp #5 in Intermediate Code Actions for Module Definition
-def get_count_of_local_vars(scope):
-    num_total_vars = len(parser_helper.procedure_directory[scope]["var_table"])
-    num_params = parser_helper.procedure_directory[scope]["params_count"]
-    num_local_vars = num_total_vars - num_params
-
-    if num_local_vars < 0:
-        num_local_vars = 0
-
-    return num_local_vars
-
-
 # snp #6 in Intermediate Code Actions for Module Definition
 def p_snp_add_quad_cont_to_table(p):
     """snp_add_quad_cont_to_table : empty"""
@@ -894,40 +884,6 @@ def p_snp_push_eval_pending_token(p):
     quad_helper.push_token("eval")
     # For debbuging
     # print("Top token: ", quad_helper.top_token())
-
-
-def is_var_in_current_scope(var_name):
-    return (
-        var_name
-        in parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"]
-    )
-
-
-# def get_memory_address_from_table(var_name):
-#     return parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
-#         "memory_address"
-#     ]
-
-
-def is_var_in_global_scope(var_name):
-    return var_name in parser_helper.procedure_directory["global_script"]["var_table"]
-
-
-def is_scope_global(scope_name):
-    return parser_helper.procedure_directory[scope_name][
-        "scope_type"
-    ] is scope_to_code.get("global")
-
-
-def get_scope_type(scope_name):
-    """
-        Description:
-        Params:
-            scope_name (str): the name of the scope
-        Return:
-            scope_type (int): returns 1 for global, 2 for local
-     """
-    return parser_helper.procedure_directory[scope_name]["scope_type"]
 
 
 import ply.yacc as yacc

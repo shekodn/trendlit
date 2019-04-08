@@ -38,7 +38,7 @@ format: ##Applies BLACK to all py files in defined modules.
 	@black ${ALL_MODULES}
 
 ##prepare: Applies FORMAT TEST.
-prepare: format run test
+prepare: format clean run test
 
 run: ##Run all .tl files
 	${RUNMAIN} ${ALL_TL_FILES}
