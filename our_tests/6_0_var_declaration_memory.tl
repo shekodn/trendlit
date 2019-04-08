@@ -10,9 +10,15 @@ program the_name_of_the_program
       str global_str_4000
       str global_str_4001
 
+      def my_function2 () {
+        int local_int_5000
+        bool local_bool_7000
+        str local_str_8000
+      }
+
       def my_function3 () {
-        int local_int
-        bool local_bool
-        str local_str
+        int local_int_5000
+        bool local_bool_7000
+        str local_str_8000
       }
     }

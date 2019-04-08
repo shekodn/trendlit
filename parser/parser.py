@@ -519,6 +519,7 @@ def p_snp_end_module(p):
     # print(f"TABLE: {parser_helper.procedure_directory}")
     # print("CURR TYPEEEE",curr_module_type)
     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"].clear()
+    memory.reset_local_vars()
     parser_helper.curr_scope = "global_script"
     if curr_module_type is "void":  # VOID MODULE
         # Delete var table for the module that ended
