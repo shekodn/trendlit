@@ -7,6 +7,7 @@ RUNMAIN= python3 main.py
 # https://www.gnu.org/software/make/manual/html_node/Wildcard-Function.html
 ALL_ERROR_MODULES=$(wildcard error/*.py)
 ALL_LEXER_MODULES=$(wildcard lexer/*.py)
+ALL_MEMORY_MODULES=$(wildcard memory/*.py)
 ALL_PARSER_MODULES=$(wildcard parser/*.py)
 ALL_QUADRUPLE_MODULES=$(wildcard quadruple/*.py)
 ALL_ROOT_MODULES=$(wildcard *.py)
@@ -14,7 +15,7 @@ ALL_SEMANTIC_CUBE_MODULES=$(wildcard semantic_cube/*.py)
 ALL_STACK_MODULES=$(wildcard stack/*.py)
 ALL_TEST_MODULES=$(wildcard tests/test_*.py)
 
-ALL_MODULES=$(ALL_ERROR_MODULES) $(ALL_LEXER_MODULES) $(ALL_PARSER_MODULES) $(ALL_QUADRUPLE_MODULES) $(ALL_ROOT_MODULES) $(ALL_SEMANTIC_CUBE_MODULES) $(ALL_STACK_MODULES) $(ALL_TEST_MODULES)
+ALL_MODULES=$(ALL_ERROR_MODULES) $(ALL_LEXER_MODULES) $(ALL_MEMORY_MODULES) $(ALL_PARSER_MODULES) $(ALL_QUADRUPLE_MODULES) $(ALL_ROOT_MODULES) $(ALL_SEMANTIC_CUBE_MODULES) $(ALL_STACK_MODULES) $(ALL_TEST_MODULES)
 
 # Path from all .tl files (inside our_tests)
 ALL_TL_FILES=$(wildcard our_tests/*.tl)
