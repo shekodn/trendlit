@@ -425,7 +425,7 @@ def p_class(p):
 
 
 def p_htmlscript(p):
-    """htmlscript : OEVALSCRIPT expression CEVALSCRIPT
+    """htmlscript : OEVALSCRIPT snp_push_eval_pending_token expression CEVALSCRIPT snp_add_eval_quad
         | embedscript"""
 
 
@@ -870,7 +870,7 @@ def p_snp_add_quad_cont_to_table(p):
     # print("I start from: ", parser_helper.procedure_directory[parser_helper.curr_scope]["starting_quad"])
 
 
-# --- CONDITIONALS ---
+# --- HTML ---
 
 
 def p_snp_open_html_tag(p):
@@ -884,6 +884,13 @@ def p_snp_close_html_tag(p):
     """snp_close_html_tag : empty"""
     html_tag = quad_helper.pop_tag() + 1
     quad_helper.add_quad(token_to_code.get("eval"), -1, -1, html_tag)
+
+
+def p_snp_push_eval_pending_token(p):
+    """snp_push_eval_pending_token : empty"""
+    quad_helper.push_token("eval")
+    # For debbuging
+    # print("Top token: ", quad_helper.top_token())
 
 
 def is_var_in_current_scope(var_name):
