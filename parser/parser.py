@@ -878,6 +878,9 @@ def p_snp_open_html_tag(p):
     html_tag = p[-1].upper()
     quad_helper.push_tag(token_to_code.get(html_tag))
     quad_helper.add_quad(token_to_code.get("eval"), -1, -1, token_to_code.get(html_tag))
+    # For debbuging
+    print("Html tag: ", html_tag)
+    print("Top tag: ", quad_helper.top_tag())
 
 
 def p_snp_close_html_tag(p):
