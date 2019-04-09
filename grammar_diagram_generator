@@ -136,7 +136,7 @@ arguments1 ::= 'COMMA' type 'ID' arguments1 | empty
 
 tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
 
-class ::= 'CLASS' 'COLON' 'CTESTR' | empty
+html_class ::= 'CLASS' 'COLON' 'CTESTR' | empty
 
 htmlscript ::= 'OEVALSCRIPT' expression 'CEVALSCRIPT'
 

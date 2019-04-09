@@ -400,7 +400,7 @@ def p_arguments1(p):
 
 #
 # def p_htmltag(p):
-#     """htmltag : tag OBRACE class htmltag1 CBRACE snp_close_html_tag"""
+#     """htmltag : tag OBRACE html_class htmltag1 CBRACE snp_close_html_tag"""
 #
 #
 # def p_htmltag1(p):
@@ -420,8 +420,8 @@ def p_tag(p):
         | TH snp_open_html_tag"""
 
 
-def p_class(p):
-    """class : CLASS COLON CTESTR
+def p_html_class(p):
+    """html_class : CLASS COLON CTESTR
         | empty"""
 
 
