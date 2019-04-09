@@ -131,3 +131,39 @@ class QuadruplesTestCase(unittest.TestCase):
         result = filecmp.cmp(file1_name, file2_name)
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
+
+    def test_quadruple_8_3_pass_loop_html(self):
+        file1_name = TESTING_CODE + "8_3_pass_loop_html.tl.test"
+        file2_name = OBJECT_CODE + "8_3_pass_loop_html.tl.obj"
+
+        print(f"\nTESTING QUADRUPLES: {file1_name}\n")
+        result = filecmp.cmp(file1_name, file2_name)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
+    def test_quadruple_8_4_pass_nested_loop_html(self):
+        file1_name = TESTING_CODE + "8_4_pass_nested_loop_html.tl.test"
+        file2_name = OBJECT_CODE + "8_4_pass_nested_loop_html.tl.obj"
+
+        print(f"\nTESTING QUADRUPLES: {file1_name}\n")
+        result = filecmp.cmp(file1_name, file2_name)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
+    def test_quadruple_8_5_pass_if_inside_loop_html(self):
+        file1_name = TESTING_CODE + "8_5_pass_if_inside_loop_html.tl.test"
+        file2_name = OBJECT_CODE + "8_5_pass_if_inside_loop_html.tl.obj"
+
+        print(f"\nTESTING QUADRUPLES: {file1_name}\n")
+        result = filecmp.cmp(file1_name, file2_name)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
+    def test_quadruple_8_6_pass_do_loop_html(self):
+        file1_name = TESTING_CODE + "8_6_pass_do_loop_html.tl.test"
+        file2_name = OBJECT_CODE + "8_6_pass_do_loop_html.tl.obj"
+
+        print(f"\nTESTING QUADRUPLES: {file1_name}\n")
+        result = filecmp.cmp(file1_name, file2_name)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
