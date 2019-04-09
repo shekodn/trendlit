@@ -138,7 +138,7 @@ tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
 
 class ::= 'CLASS' 'COLON' 'CTESTR' | empty
 
-htmlscript ::= 'OEVALSCRIPT' expression 'CEVALSCRIPT' | embedscript
+htmlscript ::= 'OEVALSCRIPT' expression 'CEVALSCRIPT'
 
 embedscript ::= 'EMBED' 'ID' 'OBRACE' eblock 'CBRACE'
 
@@ -150,7 +150,7 @@ tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
 
 html_block ::= html_statement html_block | htmltag html_block | empty
 
-html_statement ::= html_assignment | html_condition | cycle | call | writing
+html_statement ::= html_assignment | html_condition | htmlscript | cycle | call | writing
 
 html_assignment ::= 'INITCODEHTML' 'ID' 'EQ' expression 'CCODEHTML'
 html_condition ::= 'INITCODEHTML' 'IF' 'OPAREN' expression 'CPAREN' 'CCODEHTML' html_block html_end_condition
