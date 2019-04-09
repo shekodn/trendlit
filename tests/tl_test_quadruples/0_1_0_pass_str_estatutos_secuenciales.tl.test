@@ -1,0 +1,8 @@
+105  -1 final_sentence
+105 "Byte" -1 name
+105 "" -1 another_string
+105 "is cute" -1 another_string
+101 name another_string 10001
+105 10001 -1 final_sentence
+101 final_sentence "!!!" 10002
+301 -1 -1 10002
