@@ -398,15 +398,16 @@ def p_arguments1(p):
         | empty"""
 
 
-def p_htmltag(p):
-    """htmltag : tag OBRACE class htmltag1 CBRACE snp_close_html_tag"""
-
-
-def p_htmltag1(p):
-    """htmltag1 : CTESTR htmltag1
-        | htmlscript htmltag1
-        | htmltag htmltag1
-        | empty"""
+#
+# def p_htmltag(p):
+#     """htmltag : tag OBRACE class htmltag1 CBRACE snp_close_html_tag"""
+#
+#
+# def p_htmltag1(p):
+#     """htmltag1 : CTESTR htmltag1
+#         | htmlscript htmltag1
+#         | htmltag htmltag1
+#         | empty"""
 
 
 def p_tag(p):
@@ -424,9 +425,9 @@ def p_class(p):
         | empty"""
 
 
+# gorritos <^ ^>
 def p_htmlscript(p):
-    """htmlscript : OEVALSCRIPT snp_push_eval_pending_token expression CEVALSCRIPT snp_add_eval_quad
-        | embedscript"""
+    """htmlscript : OEVALSCRIPT snp_push_eval_pending_token expression CEVALSCRIPT snp_add_eval_quad"""
 
 
 # TODO : FIX THIS!!!
@@ -442,6 +443,45 @@ def p_empty(p):
 def p_error(p):
     print("Syntax error at '%s'" % p)
     exit(1)
+
+
+# --- HTML ---
+
+
+def p_htmltag(p):
+    """htmltag : tag OBRACE html_block CBRACE snp_close_html_tag"""
+    print("p_htmltag(p):")
+
+
+def p_html_block(p):
+    """html_block : html_statement html_block
+    | htmltag html_block
+    | empty"""
+    print("p_html_block(p)")
+
+
+def p_html_statement(p):
+    """html_statement : html_assignment
+    | html_condition
+    | htmlscript
+    | cycle
+    | call
+    | writing"""
+
+
+def p_html_assignment(p):
+    """html_assignment : INITCODEHTML ID EQ expression CCODEHTML"""
+    print("p_html_assignment(p):")
+
+
+def p_html_condition(p):
+    """html_condition : INITCODEHTML IF OPAREN expression CPAREN snp_conditional_statement_1 CCODEHTML html_block html_end_condition"""
+    print("p_html_condition(p)")
+
+
+def p_html_end_condition(p):
+    """html_end_condition : ENDCODEHTML ENDIF CCODEHTML snp_conditional_statement_2"""
+    print("p_html_end_condition(p):")
 
 
 # --- SEMANTIC NEURAL POINTS ---
@@ -869,8 +909,8 @@ def p_snp_open_html_tag(p):
     quad_helper.push_tag(token_to_code.get(html_tag))
     quad_helper.add_quad(token_to_code.get("eval"), -1, -1, token_to_code.get(html_tag))
     # For debbuging
-    print("Html tag: ", html_tag)
-    print("Top tag: ", quad_helper.top_tag())
+    # print("Html tag: ", html_tag)
+    # print("Top tag: ", quad_helper.top_tag())
 
 
 def p_snp_close_html_tag(p):

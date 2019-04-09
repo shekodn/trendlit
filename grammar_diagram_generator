@@ -131,8 +131,8 @@ writing ::= 'EVAL' 'OPAREN' expression 'CPAREN'
 arguments ::= type 'ID' arguments1 | empty
 arguments1 ::= 'COMMA' type 'ID' arguments1 | empty
 
-htmltag ::= tag 'OBRACE' class htmltag1 'CBRACE'
-htmltag1 ::= 'CTESTR' htmltag1 | htmlscript htmltag1 | htmltag htmltag1 | empty
+// htmltag ::= tag 'OBRACE' class htmltag1 'CBRACE'
+// htmltag1 ::= 'CTESTR' htmltag1 | htmlscript htmltag1 | htmltag htmltag1 | empty
 
 tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
 
@@ -141,3 +141,17 @@ class ::= 'CLASS' 'COLON' 'CTESTR' | empty
 htmlscript ::= 'OEVALSCRIPT' expression 'CEVALSCRIPT' | embedscript
 
 embedscript ::= 'EMBED' 'ID' 'OBRACE' eblock 'CBRACE'
+
+/* -------- NEW HTML GAMMAR -------- */
+
+htmltag ::= tag 'OBRACE' html_block 'CBRACE'
+
+tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
+
+html_block ::= html_statement html_block | htmltag html_block | empty
+
+html_statement ::= html_assignment | html_condition | cycle | call | writing
+
+html_assignment ::= 'INITCODEHTML' 'ID' 'EQ' expression 'CCODEHTML'
+html_condition ::= 'INITCODEHTML' 'IF' 'OPAREN' expression 'CPAREN' 'CCODEHTML' html_block html_end_condition
+html_end_condition ::= 'ENDCODEHTML' 'ENDIF' 'CCODEHTML'

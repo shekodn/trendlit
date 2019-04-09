@@ -36,7 +36,7 @@ reserved_words = {
     "sort_slice": "SORT_SLICE",
     "suck_csv": "SUCK_CSV",
     "zeros": "ZEROS",
-    # reserved words html
+    # reserved words html tags
     "class": "CLASS",
     "div": "DIV",
     "embed": "EMBED",
@@ -46,12 +46,15 @@ reserved_words = {
     "table": "TABLE",
     "th": "TH",
     "tr": "TR",
+    # reserved html code
+    "endif": "ENDIF",
 }
 
 tokens = list(reserved_words.values()) + [
     "ASSOCIATIVE",
     "CBRACE",
     "CBRACK",
+    "CCODEHTML",
     "CEVALSCRIPT",
     "COLON",
     "COMMA",
@@ -59,8 +62,10 @@ tokens = list(reserved_words.values()) + [
     "CTED",
     "CTEI",
     "CTESTR",
+    "ENDCODEHTML",
     "EQ",
     "ID",
+    "INITCODEHTML",
     "OBRACE",
     "OBRACK",
     "OEVALSCRIPT",
@@ -86,6 +91,21 @@ t_CBRACK = r"\]"
 
 def t_OEVALSCRIPT(t):
     r"<\^"
+    return t
+
+
+def t_ENDCODEHTML(t):
+    r"<%\/"
+    return t
+
+
+def t_INITCODEHTML(t):
+    r"<%"
+    return t
+
+
+def t_CCODEHTML(t):
+    r"%>"
     return t
 
 
