@@ -430,10 +430,11 @@ def p_htmlscript(p):
     """htmlscript : OEVALSCRIPT snp_push_eval_pending_token expression CEVALSCRIPT snp_add_eval_quad"""
 
 
-# TODO : FIX THIS!!!
-def p_embedscript(p):
-    """embedscript : EMBED ID block"""
-    # """embedscript : EMBED ID OBRACE eblock CBRACE"""
+#
+# # TODO : FIX THIS!!!
+# def p_embedscript(p):
+#     """embedscript : EMBED ID block"""
+#     # """embedscript : EMBED ID OBRACE eblock CBRACE"""
 
 
 def p_empty(p):
@@ -450,21 +451,20 @@ def p_error(p):
 
 def p_htmltag(p):
     """htmltag : tag OBRACE html_block CBRACE snp_close_html_tag"""
-    print("p_htmltag(p):")
 
 
 def p_html_block(p):
     """html_block : html_statement html_block
     | htmltag html_block
     | empty"""
-    print("p_html_block(p)")
 
 
 def p_html_statement(p):
     """html_statement : html_assignment
     | html_condition
     | htmlscript
-    | cycle
+    | html_cycle
+    | html_do_cycle
     | call
     | writing"""
 
@@ -485,6 +485,22 @@ def p_html_end_condition(p):
     """html_end_condition : ENDCODEHTML ENDIF CCODEHTML snp_conditional_statement_2"""
     # For debbuging
     # print("p_html_end_condition(p):")
+
+
+def p_html_cycle(p):
+    """html_cycle : INITCODEHTML LOOP snp_while_1 OPAREN expression CPAREN CCODEHTML snp_conditional_statement_1 html_block html_end_cycle snp_while_3"""
+
+
+def p_html_end_cycle(p):
+    """html_end_cycle : ENDCODEHTML ENDLOOP CCODEHTML"""
+
+
+def p_html_do_cycle(p):
+    """html_do_cycle : INITCODEHTML DO CCODEHTML snp_while_1 html_block html_end_do_cycle"""
+
+
+def p_html_end_do_cycle(p):
+    """html_end_do_cycle : ENDCODEHTML ENDLOOP OPAREN expression CPAREN CCODEHTML snp_do_while_gotot"""
 
 
 # --- SEMANTIC NEURAL POINTS ---

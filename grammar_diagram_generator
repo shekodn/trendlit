@@ -47,7 +47,7 @@ constSlice2D ::=  'OBRACK' constSlice1D 'COMMA' 'CBRACK' | 'OBRACK' constSlice1D
 
 type ::= 'STR' | 'INT' | 'DOUBLE' | 'BOOL'
 
-statement ::= assignment | condition | cycle | call | writing
+statement ::= assignment | condition | cycle | doCycle |call | writing
 
 /*
 assignment:
@@ -140,7 +140,7 @@ class ::= 'CLASS' 'COLON' 'CTESTR' | empty
 
 htmlscript ::= 'OEVALSCRIPT' expression 'CEVALSCRIPT'
 
-embedscript ::= 'EMBED' 'ID' 'OBRACE' eblock 'CBRACE'
+// embedscript ::= 'EMBED' 'ID' 'OBRACE' eblock 'CBRACE'
 
 /* -------- NEW HTML GAMMAR -------- */
 
@@ -150,8 +150,15 @@ tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
 
 html_block ::= html_statement html_block | htmltag html_block | empty
 
-html_statement ::= html_assignment | html_condition | htmlscript | cycle | call | writing
+html_statement ::= html_assignment | html_condition | htmlscript | html_cycle | html_do_cycle| call | writing
 
 html_assignment ::= 'INITCODEHTML' 'ID' 'EQ' expression 'CCODEHTML'
+
 html_condition ::= 'INITCODEHTML' 'IF' 'OPAREN' expression 'CPAREN' 'CCODEHTML' html_block html_end_condition
 html_end_condition ::= 'ENDCODEHTML' 'ENDIF' 'CCODEHTML'
+
+html_cycle ::= 'INITCODEHTML' 'LOOP' 'OPAREN' expression 'CPAREN' 'CCODEHTML' html_block html_end_cycle
+html_end_cycle ::= 'ENDCODEHTML' 'ENDLOOP' 'CCODEHTML'
+
+html_do_cycle ::= 'INITCODEHTML' 'DO' 'CCODEHTML' html_block html_end_do_cycle
+html_end_do_cycle ::= 'ENDCODEHTML' 'ENDLOOP' 'OPAREN' expression 'CPAREN' 'CCODEHTML'

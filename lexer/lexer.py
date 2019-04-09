@@ -39,7 +39,7 @@ reserved_words = {
     # reserved words html tags
     "class": "CLASS",
     "div": "DIV",
-    "embed": "EMBED",
+    # "embed": "EMBED",
     "h1": "H1",
     "h2": "H2",
     "p": "P",
@@ -48,6 +48,7 @@ reserved_words = {
     "tr": "TR",
     # reserved html code
     "endif": "ENDIF",
+    "endloop": "ENDLOOP",
 }
 
 tokens = list(reserved_words.values()) + [
