@@ -471,17 +471,20 @@ def p_html_statement(p):
 
 def p_html_assignment(p):
     """html_assignment : INITCODEHTML ID EQ expression CCODEHTML"""
-    print("p_html_assignment(p):")
+    # For debbuging
+    # print("p_html_assignment(p):")
 
 
 def p_html_condition(p):
     """html_condition : INITCODEHTML IF OPAREN expression CPAREN snp_conditional_statement_1 CCODEHTML html_block html_end_condition"""
-    print("p_html_condition(p)")
+    # For debbuging
+    # print("p_html_condition(p)")
 
 
 def p_html_end_condition(p):
     """html_end_condition : ENDCODEHTML ENDIF CCODEHTML snp_conditional_statement_2"""
-    print("p_html_end_condition(p):")
+    # For debbuging
+    # print("p_html_end_condition(p):")
 
 
 # --- SEMANTIC NEURAL POINTS ---
