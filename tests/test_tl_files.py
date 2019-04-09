@@ -81,9 +81,39 @@ class OurTestCase(unittest.TestCase):
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
 
-    def test_5_2_fail_returning_function_no_args(self):
+    def test_8_1_fail_gorritos_html(self):
         file_name = TESTING_PREFIX + "8_1_fail_gorritos_html.tl"
         expected_errors = 2
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
+
+    # TODO : Add these missing failing files (no los pude agregar bc todo tronaba ya que son syntaz errors y ahi estamos haciendo un exit no agregando al error_helper)
+
+    # def test_8_7_fail_eval_outside_tag_html(self):
+    #     file_name = TESTING_PREFIX + "8_7_fail_eval_outside_tag_html.tl"
+    #     expected_errors = 1
+    #     result = aux_tl_file(file_name, expected_errors)
+    #     print(f"\nTESTING: {file_name}\n")
+    #     self.assertEqual(result, expected_errors)
+    #
+    # def test_8_8_fail_do_loop_outside_tag_html(self):
+    #     file_name = TESTING_PREFIX + "8_8_fail_do_loop_outside_tag_html.tl"
+    #     expected_errors = 1
+    #     result = aux_tl_file(file_name, expected_errors)
+    #     print(f"\nTESTING: {file_name}\n")
+    #     self.assertEqual(result, expected_errors)
+    #
+    # def test_8_9_fail_loop_outside_tag_html(self):
+    #     file_name = TESTING_PREFIX + "8_9_fail_loop_outside_tag_html.tl"
+    #     expected_errors = 1
+    #     result = aux_tl_file(file_name, expected_errors)
+    #     print(f"\nTESTING: {file_name}\n")
+    #     self.assertEqual(result, expected_errors)
+
+    def test_8_6_pass_func_call_html(self):
+        file_name = TESTING_PREFIX + "8_6_pass_func_call_html.tl"
+        expected_errors = 0
         result = aux_tl_file(file_name, expected_errors)
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)

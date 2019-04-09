@@ -150,7 +150,7 @@ tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
 
 html_block ::= html_statement html_block | htmltag html_block | empty
 
-html_statement ::= html_assignment | html_condition | htmlscript | html_cycle | html_do_cycle| call | writing
+html_statement ::= html_assignment | html_condition | htmlscript | html_cycle | html_do_cycle| html_call | writing
 
 html_assignment ::= 'INITCODEHTML' 'ID' 'EQ' expression 'CCODEHTML'
 
@@ -162,3 +162,6 @@ html_end_cycle ::= 'ENDCODEHTML' 'ENDLOOP' 'CCODEHTML'
 
 html_do_cycle ::= 'INITCODEHTML' 'DO' 'CCODEHTML' html_block html_end_do_cycle
 html_end_do_cycle ::= 'ENDCODEHTML' 'ENDLOOP' 'OPAREN' expression 'CPAREN' 'CCODEHTML'
+
+/* falta agregar predef a html calls (nuestras funciones propias)*/
+html_call ::= 'INITCODEHTML' 'ID' 'OPAREN' params 'CPAREN' 'CCODEHTML'

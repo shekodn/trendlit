@@ -441,8 +441,10 @@ def p_empty(p):
     """empty :"""
 
 
+# TODO : Add a nice error to the error queue here
 def p_error(p):
     print("Syntax error at '%s'" % p)
+    # error_helper.add_error(0, "Syntax error at '%s'" % p)
     exit(1)
 
 
@@ -465,7 +467,7 @@ def p_html_statement(p):
     | htmlscript
     | html_cycle
     | html_do_cycle
-    | call
+    | html_call
     | writing"""
 
 
@@ -501,6 +503,10 @@ def p_html_do_cycle(p):
 
 def p_html_end_do_cycle(p):
     """html_end_do_cycle : ENDCODEHTML ENDLOOP OPAREN expression CPAREN CCODEHTML snp_do_while_gotot"""
+
+
+def p_html_call(p):
+    """html_call : INITCODEHTML ID OPAREN params CPAREN CCODEHTML"""
 
 
 # --- SEMANTIC NEURAL POINTS ---
@@ -587,7 +593,7 @@ def p_snp_end_module(p):
         return_value = quad_helper.pop_operand()
         return_type = code_to_type.get(quad_helper.pop_type())
         if return_type != curr_module_type:
-            print(return_type, curr_module_type)
+            # print(return_type, curr_module_type)
             error_helper.add_error(301, f"Error in line {p.lexer.lineno}")
         else:
             quad_helper.add_quad(
@@ -903,10 +909,10 @@ def p_snp_add_params_count_to_table(p):
     # clears counter
     parser_helper.curr_module_param_counter = 0
     # debbuging
-    counter = parser_helper.procedure_directory[parser_helper.curr_scope][
-        "params_count"
-    ]
-    print(f"current scope: {parser_helper.curr_scope} counter: {counter}")
+    # counter = parser_helper.procedure_directory[parser_helper.curr_scope][
+    #     "params_count"
+    # ]
+    # print(f"current scope: {parser_helper.curr_scope} counter: {counter}")
 
 
 # snp #6 in Intermediate Code Actions for Module Definition
