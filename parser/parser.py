@@ -398,18 +398,6 @@ def p_arguments1(p):
         | empty"""
 
 
-#
-# def p_htmltag(p):
-#     """htmltag : tag OBRACE html_class htmltag1 CBRACE snp_close_html_tag"""
-#
-#
-# def p_htmltag1(p):
-#     """htmltag1 : CTESTR htmltag1
-#         | htmlscript htmltag1
-#         | htmltag htmltag1
-#         | empty"""
-
-
 def p_tag(p):
     """tag : H1 snp_open_html_tag
         | H2 snp_open_html_tag
@@ -428,13 +416,6 @@ def p_html_class(p):
 # gorritos <^ ^>
 def p_htmlscript(p):
     """htmlscript : OEVALSCRIPT snp_push_eval_pending_token expression CEVALSCRIPT snp_add_eval_quad"""
-
-
-#
-# # TODO : FIX THIS!!!
-# def p_embedscript(p):
-#     """embedscript : EMBED ID block"""
-#     # """embedscript : EMBED ID OBRACE eblock CBRACE"""
 
 
 def p_empty(p):

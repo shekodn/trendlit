@@ -131,16 +131,11 @@ writing ::= 'EVAL' 'OPAREN' expression 'CPAREN'
 arguments ::= type 'ID' arguments1 | empty
 arguments1 ::= 'COMMA' type 'ID' arguments1 | empty
 
-// htmltag ::= tag 'OBRACE' class htmltag1 'CBRACE'
-// htmltag1 ::= 'CTESTR' htmltag1 | htmlscript htmltag1 | htmltag htmltag1 | empty
-
 tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
 
 html_class ::= 'CLASS' 'COLON' 'CTESTR' | empty
 
 htmlscript ::= 'OEVALSCRIPT' expression 'CEVALSCRIPT'
-
-// embedscript ::= 'EMBED' 'ID' 'OBRACE' eblock 'CBRACE'
 
 /* -------- NEW HTML GAMMAR -------- */
 
