@@ -4,13 +4,6 @@ from parser.parser import parser, yacc, quad_helper, error_helper
 TESTING_PREFIX = "our_tests/"
 
 
-# def __eq__(self, other):
-#     """Overrides the default implementation"""
-#     if isinstance(other, Number):
-#         return self.number == other.number
-#     return False
-
-
 def aux_tl_file(file_name, expected_number_of_errors):
     try:
         f = open(file_name, "r")
@@ -88,32 +81,49 @@ class OurTestCase(unittest.TestCase):
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
 
-    # TODO : Add these missing failing files (no los pude agregar bc todo tronaba ya que son syntaz errors y ahi estamos haciendo un exit no agregando al error_helper)
-
-    # def test_8_7_fail_eval_outside_tag_html(self):
-    #     file_name = TESTING_PREFIX + "8_7_fail_eval_outside_tag_html.tl"
-    #     expected_errors = 1
-    #     result = aux_tl_file(file_name, expected_errors)
-    #     print(f"\nTESTING: {file_name}\n")
-    #     self.assertEqual(result, expected_errors)
-    #
-    # def test_8_8_fail_do_loop_outside_tag_html(self):
-    #     file_name = TESTING_PREFIX + "8_8_fail_do_loop_outside_tag_html.tl"
-    #     expected_errors = 1
-    #     result = aux_tl_file(file_name, expected_errors)
-    #     print(f"\nTESTING: {file_name}\n")
-    #     self.assertEqual(result, expected_errors)
-    #
-    # def test_8_9_fail_loop_outside_tag_html(self):
-    #     file_name = TESTING_PREFIX + "8_9_fail_loop_outside_tag_html.tl"
-    #     expected_errors = 1
-    #     result = aux_tl_file(file_name, expected_errors)
-    #     print(f"\nTESTING: {file_name}\n")
-    #     self.assertEqual(result, expected_errors)
-
     def test_8_6_pass_func_call_html(self):
         file_name = TESTING_PREFIX + "8_6_pass_func_call_html.tl"
         expected_errors = 0
         result = aux_tl_file(file_name, expected_errors)
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
+
+    def test_8_7_fail_eval_outside_tag_html(self):
+
+        with self.assertRaises(SystemExit) as cm:
+            file_name = TESTING_PREFIX + "8_7_fail_eval_outside_tag_html.tl"
+            print(f"\nTESTING: {file_name}\n")
+            # expected_errors: None, since error_helper cannot help here (program should exit)
+            expected_errors = None
+
+            # No result expected since program should exit (1)
+            # result = aux_tl_file(file_name, expected_errors)
+            aux_tl_file(file_name, expected_errors)
+        expected_exit_code = 1
+        self.assertEqual(cm.exception.code, expected_exit_code)
+
+    def test_8_8_fail_do_loop_outside_tag_html(self):
+        with self.assertRaises(SystemExit) as cm:
+            file_name = TESTING_PREFIX + "8_8_fail_do_loop_outside_tag_html.tl"
+            print(f"\nTESTING: {file_name}\n")
+            # expected_errors: None, since error_helper cannot help here (program should exit)
+            expected_errors = None
+
+            # No result expected since program should exit (1)
+            # result = aux_tl_file(file_name, expected_errors)
+            aux_tl_file(file_name, expected_errors)
+        expected_exit_code = 1
+        self.assertEqual(cm.exception.code, expected_exit_code)
+
+    def test_8_9_fail_loop_outside_tag_html(self):
+        with self.assertRaises(SystemExit) as cm:
+            file_name = TESTING_PREFIX + "8_9_fail_loop_outside_tag_html.tl"
+            print(f"\nTESTING: {file_name}\n")
+            # expected_errors: None, since error_helper cannot help here (program should exit)
+            expected_errors = None
+
+            # No result expected since program should exit (1)
+            # result = aux_tl_file(file_name, expected_errors)
+            aux_tl_file(file_name, expected_errors)
+        expected_exit_code = 1
+        self.assertEqual(cm.exception.code, expected_exit_code)

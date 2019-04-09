@@ -423,9 +423,16 @@ def p_empty(p):
 
 
 # TODO : Add a nice error to the error queue here
+# Cannot use error_helper since program needs to exit.
+# Othwerwise it doesn't know where to go next (aka se cicla)
+# Reference: https://github.com/dabeaz/ply/blob/dca6c606d63d4729a395f30953456b0f00d4f443/ply/lex.py#L66
 def p_error(p):
+    # For debbuging
+    # print("Type: ", p.type)
+    # print("Value: ", p.value)
+    # print("Line #", p.lineno)
+    # print("lexpos? #", p.lexpos)
     print("Syntax error at '%s'" % p)
-    # error_helper.add_error(0, "Syntax error at '%s'" % p)
     exit(1)
 
 
