@@ -713,6 +713,16 @@ def add_quadruple_assignation():
         quad_helper.add_quad(token, right_operand, -1, left_operand)  # assignation
     else:
         error_helper.add_error(301)
+    # For debbuging
+    # print(
+    #     "Semantic Cube Checked: ",
+    #     "right: ",
+    #     right_operand_type,
+    #     "left: ",
+    #     left_operand_type,
+    #     "token: ",
+    #     token,
+    # )
 
 
 # sign => "+|-"

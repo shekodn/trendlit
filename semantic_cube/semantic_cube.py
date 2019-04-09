@@ -245,7 +245,8 @@ class Cube:
         }
 
     def is_in_cube(self, operType1, operType2, op):
-        if (operType1, operType2, op) not in self.cube:
-            return False
-        else:
+        if (operType1, operType2, op) in self.cube and (
+            self.cube[(operType1, operType2, op)] is not type_error
+        ):
             return True
+        return False
