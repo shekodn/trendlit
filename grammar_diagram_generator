@@ -150,15 +150,15 @@ html_statement ::= html_assignment | html_condition | htmlscript | html_cycle | 
 html_assignment ::= 'INITCODEHTML' 'ID' 'EQ' expression 'CCODEHTML'
 
 html_condition ::= 'INITCODEHTML' 'IF' 'OPAREN' expression 'CPAREN' 'CCODEHTML' html_block html_condition1_else html_end_condition
-html_condition1_else ::= 'INITCODEHTML' 'ELSE' 'CCODEHTML' html_block | empty
-html_end_condition ::= 'ENDCODEHTML' 'ENDIF' 'CCODEHTML'
+html_condition1_else ::= 'HTMLELSE' html_block | empty
+html_end_condition ::= 'HTMLEND'
 
 
 html_cycle ::= 'INITCODEHTML' 'LOOP' 'OPAREN' expression 'CPAREN' 'CCODEHTML' html_block html_end_cycle
-html_end_cycle ::= 'ENDCODEHTML' 'ENDLOOP' 'CCODEHTML'
+html_end_cycle ::= 'HTMLEND'
 
 html_do_cycle ::= 'INITCODEHTML' 'DO' 'CCODEHTML' html_block html_end_do_cycle
-html_end_do_cycle ::= 'ENDCODEHTML' 'ENDLOOP' 'OPAREN' expression 'CPAREN' 'CCODEHTML'
+html_end_do_cycle ::= 'HTMLENDDO' 'OPAREN' expression 'CPAREN' 'CCODEHTML'
 
 /* falta agregar predef a html calls (nuestras funciones propias)*/
 html_call ::= 'INITCODEHTML' 'ID' 'OPAREN' params 'CPAREN' 'CCODEHTML'
