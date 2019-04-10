@@ -66,6 +66,7 @@ tokens = list(reserved_words.values()) + [
     "ENDCODEHTML",
     "EQ",
     "HTMLELSE",
+    "HTMLEND",
     "ID",
     "INITCODEHTML",
     "OBRACE",
@@ -98,6 +99,11 @@ def t_OEVALSCRIPT(t):
 
 def t_HTMLELSE(t):
     r"<%[ ]*else[ ]*%>"
+    return t
+
+
+def t_HTMLEND(t):
+    r"<%[ ]*end[ ]*%>"
     return t
 
 
