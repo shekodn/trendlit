@@ -491,7 +491,7 @@ def p_html_do_cycle(p):
 
 
 def p_html_end_do_cycle(p):
-    """html_end_do_cycle : ENDCODEHTML ENDLOOP OPAREN expression CPAREN CCODEHTML snp_do_while_gotot"""
+    """html_end_do_cycle : HTMLENDDO OPAREN expression CPAREN CCODEHTML snp_do_while_gotot"""
 
 
 def p_html_call(p):

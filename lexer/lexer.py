@@ -64,6 +64,7 @@ tokens = list(reserved_words.values()) + [
     "CTEI",
     "CTESTR",
     "ENDCODEHTML",
+    "HTMLENDDO",
     "EQ",
     "HTMLELSE",
     "HTMLEND",
@@ -104,6 +105,11 @@ def t_HTMLELSE(t):
 
 def t_HTMLEND(t):
     r"<%[ ]*end[ ]*%>"
+    return t
+
+
+def t_HTMLENDDO(t):
+    r"<%[ ]*end"
     return t
 
 

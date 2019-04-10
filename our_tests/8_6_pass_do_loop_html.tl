@@ -8,7 +8,7 @@ program the_name_of_the_program
       <% do %>
         <^"hi"^>
         p{}
-      <%/ endloop ( 3 is 4) %>
+      <% end ( 3 is 4) %>
     }
 
     # 0. eval -1 -1 604
