@@ -914,6 +914,7 @@ def p_snp_add_params_count_to_table(p):
     # ]
     # print(f"current scope: {parser_helper.curr_scope} counter: {counter}")
 
+
 # --- INTERMEDIATECODE ACTIONS FOR MODULE DEFINITION (INTERMEDIATE REPRESENTATION) ---
 
 # snp #6 in Intermediate Code Actions for Module Definition

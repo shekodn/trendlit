@@ -26,6 +26,7 @@ class QuadruplesTestCase(unittest.TestCase):
 
         file1_name = TESTING_CODE + "0_1_0_pass_str_estatutos_secuenciales.tl.test"
         file2_name = OBJECT_CODE + "0_1_0_pass_str_estatutos_secuenciales.tl.obj"
+
     def test_quadruple_2_0_pass_estatutos_secuenciales(self):
 
         file1_name = TESTING_CODE + "2_0_pass_estatutos_secuenciales.tl.test"
