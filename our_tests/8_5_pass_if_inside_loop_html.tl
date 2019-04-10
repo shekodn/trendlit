@@ -11,7 +11,7 @@ program the_name_of_the_program
             p{}
             p { <^"nested if is executed"^> }
         <% end %>
-      <%/ endloop %>
+      <% end %>
     }
 
 

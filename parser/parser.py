@@ -483,7 +483,7 @@ def p_html_cycle(p):
 
 
 def p_html_end_cycle(p):
-    """html_end_cycle : ENDCODEHTML ENDLOOP CCODEHTML"""
+    """html_end_cycle : HTMLEND"""
 
 
 def p_html_do_cycle(p):
