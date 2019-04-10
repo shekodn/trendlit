@@ -10,7 +10,7 @@ program the_name_of_the_program
             p { <^" if is executed"^> }
         <% else %>
             p { <^" else is executed"^> }
-        <%/ endif %>
+        <% end              %>
     }
 
     # 0. eval -1 -1 604

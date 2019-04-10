@@ -475,7 +475,7 @@ def p_html_condition1_else(p):
 
 
 def p_html_end_condition(p):
-    """html_end_condition : ENDCODEHTML ENDIF CCODEHTML snp_conditional_statement_2"""
+    """html_end_condition : HTMLEND snp_conditional_statement_2"""
 
 
 def p_html_cycle(p):
