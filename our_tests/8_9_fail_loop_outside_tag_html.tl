@@ -7,4 +7,4 @@ program the_name_of_the_program
 
     <% loop (1 > 5) %>
         <^"All this is not valid"^>
-    <%/ endloop %>
+    <% end %>
