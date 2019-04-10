@@ -462,19 +462,26 @@ def p_html_statement(p):
 def p_html_assignment(p):
     """html_assignment : INITCODEHTML ID EQ expression CCODEHTML"""
     # For debbuging
-    # print("p_html_assignment(p):")
+    print("p_html_assignment(p):")
 
 
 def p_html_condition(p):
-    """html_condition : INITCODEHTML IF OPAREN expression CPAREN snp_conditional_statement_1 CCODEHTML html_block html_end_condition"""
+    """html_condition : INITCODEHTML IF OPAREN expression CPAREN snp_conditional_statement_1 CCODEHTML html_block html_condition1_else html_end_condition"""
     # For debbuging
-    # print("p_html_condition(p)")
+    print("p_html_condition(p)")
+
+
+def p_html_condition1_else(p):
+    """html_condition1_else : HTMLELSE snp_conditional_statement_3 html_block
+    | empty"""
+    # For debbuging
+    print("p_html_condition1_else")
 
 
 def p_html_end_condition(p):
     """html_end_condition : ENDCODEHTML ENDIF CCODEHTML snp_conditional_statement_2"""
     # For debbuging
-    # print("p_html_end_condition(p):")
+    print("p_html_end_condition(p):")
 
 
 def p_html_cycle(p):

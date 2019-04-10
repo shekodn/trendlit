@@ -149,8 +149,10 @@ html_statement ::= html_assignment | html_condition | htmlscript | html_cycle | 
 
 html_assignment ::= 'INITCODEHTML' 'ID' 'EQ' expression 'CCODEHTML'
 
-html_condition ::= 'INITCODEHTML' 'IF' 'OPAREN' expression 'CPAREN' 'CCODEHTML' html_block html_end_condition
+html_condition ::= 'INITCODEHTML' 'IF' 'OPAREN' expression 'CPAREN' 'CCODEHTML' html_block html_condition1_else html_end_condition
+html_condition1_else ::= 'INITCODEHTML' 'ELSE' 'CCODEHTML' html_block | empty
 html_end_condition ::= 'ENDCODEHTML' 'ENDIF' 'CCODEHTML'
+
 
 html_cycle ::= 'INITCODEHTML' 'LOOP' 'OPAREN' expression 'CPAREN' 'CCODEHTML' html_block html_end_cycle
 html_end_cycle ::= 'ENDCODEHTML' 'ENDLOOP' 'CCODEHTML'
