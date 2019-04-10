@@ -5,6 +5,7 @@ class ParserHelper(object):
         self.curr_type = ""  # The current type used (module or var)
         self.curr_module_param_counter = 0
         self.curr_module_var_counter = 0
+        self.queue_params = []
 
     def reset(self):
         self.__init__()
@@ -37,7 +38,7 @@ class ParserHelper(object):
             Params:
                 scope ():
             Return:
-                num_local_vars (int): 
+                num_local_vars (int):
          """
         num_total_vars = len(self.procedure_directory[scope]["var_table"])
         num_params = self.procedure_directory[scope]["params_count"]

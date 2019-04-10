@@ -1,5 +1,5 @@
 import unittest  # Reference: https://docs.python.org/2/library/unittest.html
-from parser.parser import parser, yacc, quad_helper, error_helper
+from parser.parser import parser, yacc, quad_helper, error_helper, parser_helper
 
 TESTING_PREFIX = "our_tests/"
 
@@ -80,6 +80,29 @@ class OurTestCase(unittest.TestCase):
         result = aux_tl_file(file_name, expected_errors)
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
+
+    def test_5_5_pass_param_queue_function(self):
+        file_name = TESTING_PREFIX + "5_5_pass_param_queue_function.tl"
+        expected_errors = 0
+        expected_params = [5, 3, 1, 2]
+
+        try:
+            f = open(file_name, "r")
+            data = f.read()
+            f.close()
+            yacc.parse(data, tracking=True)
+            number_of_errors = error_helper.error_cont
+            queue_params = parser_helper.procedure_directory["param_func"][
+                "queue_params"
+            ]
+            error_helper.reset()
+            parser_helper.reset()
+        except EOFError:
+            print("EOFError")
+
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(number_of_errors, expected_errors)
+        self.assertEqual(queue_params, expected_params)
 
     def test_8_1_fail_gorritos_html(self):
         file_name = TESTING_PREFIX + "8_1_fail_gorritos_html.tl"

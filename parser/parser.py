@@ -8,6 +8,7 @@ from semantic_cube.semantic_cube import Cube
 from semantic_cube.semantic_cube_helper import (
     code_to_type,
     token_to_code,
+    type_to_code,
     type_to_init_value,
     scope_to_code,
     code_to_scope,
@@ -515,6 +516,7 @@ def p_snp_script_start(p):
         "type": parser_helper.curr_type,
         "scope_type": scope_to_code.get("global"),
         "params_count": 0,
+        "queue_params": [],
         "starting_quad": -1,
         "var_table": {},
     }  # TODO : add more info later on
@@ -527,7 +529,7 @@ def p_snp_add_module(p):
     module_name = p[-1]  # get the last symbol read (left from this neural point)
     # Check if module already exists and add it to the directory
     # debbuging
-    # print("parser_helper.procedure_directory", parser_helper.procedure_directory, "module_name:", module_name)
+    # print("TABLEE! parser_helper.procedure_directory", parser_helper.procedure_directory, "module to add:", module_name, "\n")
     if module_name in parser_helper.procedure_directory:
         error_message = f"Module {module_name} has already been declared"
         error_helper.add_error(0, error_message)
@@ -536,6 +538,7 @@ def p_snp_add_module(p):
             "type": parser_helper.curr_type,
             "scope_type": scope_to_code.get("local"),
             "params_count": 0,
+            "queue_params": [],
             "starting_quad": -1,
             "var_table": {},
         }  # TODO : add more info later on
@@ -571,7 +574,7 @@ def p_snp_end_module(p):
     ]
     # debbuging
     # print(f"CURR SCOPE: {parser_helper.curr_scope}")
-    # print(f"TABLE: {parser_helper.procedure_directory}")
+    # print(f"TABLE: {parser_helper.procedure_directory} \n")
     # print("CURR TYPEEEE",curr_module_type)
     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"].clear()
     memory.reset_local_vars()
@@ -894,9 +897,12 @@ def p_snp_do_while_gotot(p):
 ###Intermediate Code Actions for a Module Definition
 def p_snp_counts_params(p):
     """snp_counts_params : empty"""
+    parser_helper.queue_params.append(type_to_code.get(parser_helper.curr_type))
     parser_helper.curr_module_param_counter = (
         parser_helper.curr_module_param_counter + 1
     )
+    # For debbuging
+    # print ("Pushed type: ",parser_helper.queue_params[len(parser_helper.queue_params)-1])
 
 
 # snp_add_params_count_to_table is snp #4 in Intermediate Code Actions for Module Definition
@@ -906,8 +912,14 @@ def p_snp_add_params_count_to_table(p):
     parser_helper.procedure_directory[parser_helper.curr_scope][
         "params_count"
     ] = parser_helper.curr_module_param_counter
+    # add the param list to the table
+    parser_helper.procedure_directory[parser_helper.curr_scope][
+        "queue_params"
+    ] = parser_helper.queue_params
     # clears counter
     parser_helper.curr_module_param_counter = 0
+    # clears the param list
+    parser_helper.queue_params = []
     # debbuging
     # counter = parser_helper.procedure_directory[parser_helper.curr_scope][
     #     "params_count"
