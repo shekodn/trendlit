@@ -109,7 +109,7 @@ def t_HTMLEND(t):
 
 
 def t_HTMLENDDO(t):
-    r"<%[ ]*end"
+    r"<%[ ]*endloop"
     return t
 
 
