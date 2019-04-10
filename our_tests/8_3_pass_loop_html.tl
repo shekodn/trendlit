@@ -7,7 +7,7 @@ program the_name_of_the_program
     div {
       <% loop (1 > 5) %>
         <^"hi"^>
-      <%/ endloop %>
+      <% end %>
     }
 
 

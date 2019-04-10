@@ -8,8 +8,8 @@ program the_name_of_the_program
       <% loop (1 > 5) %>
         <^"hi"^>
         <% loop (2 is 2) %>
-        <%/ endloop %>
-      <%/ endloop %>
+        <% end %>
+      <% end %>
     }
 
 

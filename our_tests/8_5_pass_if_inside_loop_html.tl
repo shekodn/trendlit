@@ -10,8 +10,8 @@ program the_name_of_the_program
         <% if (1 > 2) %>
             p{}
             p { <^"nested if is executed"^> }
-        <%/ endif %>
-      <%/ endloop %>
+        <% end %>
+      <% end %>
     }
 
 
