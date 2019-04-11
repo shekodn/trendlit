@@ -7,6 +7,7 @@ type_mismatch = "No baila"
 syntax_error = "Sintax error:"
 var_not_defined = "Var"
 module_not_defined = "Module"
+wrong_params_num = "Wrong number of params"
 
 error_to_code = {
     # Unkown 0
@@ -18,6 +19,7 @@ error_to_code = {
     type_mismatch: 301,
     var_not_defined: 302,
     module_not_defined: 303,
+    wrong_params_num: 304,
 }
 
 code_to_error = {
@@ -30,6 +32,7 @@ code_to_error = {
     301: type_mismatch,
     302: var_not_defined,
     303: module_not_defined,
+    304: wrong_params_num,
 }
 
 
