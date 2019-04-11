@@ -95,8 +95,6 @@ class OurTestCase(unittest.TestCase):
             queue_params = parser_helper.procedure_directory["param_func"][
                 "queue_params"
             ]
-            error_helper.reset()
-            parser_helper.reset()
         except EOFError:
             print("EOFError")
 
@@ -111,12 +109,12 @@ class OurTestCase(unittest.TestCase):
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
 
-    def test_8_6_pass_func_call_html(self):
-        file_name = TESTING_PREFIX + "8_6_pass_func_call_html.tl"
-        expected_errors = 0
-        result = aux_tl_file(file_name, expected_errors)
-        print(f"\nTESTING: {file_name}\n")
-        self.assertEqual(result, expected_errors)
+    # def test_8_6_pass_func_call_html(self):
+    #     file_name = TESTING_PREFIX + "8_6_pass_func_call_html.tl"
+    #     expected_errors = 0
+    #     result = aux_tl_file(file_name, expected_errors)
+    #     print(f"\nTESTING: {file_name}\n")
+    #     self.assertEqual(result, expected_errors)
 
     def test_8_7_fail_eval_outside_tag_html(self):
 
