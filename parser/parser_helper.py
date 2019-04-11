@@ -1,3 +1,5 @@
+from stack.stack import Stack
+
 class ParserHelper(object):
     def __init__(self):
         self.procedure_directory = {}  # [name] = {type, var_table}
@@ -6,6 +8,9 @@ class ParserHelper(object):
         self.curr_module_param_counter = 0
         self.curr_module_var_counter = 0
         self.queue_params = []
+        self.param_pointer = 0
+        self.stack_calls = Stack()
+        self.stack_calls.push(999)
 
     def reset(self):
         self.__init__()
@@ -48,3 +53,11 @@ class ParserHelper(object):
             num_local_vars = 0
 
         return num_local_vars
+
+    def is_module_in_procedure_dir(self, module_name):
+        return module_name in self.procedure_directory
+
+    def get_queue_params(self, module_name):
+        if self.is_module_in_procedure_dir(module_name):
+            return self.procedure_directory[module_name]["queue_params"]
+        return None

@@ -271,11 +271,11 @@ def p_call(p):
 
 
 def p_call1(p):
-    """call1 : OPAREN snp_add_era_size_quad params CPAREN"""
+    """call1 : OPAREN snp_add_era_size_quad params CPAREN snp_add_gosub"""
 
 
 def p_params(p):
-    """params : expression params1
+    """params : expression snp_check_param params1
         | empty"""
 
 
@@ -946,8 +946,9 @@ def p_snp_add_quad_cont_to_table(p):
 def p_snp_verify_module_existance(p):
     """snp_verify_module_existance : empty"""
     module_name = p[-1]
-    if not is_module_in_procedure_dir(module_name):
+    if not parser_helper.is_module_in_procedure_dir(module_name):
         error_helper.add_error(303, f"{module_name} doesn't exist")
+    parser_helper.stack_calls.push(module_name)
 
 
 # snp #2 Module Call
@@ -955,21 +956,54 @@ def p_snp_verify_module_existance(p):
 # Add a pointer to the first prarameter type in the parameter table
 def p_snp_add_era_size_quad(p):
     """snp_add_era_size_quad :  empty"""
-    quad_helper.add_quad(token_to_code.get("ERA"), -1, -1, -1)
+    module_name = parser_helper.stack_calls.top()
+    quad_helper.add_quad(token_to_code.get("ERA"), module_name, -1, -1)
 
 
 # snp #3 Module Call
 # Verify Argument type agains current parameter(#k) in parameter table
 # Generate action PARAMETER, Argument, Argument#k
+def p_snp_check_param(p):
+    """snp_check_param : empty"""
 
-# snp #4 Module Call
-# Move to the next parameter (k++)
+    # # Get the last read parameter from the call
+    input_param = quad_helper.pop_operand()
+    input_param_type = quad_helper.pop_type()
 
-# snp #5 Module Call
-# Verify that last parameter points to null (coherence in number of params)
+    # parser_helper.stack_param_calls([])
+    # top_queue = parser_helper.stack_param_calls.top()
+    # top_queue.append(input_param_type)
+
+    # Get the last call from the stack and its queue_params
+    module_name = parser_helper.stack_calls.top()
+    module_queue_params = parser_helper.get_queue_params(module_name)
+    pointer = parser_helper.param_pointer
+
+    # Check if param matches the type/order
+    is_not_none = module_queue_params is not None
+    if is_not_none and pointer <= len(module_queue_params) - 1 and input_param_type is module_queue_params[pointer]:
+        quad_helper.add_quad(token_to_code.get("PARAMETER"), input_param, -1, "param"+str(pointer+1))  # assignation
+    else:
+        error_helper.add_error(301, "Params do not match type")
+    # snp #4 Module Call - Increase pointer after check
+    # Move to the next parameter (k++)
+    parser_helper.param_pointer += 1
 
 # snp #6 Module Call
 # Generate quad GOSUB, procedure_name, -1, intitial-address
+def p_snp_add_gosub(p):
+    """snp_add_gosub : empty"""
+    # Get the last call from the stack and its queue_params
+    module_name = parser_helper.stack_calls.top()
+    module_queue_params = parser_helper.get_queue_params(module_name)
+    # snp #5 Module Call
+    # Verify that last parameter points to null (coherence in number of params)
+    if module_queue_params is not None:
+        if parser_helper.param_pointer is len(module_queue_params):
+            module_name = parser_helper.stack_calls.pop()
+            quad_helper.add_quad(token_to_code.get("GOSUB"), module_name, -1, -1)
+        else:
+            error_helper.add_error(304, f"This function was expecting {len(module_queue_params)} params, but received {parser_helper.param_pointer}")
 
 # --- HTML ---
 
@@ -995,10 +1029,6 @@ def p_snp_push_eval_pending_token(p):
     quad_helper.push_token("eval")
     # For debbuging
     # print("Top token: ", quad_helper.top_token())
-
-
-def is_module_in_procedure_dir(module_name):
-    return module_name in parser_helper.procedure_directory
 
 
 import ply.yacc as yacc
