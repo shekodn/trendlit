@@ -11,9 +11,9 @@ program the_name_of_the_program
 
         def uno (int a) {
             a = a + b * a
-           #  eval(a)
-           # eval(b)
-           # eval(a+b)
+            eval(a)
+           eval(b)
+           eval(a+b)
         }
 
         # def dos (int a, int b, double g) {

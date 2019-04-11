@@ -467,8 +467,6 @@ def p_html_assignment(p):
 
 def p_html_condition(p):
     """html_condition : INITCODEHTML IF OPAREN expression CPAREN snp_conditional_statement_1 CCODEHTML html_block html_condition1_else html_end_condition"""
-    # For debbuging
-    print("p_html_condition(p)")
 
 
 def p_html_condition1_else(p):
@@ -632,14 +630,16 @@ def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
     operand_id = p[-2] if p[-1] == None else p[-1]
     quad_helper.push_operand(operand_id)
+    operand_type = parser_helper.get_var_type_from_dir(operand_id)
+    quad_helper.push_type(operand_type)
 
-    if parser_helper.is_var_in_current_scope(operand_id):
-        type = parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
-            operand_id
-        ]["type"]
-        quad_helper.push_type(type)
-    else:
-        quad_helper.push_type(parser_helper.curr_type)
+    # if parser_helper.is_var_declared(operand_id):
+    #     type = parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+    #         operand_id
+    #     ]["type"]
+    #     quad_helper.push_type(type)
+    # else:
+    #     quad_helper.push_type(parser_helper.curr_type)
     # For debbuging
     # print("OPERAND", quad_helper.top_operand())
     # print("TYPE", quad_helper.top_type())
@@ -791,7 +791,8 @@ def add_quadruple_expression():
     # token = quad_helper.pop_token()
 
     # debbuging HERE
-    # print(right_operand, left_operand, token)
+    # print("SMEMANTIC CUBE: ", right_operand, left_operand, token)
+    # print("TYPES: ", right_operand_type, left_operand_type)
     if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
         # add the result (temp var) to the operand stack
         result_type = semantic_cube.cube[right_operand_type, left_operand_type, token]
@@ -801,6 +802,9 @@ def add_quadruple_expression():
         quad_helper.push_operand(quad_helper.temp_cont)
         # add the result type (temp var) to the type stack
         quad_helper.push_type(code_to_type.get(result_type))
+        # For debbuging
+        # print("OPERAND", quad_helper.top_operand())
+        # print("TYPE", quad_helper.top_type())
         # increase counter for temp/result vars
         quad_helper.temp_cont = quad_helper.temp_cont + 1
     else:
@@ -810,10 +814,7 @@ def add_quadruple_expression():
 def p_snp_checks_for_previous_declaration(p):
     """snp_checks_for_previous_declaration : empty"""
     var = p[-1]
-    is_decalred = parser_helper.is_var_in_current_scope(
-        var
-    ) or parser_helper.is_var_in_global_scope(var)
-    if not is_decalred:
+    if not parser_helper.is_var_declared(var):
         error_helper.add_error(302, f"{var} doesn't exist")
 
 

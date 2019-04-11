@@ -2,7 +2,7 @@
 from error.error import Error
 
 # Errors
-unknwon_error = "Unkown"
+unknwon_error = "Unkown Error. "
 type_mismatch = "No baila"
 syntax_error = "Sintax error:"
 var_not_defined = "Var"
