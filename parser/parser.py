@@ -981,13 +981,20 @@ def p_snp_check_param(p):
 
     # Check if param matches the type/order
     is_not_none = module_queue_params is not None
-    if is_not_none and pointer <= len(module_queue_params) - 1 and input_param_type is module_queue_params[pointer]:
-        quad_helper.add_quad(token_to_code.get("PARAMETER"), input_param, -1, "param"+str(pointer+1))  # assignation
+    if (
+        is_not_none
+        and pointer <= len(module_queue_params) - 1
+        and input_param_type is module_queue_params[pointer]
+    ):
+        quad_helper.add_quad(
+            token_to_code.get("PARAMETER"), input_param, -1, "param" + str(pointer + 1)
+        )  # assignation
     else:
         error_helper.add_error(301, "Params do not match type")
     # snp #4 Module Call - Increase pointer after check
     # Move to the next parameter (k++)
     parser_helper.param_pointer += 1
+
 
 # snp #6 Module Call
 # Generate quad GOSUB, procedure_name, -1, intitial-address
@@ -1003,7 +1010,11 @@ def p_snp_add_gosub(p):
             module_name = parser_helper.stack_calls.pop()
             quad_helper.add_quad(token_to_code.get("GOSUB"), module_name, -1, -1)
         else:
-            error_helper.add_error(304, f"This function was expecting {len(module_queue_params)} params, but received {parser_helper.param_pointer}")
+            error_helper.add_error(
+                304,
+                f"This function was expecting {len(module_queue_params)} params, but received {parser_helper.param_pointer}",
+            )
+
 
 # --- HTML ---
 

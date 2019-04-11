@@ -1,5 +1,6 @@
 from stack.stack import Stack
 
+
 class ParserHelper(object):
     def __init__(self):
         self.procedure_directory = {}  # [name] = {type, var_table}
