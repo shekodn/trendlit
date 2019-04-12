@@ -992,6 +992,8 @@ def p_snp_check_param(p):
         )  # assignation
     else:
         error_helper.add_error(301, "Params do not match type")
+        # For debbuging
+        # print("Expected: ",pointer, " Received: ", input_param_type)
     # snp #4 Module Call - Increase pointer after check
     # Move to the next parameter (k++)
     parser_helper.param_pointer += 1
@@ -1009,7 +1011,9 @@ def p_snp_add_gosub(p):
     if module_queue_params is not None:
         if parser_helper.param_pointer is len(module_queue_params):
             module_name = parser_helper.stack_calls.pop()
+            # Clear the stack and pointer after call ends
             quad_helper.add_quad(token_to_code.get("GOSUB"), module_name, -1, -1)
+            parser_helper.param_pointer = 0
         else:
             error_helper.add_error(
                 304,
