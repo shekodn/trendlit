@@ -9,9 +9,10 @@ class ParserHelper(object):
         self.curr_module_param_counter = 0
         self.curr_module_var_counter = 0
         self.queue_params = []
-        self.param_pointer = 0
         self.stack_calls = Stack()
         self.stack_calls.push(999)
+        self.stack_param_pointers = Stack()
+        self.stack_param_pointers.push(0)
 
     def reset(self):
         self.__init__()
