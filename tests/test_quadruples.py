@@ -129,6 +129,15 @@ class QuadruplesTestCase(unittest.TestCase):
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
 
+    def test_quadruple_5_6_3_pass_many_calls_to_function(self):
+        file1_name = TESTING_CODE + "5_6_3_pass_many_calls_to_function.tl.test"
+        file2_name = OBJECT_CODE + "5_6_3_pass_many_calls_to_function.tl.obj"
+
+        print(f"\nTESTING QUADRUPLES: {file1_name}\n")
+        result = filecmp.cmp(file1_name, file2_name)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
     def test_quadruple_8_0_pass_gorritos_html(self):
         file1_name = TESTING_CODE + "8_0_pass_gorritos_html.tl.test"
         file2_name = OBJECT_CODE + "8_0_pass_gorritos_html.tl.obj"
