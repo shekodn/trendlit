@@ -47,8 +47,6 @@ reserved_words = {
     "th": "TH",
     "tr": "TR",
     # reserved html code
-    "endif": "ENDIF",
-    "endloop": "ENDLOOP",
 }
 
 tokens = list(reserved_words.values()) + [
@@ -63,7 +61,6 @@ tokens = list(reserved_words.values()) + [
     "CTED",
     "CTEI",
     "CTESTR",
-    "ENDCODEHTML",
     "HTMLENDDO",
     "EQ",
     "HTMLELSE",
@@ -110,11 +107,6 @@ def t_HTMLEND(t):
 
 def t_HTMLENDDO(t):
     r"<%[ ]*endloop"
-    return t
-
-
-def t_ENDCODEHTML(t):
-    r"<%\/"
     return t
 
 
