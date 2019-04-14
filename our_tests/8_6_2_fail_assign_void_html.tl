@@ -1,3 +1,4 @@
+# Don't move, otherwise the TEST will break
 
 program the_name_of_the_program
     script {
@@ -8,7 +9,6 @@ program the_name_of_the_program
     }
 
     div {
-      <% sum(1,2) %>
       <^sum(1,2)^>
     }
 

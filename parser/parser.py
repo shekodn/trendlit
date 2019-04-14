@@ -500,7 +500,7 @@ def p_html_end_do_cycle(p):
 
 
 def p_html_call(p):
-    """html_call : INITCODEHTML ID OPAREN params CPAREN CCODEHTML"""
+    """html_call : INITCODEHTML ID snp_verify_module_existance OPAREN snp_add_era_size_quad params CPAREN snp_add_gosub CCODEHTML"""
 
 
 # --- SEMANTIC NEURAL POINTS ---

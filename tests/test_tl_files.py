@@ -146,6 +146,20 @@ class OurTestCase(unittest.TestCase):
     #     print(f"\nTESTING: {file_name}\n")
     #     self.assertEqual(result, expected_errors)
 
+    def test_8_6_1_pass_func_call_html(self):
+        file_name = TESTING_PREFIX + "8_6_1_pass_func_call_html.tl"
+        expected_errors = 0
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
+
+    def test_8_6_2_fail_assign_void_html(self):
+        file_name = TESTING_PREFIX + "8_6_2_fail_assign_void_html.tl"
+        expected_errors = 1
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
+
     def test_8_7_fail_eval_outside_tag_html(self):
 
         with self.assertRaises(SystemExit) as cm:
