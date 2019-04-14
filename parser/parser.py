@@ -218,7 +218,7 @@ def p_factor1(p):
 def p_value(p):
     """value : ID snp_checks_for_previous_declaration snp_push_pending_operand
         | valueSlice
-        | call
+        | exp_call
         | CTEI snp_save_type_int snp_push_pending_operand
         | CTED snp_save_type_double snp_push_pending_operand
         | CTESTR snp_save_type_str snp_push_pending_operand
@@ -266,12 +266,17 @@ def p_module1(p):
 
 
 def p_call(p):
-    """call : ID snp_verify_module_existance call1
+    """call : ID snp_verify_module_existance call1 snp_add_gosub
+        | predef"""
+
+
+def p_exp_call(p):
+    """exp_call : ID snp_verify_module_existance call1 snp_check_return snp_add_gosub
         | predef"""
 
 
 def p_call1(p):
-    """call1 : OPAREN snp_add_era_size_quad params CPAREN snp_add_gosub"""
+    """call1 : OPAREN snp_add_era_size_quad params CPAREN"""
 
 
 def p_params(p):
@@ -1000,6 +1005,17 @@ def p_snp_check_param(p):
     parser_helper.stack_param_pointers.push(param_pointer + 1)
 
 
+def p_snp_check_return(p):
+    """snp_check_return : empty"""
+    module_name = parser_helper.stack_calls.top()
+    module_type = parser_helper.get_module_type(module_name)
+    if module_type is "void" or module_type is "error":
+        error_helper.add_error(
+            301,
+            f'Function "{module_name}" is void, therefore you cant use it to assign a value.',
+        )
+
+
 # snp #6 Module Call
 # Generate quad GOSUB, procedure_name, -1, intitial-address
 def p_snp_add_gosub(p):
@@ -1011,12 +1027,13 @@ def p_snp_add_gosub(p):
     # snp #5 Module Call
     # Verify that last parameter points to null (coherence in number of params)
     if module_queue_params is not None:
+        # Clear the stack and pointer after call ends
+        module_name = parser_helper.stack_calls.pop()
+        parser_helper.stack_param_pointers.pop()
+        parser_helper.stack_param_pointers.push(0)
         if param_pointer is len(module_queue_params):
-            module_name = parser_helper.stack_calls.pop()
             # Clear the stack and pointer after call ends
             quad_helper.add_quad(token_to_code.get("GOSUB"), module_name, -1, -1)
-            parser_helper.stack_param_pointers.pop()
-            parser_helper.stack_param_pointers.push(0)
         else:
             error_helper.add_error(
                 304,

@@ -41,6 +41,16 @@ class ParserHelper(object):
             "global"
         )
 
+    def get_module_type(self, module_name):
+        """
+            Description:
+            Params:
+                module_name (str): the name of the scope
+            Return:
+                type (str): returns "bool" "str" "void" etc
+         """
+        return self.procedure_directory[module_name]["type"]
+
     def get_scope_type(self, scope_name):
         """
             Description:
