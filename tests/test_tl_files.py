@@ -83,6 +83,13 @@ class OurTestCase(unittest.TestCase):
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
 
+    def test_5_5_1_pass_call_void_function(self):
+        file_name = TESTING_PREFIX + "5_5_1_pass_call_void_function.tl"
+        expected_errors = 0
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
+
     def test_5_5_pass_param_queue_function(self):
         file_name = TESTING_PREFIX + "5_5_pass_param_queue_function.tl"
         expected_errors = 0
@@ -103,6 +110,13 @@ class OurTestCase(unittest.TestCase):
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(number_of_errors, expected_errors)
         self.assertEqual(queue_params, expected_params)
+
+    def test_5_6_6_fail_call_void_function(self):
+        file_name = TESTING_PREFIX + "5_6_6_fail_call_void_function.tl"
+        expected_errors = 1
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
 
     def test_8_1_fail_gorritos_html(self):
         file_name = TESTING_PREFIX + "8_1_fail_gorritos_html.tl"

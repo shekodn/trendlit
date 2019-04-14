@@ -998,7 +998,7 @@ def p_snp_check_param(p):
     else:
         error_helper.add_error(301, "Params do not match type")
         # For debbuging
-        # print("Expected: ",pointer, " Received: ", input_param_type)
+        # print("Expected: ",module_queue_params[pointer], " Received: ", input_param_type)
     # snp #4 Module Call - Increase pointer after check
     # Move to the next parameter (k++)
     param_pointer = parser_helper.stack_param_pointers.pop()
