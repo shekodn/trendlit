@@ -12,6 +12,8 @@ def aux_tl_file(file_name, expected_number_of_errors):
         yacc.parse(data, tracking=True)
         number_of_errors = error_helper.error_cont
         error_helper.reset()
+        quad_helper.reset()
+        parser_helper.reset()
         return number_of_errors
     except EOFError:
         print("EOFError")
@@ -105,6 +107,13 @@ class OurTestCase(unittest.TestCase):
     def test_8_1_fail_gorritos_html(self):
         file_name = TESTING_PREFIX + "8_1_fail_gorritos_html.tl"
         expected_errors = 2
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
+
+    def test_5_6_4_fail_assign_void_function(self):
+        file_name = TESTING_PREFIX + "5_6_4_fail_assign_void_function.tl"
+        expected_errors = 1
         result = aux_tl_file(file_name, expected_errors)
         print(f"\nTESTING: {file_name}\n")
         self.assertEqual(result, expected_errors)
