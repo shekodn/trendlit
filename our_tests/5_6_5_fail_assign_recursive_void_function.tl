@@ -8,7 +8,8 @@ program the_name_of_the_program
             eval(a)
         }
 
-        a = uno(2)
+        uno(uno(2))
 
+        a = 1+1
 
     }
