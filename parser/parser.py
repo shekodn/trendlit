@@ -546,6 +546,7 @@ def p_snp_add_module(p):
             "var_table": {},
         }  # TODO : add more info later on
         parser_helper.curr_scope = module_name
+        memory.curr_scope_type = scope_to_code.get("local")
 
 
 # Save the last type defined
@@ -582,6 +583,7 @@ def p_snp_end_module(p):
     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"].clear()
     memory.reset_local_vars()
     parser_helper.curr_scope = "global_script"
+    memory.curr_scope_type = scope_to_code.get("global")
     if curr_module_type is "void":  # VOID MODULE
         # Delete var table for the module that ended
         quad_helper.add_quad(token_to_code.get("ENDPROC"), -1, -1, -1)
@@ -610,7 +612,7 @@ def p_snp_add_var(p):
         error_helper.add_error(0, error_message)
     else:
         scope_type = parser_helper.get_scope_type(parser_helper.curr_scope)
-        var_memory_address = memory.set_addr(scope_type, parser_helper.curr_type)
+        var_memory_address = memory.set_var_addr(scope_type, parser_helper.curr_type)
         parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             var_name
         ] = {
@@ -801,17 +803,17 @@ def add_quadruple_expression():
     if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
         # add the result (temp var) to the operand stack
         result_type = semantic_cube.cube[right_operand_type, left_operand_type, token]
+        # assign memory address to temporary result variable and increase counter for temp/result vars
+        temp_memory_address = memory.set_addr_temp(code_to_type.get(result_type))
         # add the quad
-        quad_helper.add_quad(token, left_operand, right_operand, quad_helper.temp_cont)
+        quad_helper.add_quad(token, left_operand, right_operand, temp_memory_address)
         # expression
-        quad_helper.push_operand(quad_helper.temp_cont)
+        quad_helper.push_operand(temp_memory_address)
         # add the result type (temp var) to the type stack
         quad_helper.push_type(code_to_type.get(result_type))
         # For debbuging
         # print("OPERAND", quad_helper.top_operand())
         # print("TYPE", quad_helper.top_type())
-        # increase counter for temp/result vars
-        quad_helper.temp_cont = quad_helper.temp_cont + 1
     else:
         error_helper.add_error(301)
 

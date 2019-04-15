@@ -3,6 +3,7 @@ from semantic_cube.semantic_cube_helper import scope_to_code, code_to_scope
 
 class Memory(object):
     def __init__(self):
+        self.curr_scope_type = scope_to_code.get("global")
         # Address range for GLOBAL variables
         self.next_mem_global_int = 1000
         self.mem_global_int_start = 1000
@@ -44,9 +45,31 @@ class Memory(object):
         self.next_mem_temp_str = 12000
         self.mem_temp_str_start = 12000
         self.mem_temp_str_end = 12999
+        # pointers for global temp vars
+        self.next_mem_temp_global_int = 9000
+        self.next_mem_temp_global_double = 10000
+        self.next_mem_temp_global_bool = 11000
+        self.next_mem_temp_global_str = 12000
+
+        # Address range for CONSTANT variables
+        self.next_mem_const_int = 13000
+        self.mem_const_int_start = 13000
+        self.mem_const_int_end = 13999
+        self.next_mem_const_double = 14000
+        self.mem_const_double_start = 14000
+        self.mem_const_double_end = 14999
+        self.next_mem_const_bool = 15000
+        self.mem_const_bool_start = 15000
+        self.mem_const_bool_end = 15999
+        self.next_mem_const_str = 16000
+        self.mem_const_str_start = 16000
+        self.mem_const_str_end = 16999
+
+    def reset(self):
+        self.__init__()
 
     # ---- MEMORY ASSIGNATION FOR A VARIABLE ----
-    def set_addr(self, scope_type, type):
+    def set_var_addr(self, scope_type, type):
         """
             Description:
             Params:
@@ -71,71 +94,112 @@ class Memory(object):
                 assigned_address (int): returns None if there was an error
          """
         assigned_address = None
-        if type == "int":
+        if type is "int":
             assigned_address = self.next_mem_global_int
             self.next_mem_global_int += 1
-        elif type == "double":
+        elif type is "double":
             assigned_address = self.next_mem_global_double
             self.next_mem_global_double += 1
-        elif type == "bool":
+        elif type is "bool":
             assigned_address = self.next_mem_global_bool
             self.next_mem_global_bool += 1
-        elif type == "str":
+        elif type is "str":
             assigned_address = self.next_mem_global_str
             self.next_mem_global_str += 1
-
         return assigned_address
 
     # Select an address for LOCAL variable, and increase the memory pointer
     def set_addr_local(self, type):
 
         assigned_address = None
-        if type == "int":
+        if type is "int":
             assigned_address = self.next_mem_local_int
             self.next_mem_local_int += 1
-        elif type == "double":
+        elif type is "double":
             assigned_address = self.next_mem_local_double
             self.next_mem_local_double += 1
-        elif type == "bool":
+        elif type is "bool":
             assigned_address = self.next_mem_local_bool
             self.next_mem_local_bool += 1
-        elif type == "str":
+        elif type is "str":
             assigned_address = self.next_mem_local_str
             self.next_mem_local_str += 1
-
         return assigned_address
 
     # Select an address for TEMPORARY variable, and increase the memory pointer
     def set_addr_temp(self, type):
-        if type == "int":
+        assigned_address = None
+        if self.curr_scope_type is scope_to_code.get("global"):
+            assigned_address = self.set_addr_temp_global(type)
+        elif type is "int":
             assigned_address = self.next_mem_temp_int
             self.next_mem_temp_int += 1
-        elif type == "double":
+        elif type is "double":
             assigned_address = self.next_mem_temp_double
             self.next_mem_temp_double += 1
-        elif type == "bool":
+        elif type is "bool":
             assigned_address = self.next_mem_temp_bool
             self.next_mem_temp_bool += 1
-        elif type == "str":
+        elif type is "str":
             assigned_address = self.next_mem_temp_str
             self.next_mem_temp_str += 1
+        return assigned_address
 
-        assigned_address = "(" + str(assigned_address)  # TODO: what is this??
+    def set_addr_temp_global(self, type):
+        assigned_address = None
+        if type is "int":
+            assigned_address = self.next_mem_temp_global_int
+            self.next_mem_temp_global_int += 1
+        elif type is "double":
+            assigned_address = self.next_mem_temp_global_double
+            self.next_mem_temp_global_double += 1
+        elif type is "bool":
+            assigned_address = self.next_mem_temp_global_bool
+            self.next_mem_temp_global_bool += 1
+        elif type is "str":
+            assigned_address = self.next_mem_temp_global_str
+            self.next_mem_temp_global_str += 1
+        return assigned_address
+
+    # Select an address for CONSTANT variable, and increase the memory pointer
+    def set_addr_const(self, type):
+        assigned_address = None
+        if type is "int":
+            assigned_address = self.next_mem_const_int
+            self.next_mem_const_int += 1
+        elif type is "double":
+            assigned_address = self.next_mem_const_double
+            self.next_mem_const_double += 1
+        elif type is "bool":
+            assigned_address = self.next_mem_const_bool
+            self.next_mem_const_bool += 1
+        elif type is "str":
+            assigned_address = self.next_mem_const_str
+            self.next_mem_const_str += 1
         return assigned_address
 
     def reset_local_vars(self):
         """
             Description: reset the local var counter
             Params:
-                scope_type (int): the type of the scope
-                type (str): the type of the variable we want to assign
             Return:
-                assigned_address (int): returns None if there was an error
          """
         self.next_mem_local_int = 5000
         self.next_mem_local_double = 6000
         self.next_mem_local_bool = 7000
         self.next_mem_local_str = 8000
+        self.reset_temp_vars()
+
+    def reset_temp_vars(self):
+        """
+            Description: reset the temp var counter
+            Params:
+            Return:
+        """
+        self.next_mem_temp_int = 9000
+        self.next_mem_temp_double = 10000
+        self.next_mem_temp_bool = 11000
+        self.next_mem_temp_str = 12000
 
     # ---- GET INFO FROM A MEMORY ADDRESS ----
 
