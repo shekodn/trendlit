@@ -1,9 +1,9 @@
 # Don't move, otherwise the TEST will break
-# + a b 10001
-# eval -1 -1 10001
+# + a b 9000
+# eval -1 -1 9000
 # ENDPROC -1 -1 -1
-# + a b 10002
-# eval -1 -1 10002
+# + a b 9000
+# eval -1 -1 9000
 # ENDPROC -1 -1 -1
 
 program the_name_of_the_program

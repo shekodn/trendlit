@@ -1,6 +1,6 @@
 # Don't move, otherwise the TEST will break
-# + a b 10001
-# RET, 10001, -1, memory address
+# + a b 9000
+# RET, 9000, -1, memory address
 
 program the_name_of_the_program
     script {

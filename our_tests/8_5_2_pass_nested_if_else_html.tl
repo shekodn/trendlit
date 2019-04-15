@@ -19,8 +19,8 @@ program the_name_of_the_program
     }
 
     # 0. eval -1 -1 604
-    # 1. > 1 2 10001
-    # 2. GOTOF 10001 -1 7
+    # 1. > 1 2 11000
+    # 2. GOTOF 11000 -1 7
     # 3. eval -1 -1 606
     # 4. eval -1 -1 " if is executed"
     # 5. eval -1 -1 607
@@ -28,8 +28,8 @@ program the_name_of_the_program
     # 7. eval -1 -1 606
     # 8. eval -1 -1 " else is executed"
     # 9. eval -1 -1 607
-    # 10. >  1 2 10002
-    # 11. GOTOF 10002 -1 16
+    # 10. >  1 2 11001
+    # 11. GOTOF 11001 -1 16
     # 12. eval -1 -1 606
     # 13. eval -1 -1 " 2nd if is executed"
     # 14. eval -1 -1 607
