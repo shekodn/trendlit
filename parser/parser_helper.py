@@ -33,6 +33,17 @@ class ParserHelper(object):
             ]
         return self.curr_type
 
+    def get_var_address_from_dir(self, var_name):
+        if self.is_var_in_current_scope(var_name):
+            return self.procedure_directory[self.curr_scope]["var_table"][var_name][
+                "memory_address"
+            ]
+        elif self.is_var_in_global_scope(var_name):
+            return self.procedure_directory["global_script"]["var_table"][var_name][
+                "memory_address"
+            ]
+        return None # variable not declared
+
     def is_var_in_global_scope(self, var_name):
         return var_name in self.procedure_directory["global_script"]["var_table"]
 

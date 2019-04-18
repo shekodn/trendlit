@@ -620,6 +620,7 @@ def p_snp_add_var(p):
             "memory_address": var_memory_address,
         }  # TODO : add more info later on
     # For debbuging
+    # print("MEMROEY ADDRESS FOR VAR: ", var_memory_address)
     # print(
     #     f"var_name {var_name}, current_scope, {parser_helper.curr_scope}, SCOPE TYPE: {scope_type}"
     # )
@@ -636,17 +637,13 @@ def p_snp_add_eval_quad(p):
 def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
     operand_id = p[-2] if p[-1] == None else p[-1]
-    quad_helper.push_operand(operand_id)
     operand_type = parser_helper.get_var_type_from_dir(operand_id)
     quad_helper.push_type(operand_type)
-
-    # if parser_helper.is_var_declared(operand_id):
-    #     type = parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
-    #         operand_id
-    #     ]["type"]
-    #     quad_helper.push_type(type)
-    # else:
-    #     quad_helper.push_type(parser_helper.curr_type)
+    if parser_helper.is_var_declared(operand_id):
+        operand_address = parser_helper.get_var_address_from_dir(operand_id)
+    else: # operand is a constant
+        operand_address = memory.get_or_set_addr_const(operand_id, operand_type)
+    quad_helper.push_operand(operand_address)
     # For debbuging
     # print("OPERAND", quad_helper.top_operand())
     # print("TYPE", quad_helper.top_type())
@@ -688,13 +685,15 @@ def p_snp_push_solitary_operand(p):
     For example, the zero value for an int is 0
     """
     operand_id = p[-2]
+    operand_address = parser_helper.get_var_address_from_dir(operand_id)
     type = parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
         operand_id
     ]["type"]
     default_initial_value = type_to_init_value.get(type)
+    default_initial_value_address = memory.get_or_set_addr_const(default_initial_value, type)
     operator = token_to_code.get("=")
 
-    quad_helper.add_quad(operator, default_initial_value, -1, operand_id)
+    quad_helper.add_quad(operator, default_initial_value_address, -1, operand_address)
 
 
 def p_snp_add_assignation_quad(p):

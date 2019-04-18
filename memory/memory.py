@@ -64,6 +64,7 @@ class Memory(object):
         self.next_mem_const_str = 16000
         self.mem_const_str_start = 16000
         self.mem_const_str_end = 16999
+        self.constant_addresses = {}
 
     def reset(self):
         self.__init__()
@@ -84,7 +85,7 @@ class Memory(object):
             return self.set_addr_local(type)
         return None
 
-    def set_addr_global(self, type):
+    def set_addr_global(self, var_type):
         """
             Description:
                 Select an address for GLOBAL variable, and increase the memory pointer
@@ -94,16 +95,16 @@ class Memory(object):
                 assigned_address (int): returns None if there was an error
          """
         assigned_address = None
-        if type is "int":
+        if var_type == "int":
             assigned_address = self.next_mem_global_int
             self.next_mem_global_int += 1
-        elif type is "double":
+        elif var_type == "double":
             assigned_address = self.next_mem_global_double
             self.next_mem_global_double += 1
-        elif type is "bool":
+        elif var_type == "bool":
             assigned_address = self.next_mem_global_bool
             self.next_mem_global_bool += 1
-        elif type is "str":
+        elif var_type == "str":
             assigned_address = self.next_mem_global_str
             self.next_mem_global_str += 1
         return assigned_address
@@ -161,19 +162,28 @@ class Memory(object):
             self.next_mem_temp_global_str += 1
         return assigned_address
 
+    # Makes sure constants don't have multiple addresses
+    def get_or_set_addr_const(self, value, type):
+        if value in self.constant_addresses:
+            assigned_address = self.constant_addresses[value]
+        else:
+            assigned_address = self.set_addr_const(type)
+            self.constant_addresses[value] = assigned_address
+        return assigned_address
+
     # Select an address for CONSTANT variable, and increase the memory pointer
     def set_addr_const(self, type):
         assigned_address = None
-        if type is "int":
+        if type == "int":
             assigned_address = self.next_mem_const_int
             self.next_mem_const_int += 1
-        elif type is "double":
+        elif type == "double":
             assigned_address = self.next_mem_const_double
             self.next_mem_const_double += 1
-        elif type is "bool":
+        elif type == "bool":
             assigned_address = self.next_mem_const_bool
             self.next_mem_const_bool += 1
-        elif type is "str":
+        elif type == "str":
             assigned_address = self.next_mem_const_str
             self.next_mem_const_str += 1
         return assigned_address
