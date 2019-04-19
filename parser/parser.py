@@ -641,7 +641,7 @@ def p_snp_push_pending_operand(p):
     quad_helper.push_type(operand_type)
     if parser_helper.is_var_declared(operand_id):
         operand_address = parser_helper.get_var_address_from_dir(operand_id)
-    else: # operand is a constant
+    else:  # operand is a constant
         operand_address = memory.get_or_set_addr_const(operand_id, operand_type)
     quad_helper.push_operand(operand_address)
     # For debbuging
@@ -690,10 +690,14 @@ def p_snp_push_solitary_operand(p):
         operand_id
     ]["type"]
     default_initial_value = type_to_init_value.get(type)
-    default_initial_value_address = memory.get_or_set_addr_const(default_initial_value, type)
+    default_initial_value_address = memory.get_or_set_addr_const(
+        default_initial_value, type
+    )
     operator = token_to_code.get("=")
 
     quad_helper.add_quad(operator, default_initial_value_address, -1, operand_address)
+    # for debbuging
+    # print("Type", type, "address", default_initial_value_address)
 
 
 def p_snp_add_assignation_quad(p):

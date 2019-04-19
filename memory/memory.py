@@ -111,18 +111,17 @@ class Memory(object):
 
     # Select an address for LOCAL variable, and increase the memory pointer
     def set_addr_local(self, type):
-
         assigned_address = None
-        if type is "int":
+        if type == "int":
             assigned_address = self.next_mem_local_int
             self.next_mem_local_int += 1
-        elif type is "double":
+        elif type == "double":
             assigned_address = self.next_mem_local_double
             self.next_mem_local_double += 1
-        elif type is "bool":
+        elif type == "bool":
             assigned_address = self.next_mem_local_bool
             self.next_mem_local_bool += 1
-        elif type is "str":
+        elif type == "str":
             assigned_address = self.next_mem_local_str
             self.next_mem_local_str += 1
         return assigned_address

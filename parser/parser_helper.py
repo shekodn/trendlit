@@ -42,7 +42,7 @@ class ParserHelper(object):
             return self.procedure_directory["global_script"]["var_table"][var_name][
                 "memory_address"
             ]
-        return None # variable not declared
+        return None  # variable not declared
 
     def is_var_in_global_scope(self, var_name):
         return var_name in self.procedure_directory["global_script"]["var_table"]
