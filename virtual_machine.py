@@ -36,8 +36,16 @@ def get_value_from_address(addr):
         return const_memory[addr]
 
 
-def set_value_to_address (value, address):
-    return
+def set_value_to_address (value, addr):
+    if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end:
+        # Set GLOBAL variable address
+        g_memory.set_value(value, addr)
+    elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end:
+        # Set LOCAL variable address
+        l_memory.set_value(value, addr) # TODO: current memory context?
+    else: #temp
+        # Set TEMP variable address
+        g_memory.set_value(value, addr) #TODO: how to know if temp from local vs global
 
 
 
@@ -83,7 +91,7 @@ def arithmetic(quad):
         # Get value from memory
         value = get_value_from_address(quad.operand1)
         # Assign by storing value in memory
-        # set_value_to_address(value, quad.operand3)
+        set_value_to_address(value, quad.operand3)
 
 
 # def relational(quad):

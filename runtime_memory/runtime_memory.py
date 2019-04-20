@@ -46,5 +46,29 @@ class RuntimeMemory(object):
     def get_value():
         return
 
-    def return_value():
+    def set_value(self, value, addr):
+        # print("here", value, addr)
+        if self.is_int_addr(addr):
+            self.int_memory[addr] = value
+
+
+    def is_int_addr(self, addr):
+        if self.scope_type is scope_to_code.get("global"):
+            return self.is_address_of_type(addr, self.mem_global_int_start, self.mem_global_int_end)
+        elif self.scope_type is scope_to_code.get("local"):
+            return
+        return False
+
+    def is_address_of_type(self, addr, start_range, end_range):
+        if addr >= start_range and addr <= end_range:
+            return True
+        return False
+
+    def is_double_addr():
+        return
+
+    def is_bool_addr():
+        return
+
+    def is_str_addr():
         return
