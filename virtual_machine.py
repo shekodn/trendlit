@@ -134,12 +134,13 @@ def arithmetic(quad):
         value = get_value_from_address(quad.operand1)
         # Assign by storing value in memory
         set_value_to_address(value, quad.operand3)
-        print("-------")
-        print("int", g_memory.int_memory)
-        print("double", g_memory.double_memory)
-        print("bool", g_memory.bool_memory)
-        print("str", g_memory.str_memory)
-        print("temp", g_memory.temp_memory)
+        # For debbuging
+        # print("-------")
+        # print("int", g_memory.int_memory)
+        # print("double", g_memory.double_memory)
+        # print("bool", g_memory.bool_memory)
+        # print("str", g_memory.str_memory)
+        # print("temp", g_memory.temp_memory)
 
 
 def relational(quad):
