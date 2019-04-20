@@ -22,8 +22,12 @@ RELATIONAL = [
     token_to_code.get(">"),
     token_to_code.get("<"),
 ]
+JUMPS = [token_to_code.get("GOTO"),
+token_to_code.get("GOTOF"),
+token_to_code.get("GOTOT"),]
 
 html_file = None
+instruction_pointer = 0
 
 const_memory = {}
 g_memory = RuntimeMemory(scope_to_code.get("global"))
@@ -60,7 +64,7 @@ def set_value_to_address(value, addr):
 
 def run_code(queue_quad, const_mem):
     # Set the constant memory (retrieved during compilation)
-    global const_memory, html_file
+    global const_memory, html_file, instruction_pointer
     const_memory = const_mem
 
     html_file = open(
@@ -68,8 +72,9 @@ def run_code(queue_quad, const_mem):
     )  # TODO: change the file name to the program name the user wrote
 
     instruction_pointer = 0
-    # print("HELLO", const_memory)
+
     while instruction_pointer < len(queue_quad):
+        # print("ip: ", instruction_pointer)
         exec_quad(queue_quad[instruction_pointer])
         instruction_pointer = instruction_pointer + 1
 
@@ -81,6 +86,8 @@ def exec_quad(quad):
         relational(quad)
     elif quad.token == token_to_code.get("eval"):
         eval(quad)
+    elif quad.token in JUMPS:
+        jumps(quad)
     else:
         return
 
@@ -203,3 +210,26 @@ def eval(quad):
         value = get_value_from_address(quad.operand3)
     html_file.write(str(value))  # TODO: endl? spaces? make it pretty/understandable
     html_file.write("\n")
+
+def jumps(quad):
+    global instruction_pointer
+    if quad.token == token_to_code.get("GOTO"):
+        # GOTO, -1, -1, destination
+        # Change inst pointer to point to destination quad
+        instruction_pointer = quad.operand3 - 1
+    elif quad.token == token_to_code.get("GOTOF"):
+        # GOTOF, trigger, -1, destination
+        # Get trigger (result of condition)
+        trigger = get_value_from_address(quad.operand1)
+        # print("TRIGGER ", trigger)
+        # Change inst = destination quad IF trigger is FALSE
+        if not trigger:
+            instruction_pointer = quad.operand3 - 1
+    elif quad.token == token_to_code.get("GOTOT"):
+        # GOTOT, trigger, -1, destination
+        # Get trigger (result of condition)
+        trigger = get_value_from_address(quad.operand1)
+        # print("TRIGGER ", trigger)
+        # Change inst = destination quad IF trigger is FALSE
+        if trigger:
+            instruction_pointer = quad.operand3 - 1
