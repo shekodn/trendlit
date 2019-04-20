@@ -19,6 +19,8 @@ RELATIONAL = [
     token_to_code.get("<"),
 ]
 
+html_file = None
+
 const_memory = {}
 g_memory = RuntimeMemory(scope_to_code.get("global"))
 # memory_context_stack = Stack() # TODO: how to keep track of local contexts
@@ -52,9 +54,11 @@ def set_value_to_address (value, addr):
 
 def run_code(queue_quad, const_mem):
     # Set the constant memory (retrieved during compilation)
-    global const_memory
+    global const_memory, html_file
     const_memory = const_mem
-    # TODO: Memory ?
+
+    html_file = open("trendlit.html", "w") # TODO: change the file name to the program name the user wrote
+
     instruction_pointer = 0
     # print("HELLO", const_memory)
     while instruction_pointer < len(queue_quad):
@@ -181,9 +185,9 @@ def relational(quad):
 
 def eval(quad):
     # eval, -1, -1, 16000
-    # TODO: print html tag, endl?
     if quad.operand3 >= 600 and quad.operand3 <= 699: # html tag
         value = "<" + code_to_token.get(quad.operand3).lower() + ">"
     else:
         value = get_value_from_address(quad.operand3)
-    print(value)
+    html_file.write(str(value))  # TODO: endl? spaces? make it pretty/understandable
+    html_file.write("\n")
