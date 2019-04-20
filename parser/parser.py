@@ -468,7 +468,7 @@ def p_html_statement(p):
 
 
 def p_html_assignment(p):
-    """html_assignment : INITCODEHTML ID EQ expression CCODEHTML"""
+    """html_assignment : INITCODEHTML ID snp_push_pending_operand EQ snp_push_pending_token expression snp_add_assignation_quad CCODEHTML"""
 
 
 def p_html_condition(p):
