@@ -107,7 +107,11 @@ def arithmetic(quad):
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
         # Execute multiplication
-        res_val = left_op / right_op
+        if right_op != 0:
+            res_val = left_op / right_op
+        else:
+            print("YOU ARE DIVIDING BY 0") # TODO : add nice error message (zero_division: 401)
+            exit(1)
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
     else: # Assignment '='

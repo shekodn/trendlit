@@ -8,6 +8,7 @@ syntax_error = "Sintax error:"
 var_not_defined = "Var"
 module_not_defined = "Module"
 wrong_params_num = "Wrong number of params"
+zero_division = "ZeroDivisionError: division by zero"
 
 error_to_code = {
     # Unkown 0
@@ -20,6 +21,8 @@ error_to_code = {
     var_not_defined: 302,
     module_not_defined: 303,
     wrong_params_num: 304,
+    # Runtime errors 400
+    zero_division: 401,
 }
 
 code_to_error = {
@@ -33,6 +36,8 @@ code_to_error = {
     302: var_not_defined,
     303: module_not_defined,
     304: wrong_params_num,
+    # Runtime errors 400
+    401: zero_division
 }
 
 
