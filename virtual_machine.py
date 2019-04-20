@@ -83,15 +83,33 @@ def arithmetic(quad):
         res_val = left_op + right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-    elif (quad.token == token_to_code.get('-')):
-        # Substraction
-        return
-    elif (quad.token == token_to_code.get('*')):
-        # Multiplication
-        return
-    elif (quad.token == token_to_code.get('/')):
-        # Division
-        return
+    elif (quad.token == token_to_code.get('-')): # Substraction
+        # -, left_op, right_op, result
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute substraction
+        res_val = left_op - right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
+    elif (quad.token == token_to_code.get('*')): # Multiplication
+        # *, left_op, right_op, result
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute multiplication
+        res_val = left_op * right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
+    elif (quad.token == token_to_code.get('/')): # Division
+        # /, left_op, right_op, result
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute multiplication
+        res_val = left_op / right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
     else: # Assignment '='
         # =, value, -1, variable
         # Get value from memory
