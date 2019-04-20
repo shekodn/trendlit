@@ -3,6 +3,7 @@ from semantic_cube.semantic_cube_helper import scope_to_code, code_to_scope
 
 class RuntimeMemory(object):
     def __init__(self, scope_type):
+        self.scope_type = scope_type
         # Address range for GLOBAL variables
         self.mem_global_int_start = 1000
         self.mem_global_int_end = 1999
@@ -47,13 +48,3 @@ class RuntimeMemory(object):
 
     def return_value():
         return
-
-
-    # Get the scope from a memory address
-    def get_scope(self, dir):
-        if dir >= self.mem_global_int_start and dir <= self.mem_global_int_end:
-            return "global"  # TODO: ver si neceitamos usar el semantic cube
-        elif dir >= self.mem_local_int_start and dir <= self.mem_local_str_end:
-            return "local"
-        else:
-            return "temp"

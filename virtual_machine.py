@@ -1,4 +1,4 @@
-from semantic_cube.semantic_cube_helper import token_to_code
+from semantic_cube.semantic_cube_helper import token_to_code, scope_to_code
 from runtime_memory.runtime_memory import RuntimeMemory
 from stack.stack import Stack
 
@@ -8,6 +8,7 @@ ARTITHMETIC = [
     token_to_code.get("-"),
     token_to_code.get("*"),
     token_to_code.get("/"),
+    token_to_code.get("="),
 ]
 RELATIONAL = [
     token_to_code.get("is"),
@@ -19,22 +20,36 @@ RELATIONAL = [
 ]
 
 const_memory = {}
-global_memory = {}
-# curr_memory = {}
+g_memory = RuntimeMemory(scope_to_code.get("global"))
+# memory_context_stack = Stack() # TODO: how to keep track of local contexts
 
-memory_context_stack = Stack()
-memory_context_stack.push(999)
+
+# MEMORY HELPERS
+def get_value_from_address(addr):
+    if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end:
+        return g_memory.get_value(addr)
+    elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end:
+        return l_memory.get_value(addr) # TODO: current memory context?
+    elif addr >= g_memory.mem_temp_int_start and addr <= g_memory.mem_temp_str_end:
+        return g_memory.get_value(addr) #TODO: how to know if temp from local vs global
+    else: # constant
+        return const_memory[addr]
+
+
+def set_value_to_address (value, address):
+    return
 
 
 
 
 def run_code(queue_quad, const_mem):
-    global const_memory, memory_context_stack
+    # Set the constant memory (retrieved during compilation)
+    global const_memory
     const_memory = const_mem
     # TODO: Memory ?
     instruction_pointer = 0
     # print("HELLO", const_memory)
-    while quad_cont < len(queue_quad):
+    while instruction_pointer < len(queue_quad):
         exec_quad(queue_quad[instruction_pointer])
         instruction_pointer = instruction_pointer + 1
 
@@ -66,10 +81,9 @@ def arithmetic(quad):
     else: ## Assignment '='
         # =, value, -1, variable
         # Get value from memory
-        value = memory.get_value(quad.operand1)
-
+        value = get_value_from_address(quad.operand1)
         # Assign by storing value in memory
-        memory.set_value(value, quad.operand3)
+        # set_value_to_address(value, quad.operand3)
 
 
 # def relational(quad):
