@@ -1,4 +1,4 @@
-from semantic_cube.semantic_cube_helper import token_to_code, scope_to_code
+from semantic_cube.semantic_cube_helper import token_to_code, scope_to_code, code_to_token
 from runtime_memory.runtime_memory import RuntimeMemory
 from stack.stack import Stack
 
@@ -182,5 +182,8 @@ def relational(quad):
 def eval(quad):
     # eval, -1, -1, 16000
     # TODO: print html tag, endl?
-    value = get_value_from_address(quad.operand3)
+    if quad.operand3 >= 600 and quad.operand3 <= 699: # html tag
+        value = "<" + code_to_token.get(quad.operand3).lower() + ">"
+    else:
+        value = get_value_from_address(quad.operand3)
     print(value)
