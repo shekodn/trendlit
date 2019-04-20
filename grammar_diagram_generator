@@ -139,7 +139,7 @@ htmlscript ::= 'OEVALSCRIPT' expression 'CEVALSCRIPT'
 
 /* -------- NEW HTML GAMMAR -------- */
 
-htmltag ::= tag 'OBRACE' html_block 'CBRACE'
+htmltag ::= tag 'OBRACE' html_block 'CBRACE' | 'BR' 'OBRACE' 'CBRACE'
 
 tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
 
