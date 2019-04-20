@@ -22,9 +22,11 @@ RELATIONAL = [
     token_to_code.get(">"),
     token_to_code.get("<"),
 ]
-JUMPS = [token_to_code.get("GOTO"),
-token_to_code.get("GOTOF"),
-token_to_code.get("GOTOT"),]
+JUMPS = [
+    token_to_code.get("GOTO"),
+    token_to_code.get("GOTOF"),
+    token_to_code.get("GOTOT"),
+]
 
 html_file = None
 instruction_pointer = 0
@@ -210,6 +212,7 @@ def eval(quad):
         value = get_value_from_address(quad.operand3)
     html_file.write(str(value))  # TODO: endl? spaces? make it pretty/understandable
     html_file.write("\n")
+
 
 def jumps(quad):
     global instruction_pointer
