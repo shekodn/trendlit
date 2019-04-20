@@ -11,6 +11,6 @@ program the_name_of_the_program
         D = 10 not 20
         D = 10 > 20
         D = 10 < 20
-        C = A + B
+        # C = A + B # TODO: this is NOT failing (propperly aka nice error message) and 'C' is not declared!
         D = A > B
     }
