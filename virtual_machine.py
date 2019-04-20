@@ -65,8 +65,8 @@ def run_code(queue_quad, const_mem):
 def exec_quad(quad):
     if (quad.token in ARTITHMETIC):
         arithmetic(quad)
-    # elif (quad.token in RELATIONAL):
-    #     relational(quad)
+    elif (quad.token in RELATIONAL):
+        relational(quad)
     # elif (quad.token == token_to_code.get('eval')):
     #     eval(quad)
     else:
@@ -128,13 +128,56 @@ def arithmetic(quad):
         print("temp", g_memory.temp_memory)
 
 
-# def relational(quad):
-#     if (quad.token == token_to_code.get('is')):
-#     elif (quad.token == token_to_code.get('not')):
-#     elif (quad.token == token_to_code.get('>=')):
-#     elif (quad.token == token_to_code.get('<=')):
-#     elif (quad.token == token_to_code.get('>')):
-#     else: # '<'
-#
+def relational(quad):
+    if (quad.token == token_to_code.get('is')):
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute substraction
+        res_val = left_op == right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
+    elif (quad.token == token_to_code.get('not')):
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute substraction
+        res_val = left_op != right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
+    elif (quad.token == token_to_code.get('>=')):
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute substraction
+        res_val = left_op >= right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
+    elif (quad.token == token_to_code.get('<=')):
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute substraction
+        res_val = left_op <= right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
+    elif (quad.token == token_to_code.get('>')):
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute substraction
+        res_val = left_op > right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
+    else: # '<'
+        # <, left_op, right_op, result
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute substraction
+        res_val = left_op < right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
+
 # def eval(quad):
 #     # TODO: print html tag, print value, endl?
