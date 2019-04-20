@@ -37,7 +37,7 @@ code_to_error = {
     303: module_not_defined,
     304: wrong_params_num,
     # Runtime errors 400
-    401: zero_division
+    401: zero_division,
 }
 
 

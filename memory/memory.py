@@ -166,7 +166,7 @@ class Memory(object):
     def get_or_set_addr_const(self, value, type):
         if value in self.constant_addresses:
             assigned_address = self.constant_addresses[value]
-        else: # add new constant
+        else:  # add new constant
             assigned_address = self.set_addr_const(type)
             self.constant_addresses[value] = assigned_address
             self.constant_values[assigned_address] = self.convert_to_type(value, type)
@@ -180,7 +180,7 @@ class Memory(object):
         elif type == "bool":
             return False if value == "False" else True
         elif type == "str":
-             return value.strip("\"",)
+            return value.strip('"')
         return None
 
     # Select an address for CONSTANT variable, and increase the memory pointer

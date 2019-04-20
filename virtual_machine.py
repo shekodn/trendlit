@@ -1,4 +1,8 @@
-from semantic_cube.semantic_cube_helper import token_to_code, scope_to_code, code_to_token
+from semantic_cube.semantic_cube_helper import (
+    token_to_code,
+    scope_to_code,
+    code_to_token,
+)
 from runtime_memory.runtime_memory import RuntimeMemory
 from stack.stack import Stack
 
@@ -31,25 +35,27 @@ def get_value_from_address(addr):
     if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end:
         return g_memory.get_value(addr)
     elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end:
-        return l_memory.get_value(addr) # TODO: current memory context?
+        return l_memory.get_value(addr)  # TODO: current memory context?
     elif addr >= g_memory.mem_temp_int_start and addr <= g_memory.mem_temp_str_end:
-        return g_memory.get_value(addr) #TODO: how to know if temp from local vs global
-    else: # constant
+        return g_memory.get_value(
+            addr
+        )  # TODO: how to know if temp from local vs global
+    else:  # constant
         return const_memory[addr]
 
 
-def set_value_to_address (value, addr):
+def set_value_to_address(value, addr):
     if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end:
         # Set GLOBAL variable address
         g_memory.set_value(value, addr)
     elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end:
         # Set LOCAL variable address
-        l_memory.set_value(value, addr) # TODO: current memory context?
-    else: #temp
+        l_memory.set_value(value, addr)  # TODO: current memory context?
+    else:  # temp
         # Set TEMP variable address
-        g_memory.set_value(value, addr) #TODO: how to know if temp from local vs global
-
-
+        g_memory.set_value(
+            value, addr
+        )  # TODO: how to know if temp from local vs global
 
 
 def run_code(queue_quad, const_mem):
@@ -57,7 +63,9 @@ def run_code(queue_quad, const_mem):
     global const_memory, html_file
     const_memory = const_mem
 
-    html_file = open("trendlit.html", "w") # TODO: change the file name to the program name the user wrote
+    html_file = open(
+        "trendlit.html", "w"
+    )  # TODO: change the file name to the program name the user wrote
 
     instruction_pointer = 0
     # print("HELLO", const_memory)
@@ -67,18 +75,18 @@ def run_code(queue_quad, const_mem):
 
 
 def exec_quad(quad):
-    if (quad.token in ARTITHMETIC):
+    if quad.token in ARTITHMETIC:
         arithmetic(quad)
-    elif (quad.token in RELATIONAL):
+    elif quad.token in RELATIONAL:
         relational(quad)
-    elif (quad.token == token_to_code.get('eval')):
+    elif quad.token == token_to_code.get("eval"):
         eval(quad)
     else:
         return
 
 
 def arithmetic(quad):
-    if (quad.token == token_to_code.get('+')): # Addition
+    if quad.token == token_to_code.get("+"):  # Addition
         # +, left_op, right_op, result
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
@@ -87,7 +95,7 @@ def arithmetic(quad):
         res_val = left_op + right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-    elif (quad.token == token_to_code.get('-')): # Substraction
+    elif quad.token == token_to_code.get("-"):  # Substraction
         # -, left_op, right_op, result
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
@@ -96,7 +104,7 @@ def arithmetic(quad):
         res_val = left_op - right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-    elif (quad.token == token_to_code.get('*')): # Multiplication
+    elif quad.token == token_to_code.get("*"):  # Multiplication
         # *, left_op, right_op, result
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
@@ -105,7 +113,7 @@ def arithmetic(quad):
         res_val = left_op * right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-    elif (quad.token == token_to_code.get('/')): # Division
+    elif quad.token == token_to_code.get("/"):  # Division
         # /, left_op, right_op, result
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
@@ -114,11 +122,13 @@ def arithmetic(quad):
         if right_op != 0:
             res_val = left_op / right_op
         else:
-            print("YOU ARE DIVIDING BY 0") # TODO : add nice error message (zero_division: 401)
+            print(
+                "YOU ARE DIVIDING BY 0"
+            )  # TODO : add nice error message (zero_division: 401)
             exit(1)
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-    else: # Assignment '='
+    else:  # Assignment '='
         # =, value, -1, variable
         # Get value from memory
         value = get_value_from_address(quad.operand1)
@@ -133,7 +143,7 @@ def arithmetic(quad):
 
 
 def relational(quad):
-    if (quad.token == token_to_code.get('is')):
+    if quad.token == token_to_code.get("is"):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
@@ -141,7 +151,7 @@ def relational(quad):
         res_val = left_op == right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-    elif (quad.token == token_to_code.get('not')):
+    elif quad.token == token_to_code.get("not"):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
@@ -149,7 +159,7 @@ def relational(quad):
         res_val = left_op != right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-    elif (quad.token == token_to_code.get('>=')):
+    elif quad.token == token_to_code.get(">="):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
@@ -157,7 +167,7 @@ def relational(quad):
         res_val = left_op >= right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-    elif (quad.token == token_to_code.get('<=')):
+    elif quad.token == token_to_code.get("<="):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
@@ -165,7 +175,7 @@ def relational(quad):
         res_val = left_op <= right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-    elif (quad.token == token_to_code.get('>')):
+    elif quad.token == token_to_code.get(">"):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
@@ -173,7 +183,7 @@ def relational(quad):
         res_val = left_op > right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-    else: # '<'
+    else:  # '<'
         # <, left_op, right_op, result
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
@@ -183,9 +193,10 @@ def relational(quad):
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
 
+
 def eval(quad):
     # eval, -1, -1, 16000
-    if quad.operand3 >= 600 and quad.operand3 <= 699: # html tag
+    if quad.operand3 >= 600 and quad.operand3 <= 699:  # html tag
         value = "<" + code_to_token.get(quad.operand3).lower() + ">"
     else:
         value = get_value_from_address(quad.operand3)
