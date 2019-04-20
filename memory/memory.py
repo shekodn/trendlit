@@ -65,6 +65,7 @@ class Memory(object):
         self.mem_const_str_start = 16000
         self.mem_const_str_end = 16999
         self.constant_addresses = {}
+        self.constant_values = {}
 
     def reset(self):
         self.__init__()
@@ -165,10 +166,22 @@ class Memory(object):
     def get_or_set_addr_const(self, value, type):
         if value in self.constant_addresses:
             assigned_address = self.constant_addresses[value]
-        else:
+        else: # add new constant
             assigned_address = self.set_addr_const(type)
             self.constant_addresses[value] = assigned_address
+            self.constant_values[assigned_address] = self.convert_to_type(value, type)
         return assigned_address
+
+    def convert_to_type(self, value, type):
+        if type == "int":
+            return int(value)
+        elif type == "double":
+            return float(value)
+        elif type == "bool":
+            return False if value == "False" else True
+        elif type == "str":
+             return value.strip("\"",)
+        return None
 
     # Select an address for CONSTANT variable, and increase the memory pointer
     def set_addr_const(self, type):
@@ -213,10 +226,10 @@ class Memory(object):
     # ---- GET INFO FROM A MEMORY ADDRESS ----
 
     # Get the scope from a memory address
-    def get_scope(self, dir):
-        if dir >= self.mem_global_int_start and dir <= self.mem_global_int_end:
-            return "global"  # TODO: ver si neceitamos usar el semantic cube
-        elif dir >= self.mem_local_int_start and dir <= self.mem_local_str_end:
-            return "local"
-        else:
-            return "temp"
+    # def get_scope(self, dir):
+    #     if dir >= self.mem_global_int_start and dir <= self.mem_global_int_end:
+    #         return "global"  # TODO: ver si neceitamos usar el semantic cube
+    #     elif dir >= self.mem_local_int_start and dir <= self.mem_local_str_end:
+    #         return "local"
+    #     else:
+    #         return "temp"
