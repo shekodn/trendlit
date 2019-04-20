@@ -67,8 +67,8 @@ def exec_quad(quad):
         arithmetic(quad)
     elif (quad.token in RELATIONAL):
         relational(quad)
-    # elif (quad.token == token_to_code.get('eval')):
-    #     eval(quad)
+    elif (quad.token == token_to_code.get('eval')):
+        eval(quad)
     else:
         return
 
@@ -179,5 +179,8 @@ def relational(quad):
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
 
-# def eval(quad):
-#     # TODO: print html tag, print value, endl?
+def eval(quad):
+    # eval, -1, -1, 16000
+    # TODO: print html tag, endl?
+    value = get_value_from_address(quad.operand3)
+    print(value)
