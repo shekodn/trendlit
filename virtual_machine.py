@@ -74,9 +74,15 @@ def exec_quad(quad):
 
 
 def arithmetic(quad):
-    if (quad.token == token_to_code.get('+')):
-        # Addition
-        return
+    if (quad.token == token_to_code.get('+')): # Addition
+        # +, left_op, right_op, result
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute addition
+        res_val = left_op + right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
     elif (quad.token == token_to_code.get('-')):
         # Substraction
         return
@@ -86,12 +92,18 @@ def arithmetic(quad):
     elif (quad.token == token_to_code.get('/')):
         # Division
         return
-    else: ## Assignment '='
+    else: # Assignment '='
         # =, value, -1, variable
         # Get value from memory
         value = get_value_from_address(quad.operand1)
         # Assign by storing value in memory
         set_value_to_address(value, quad.operand3)
+        print("-------")
+        print("int", g_memory.int_memory)
+        print("double", g_memory.double_memory)
+        print("bool", g_memory.bool_memory)
+        print("str", g_memory.str_memory)
+        print("temp", g_memory.temp_memory)
 
 
 # def relational(quad):
