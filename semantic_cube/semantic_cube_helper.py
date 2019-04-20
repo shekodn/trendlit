@@ -40,6 +40,7 @@ token_to_code = {
     "/TR": 611,
     "TH": 612,
     "/TH": 613,
+    "BR": 614,
     # Aux
     "false_bottom": 999,
     "(": 1001,
@@ -88,6 +89,7 @@ code_to_token = {
     611: "/TR",
     612: "TH",
     613: "/TH",
+    614: "BR",
     # Aux
     999: "false_bottom",
     1001: "(",

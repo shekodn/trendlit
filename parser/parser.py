@@ -447,7 +447,8 @@ def p_error(p):
 
 
 def p_htmltag(p):
-    """htmltag : tag OBRACE html_block CBRACE snp_close_html_tag"""
+    """htmltag : tag OBRACE html_block CBRACE snp_close_html_tag
+    | BR snp_br_html_tag OBRACE CBRACE"""
 
 
 def p_html_block(p):
@@ -1064,6 +1065,12 @@ def p_snp_close_html_tag(p):
     html_tag = quad_helper.pop_tag() + 1
     quad_helper.add_quad(token_to_code.get("eval"), -1, -1, html_tag)
 
+def p_snp_br_html_tag(p):
+    """snp_br_html_tag : empty"""
+    html_tag = p[-1].upper()
+    print("Html tag: ", html_tag)
+
+    quad_helper.add_quad(token_to_code.get("eval"), -1, -1, token_to_code.get(html_tag))
 
 def p_snp_push_eval_pending_token(p):
     """snp_push_eval_pending_token : empty"""
