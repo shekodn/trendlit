@@ -200,6 +200,42 @@ class Memory(object):
             self.next_mem_const_str += 1
         return assigned_address
 
+    def increase_next_mem(self, scope_type, type, amount):
+        """
+            Description:
+            Params:
+                scope_type (int): the type of the scope
+                type (str): the type of the variable we want to assign
+            Return:
+                assigned_address (int): returns None if there was an error
+         """
+        if scope_type is scope_to_code.get("global"):
+            return self.increase_next_global_mem(type, amount)
+        elif scope_type is scope_to_code.get("local"):
+            return self.increase_next_local_mem(type, amount)
+        return None
+
+    def increase_next_global_mem(self, type, amount):
+        if type == "int":
+            self.next_mem_global_int += amount
+        elif type == "double":
+            self.next_mem_global_double += amount
+        elif type == "bool":
+            self.next_mem_global_bool += amount
+        elif type == "str":
+            self.next_mem_global_str += amount
+
+    def increase_next_local_mem(self, type, amount):
+        if type == "int":
+            self.next_mem_local_int += amount
+        elif type == "double":
+            self.next_mem_local_double += amount
+        elif type == "bool":
+            self.next_mem_local_bool += amount
+        elif type == "str":
+            self.next_mem_local_str += amount
+
+
     def reset_local_vars(self):
         """
             Description: reset the local var counter

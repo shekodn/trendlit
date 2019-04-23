@@ -499,20 +499,30 @@ def p_snp_add_dimension(p):
         parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             parser_helper.curr_slice
         ]["t_dimensions"]["m2"] = k
+    #
+    scope_type = parser_helper.get_scope_type(parser_helper.curr_scope)
+    slice_type = parser_helper.get_var_type_from_dir(slice_name)
+    memory.increase_next_mem(scope_type, slice_type, parser_helper.curr_r)
 
     # for debbuging
-    print(f"Adding {parser_helper.curr_dimension_counter} dim for {slice_name} ")
-    print(
-        "Dim Table: ",
-        parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
-            parser_helper.curr_slice
-        ]["t_dimensions"],
-    )
+    # print(f"Adding {parser_helper.curr_dimension_counter} dim for {slice_name} ")
+    # print(
+    #     "Dim Table: ",
+    #     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+    #         parser_helper.curr_slice
+    #     ]["t_dimensions"],
+    # )
 
     # Reset dimension count
     parser_helper.curr_dimension_counter = 0
     # Reset curr R
     parser_helper.curr_r = 1
+    # for debbuging
+    # print("NETX ADDRESSS ", memory.next_mem_global_int)
+    # print(
+    #     "var_table : ",
+    #     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"]
+    # )
 
 
 # primera pasada
@@ -640,7 +650,7 @@ def p_snp_push_pending_token(p):
     token = p[-1]
     quad_helper.push_token(token)
     # debbuging
-    print("pushed token", quad_helper.top_token())
+    # print("pushed token", quad_helper.top_token())
 
 
 def p_snp_push_solitary_operand(p):
@@ -1044,7 +1054,7 @@ def p_snp_push_eval_pending_token(p):
     """snp_push_eval_pending_token : empty"""
     quad_helper.push_token("eval")
     # For debbuging
-    print("Top token: ", quad_helper.top_token())
+    # print("Top token: ", quad_helper.top_token())
 
 
 import ply.yacc as yacc
