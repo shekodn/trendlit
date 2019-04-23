@@ -5,8 +5,6 @@
 # TOKENS
 reserved_words = {
     # reserved words code
-    "max": "MAX",
-    "min": "MIN",
     "program": "PROGRAM",
     "script": "SCRIPT",
     # Data types
@@ -24,18 +22,7 @@ reserved_words = {
     "def": "DEF",
     "eval": "EVAL",
     "spit": "SPIT",
-    # Special Functions
-    "avg": "AVG",
-    "find_max": "FIND_MAX",
-    "find_min": "FIND_MIN",
-    "median_1Dslice": "MEDIAN",
-    "mode_1Dslice": "MODE",
-    "multiply_1Dslice": "MULTIPLY_1DSLICE",
-    "pow": "POW",
-    "randoms": "RANDOMS",
-    "sort_slice": "SORT_SLICE",
-    "suck_csv": "SUCK_CSV",
-    "zeros": "ZEROS",
+    # TODO: Special Functions
     # reserved words html tags
     "class": "CLASS",
     "div": "DIV",
