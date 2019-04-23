@@ -94,7 +94,7 @@ def p_initialize(p):
 
 def p_initialize1(p):
     """initialize1 : ID snp_add_var snp_push_pending_operand EQ snp_push_pending_token value
-        | ID snp_add_var initializeSlices EQ constSlices"""
+        | ID snp_add_var initializeSlices snp_add_dimension EQ constSlices"""
 
 
 def p_initialize2(p):
@@ -108,11 +108,11 @@ def p_initializeSlices(p):
 
 
 def p_initializeSlices1D(p):
-    """initializeSlices1D : OBRACK CTEI CBRACK"""
+    """initializeSlices1D : OBRACK CTEI CBRACK snp_increase_dimension_count"""
 
 
 def p_initializeSlices2D(p):
-    """initializeSlices2D : OBRACK CTEI CBRACK OBRACK CTEI CBRACK"""
+    """initializeSlices2D : OBRACK CTEI CBRACK snp_increase_dimension_count OBRACK CTEI CBRACK snp_increase_dimension_count"""
 
 
 def p_constSlices(p):
@@ -131,8 +131,13 @@ def p_constSlice1D1(p):
 
 # TODO: FIX 2D SLICE
 def p_constSlice2D(p):
-    """constSlice2D : OBRACK constSlice1D COMMA CBRACK
+    """constSlice2D : OBRACK constSlice1D constSlice2D1 CBRACK
         | OBRACK constSlice1D CBRACK"""
+
+
+def p_constSlice2D1(p):
+    """constSlice2D1 : COMMA constSlice1D constSlice2D1
+        | empty"""
 
 
 def p_type(p):
@@ -217,7 +222,6 @@ def p_factor1(p):
 
 def p_value(p):
     """value : ID snp_checks_for_previous_declaration snp_push_pending_operand
-        | valueSlice
         | exp_call
         | CTEI snp_save_type_int snp_push_pending_operand
         | CTED snp_save_type_double snp_push_pending_operand
@@ -266,13 +270,13 @@ def p_module1(p):
 
 
 def p_call(p):
-    """call : ID snp_verify_module_existance call1 snp_add_gosub
-        | predef"""
+    """call : ID snp_verify_module_existance call1 snp_add_gosub"""
+    # TODO: add predef
 
 
 def p_exp_call(p):
-    """exp_call : ID snp_verify_module_existance call1 snp_check_return snp_add_gosub
-        | predef"""
+    """exp_call : ID snp_verify_module_existance call1 snp_check_return snp_add_gosub"""
+    # TODO: add predef
 
 
 def p_call1(p):
@@ -287,104 +291,6 @@ def p_params(p):
 def p_params1(p):
     """params1 : COMMA params
         | empty"""
-
-
-def p_predef(p):
-    """predef : predef_avg
-        | predef_find_max
-        | predef_find_min
-        | predef_median
-        | predef_mode
-        | predef_find_mult_slice
-        | predef_pow
-        | predef_randoms
-        | predef_sort_slice
-        | predef_suck_csv
-        | predef_zeros"""
-
-
-def p_predef_avg(p):
-    """predef_avg : AVG OPAREN ID CPAREN"""
-
-
-def p_predef_find_max(p):
-    """predef_find_max : FIND_MAX OPAREN ID COMMA predef_find_max_args CPAREN"""
-
-
-def p_predef_find_max_args(p):
-    """predef_find_max_args : ID
-        | CTEI"""
-
-
-def p_predef_find_min(p):
-    """predef_find_min : FIND_MIN OPAREN ID COMMA predef_find_min_args CPAREN"""
-
-
-def p_predef_find_min_args(p):
-    """predef_find_min_args : ID
-        | CTEI"""
-
-
-def p_predef_find_mult_slice(p):
-    """predef_find_mult_slice : MULTIPLY_1DSLICE OPAREN ID COMMA predef_find_mult_slice_args CPAREN"""
-
-
-def p_predef_find_mult_slice_args(p):
-    """predef_find_mult_slice_args : ID
-        | CTEI"""
-
-
-def p_predef_median(p):
-    """predef_median : MEDIAN OPAREN ID CPAREN"""
-
-
-def p_predef_mode(p):
-    """predef_mode : MODE OPAREN ID CPAREN"""
-
-
-def p_predef_pow(p):
-    """predef_pow : POW OPAREN predef_pow_args COMMA predef_pow_args CPAREN"""
-
-
-def p_predef_pow_args(p):
-    """predef_pow_args : ID
-        | CTEI"""
-
-
-def p_predef_randoms(p):
-    """predef_randoms : RANDOMS OPAREN predef_randoms_args CPAREN"""
-
-
-def p_predef_randoms_args(p):
-    """predef_randoms_args : ID
-        | CTEI"""
-
-
-def p_predef_zeros(p):
-    """predef_zeros : ZEROS OPAREN predef_zeros_args CPAREN"""
-
-
-def p_predef_zeros_args(p):
-    """predef_zeros_args : ID
-        | CTEI"""
-
-
-def p_predef_sort_slice(p):
-    """predef_sort_slice : SORT_SLICE OPAREN ID COMMA predef_sort_slice_option CPAREN"""
-
-
-def p_predef_sort_slice_option(p):
-    """predef_sort_slice_option : MAX
-        | MIN"""
-
-
-def p_predef_suck_csv(p):
-    """predef_suck_csv : SUCK_CSV OPAREN predef_suck_csv_args CPAREN"""
-
-
-def p_predef_suck_csv_args(p):
-    """predef_suck_csv_args : ID
-        | CTESTR"""
 
 
 def p_writing(p):
@@ -570,6 +476,62 @@ def p_snp_save_void_type(p):
     parser_helper.curr_type = "void"
 
 
+# ----- ARREGLOS -----
+def p_snp_add_dimension(p):
+    """snp_add_dimension : empty"""
+    slice_name = p[-3]
+    # Add dimension to var table
+    parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+        slice_name
+    ]["dimensions"] = parser_helper.curr_dimension_counter
+    # segunda pasada
+    if parser_helper.curr_dimension_counter is 2:
+        lower_limit = 0
+        upper_limit = parser_helper.get_upper_limit(slice_name, 1)
+        print("R ", parser_helper.curr_r, "Upper", upper_limit, "Lower", lower_limit)
+        m1 = parser_helper.curr_r / ((int(upper_limit) - lower_limit + 1))
+        parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+            parser_helper.curr_slice
+        ]["t_dimensions"]["m1"] = int(m1)
+        upper_limit = parser_helper.get_upper_limit(slice_name, 2)
+        # m2 = m1/((int(upper_limit) - lower_limit + 1))
+        k = 0
+        parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+            parser_helper.curr_slice
+        ]["t_dimensions"]["m2"] = k
+
+    # for debbuging
+    print(f"Adding {parser_helper.curr_dimension_counter} dim for {slice_name} ")
+    print(
+        "Dim Table: ",
+        parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+            parser_helper.curr_slice
+        ]["t_dimensions"],
+    )
+
+    # Reset dimension count
+    parser_helper.curr_dimension_counter = 0
+    # Reset curr R
+    parser_helper.curr_r = 1
+
+
+# primera pasada
+def p_snp_increase_dimension_count(p):
+    """snp_increase_dimension_count : empty"""
+    upper_limit = p[-2]
+    # indicates another dimension in slice
+    parser_helper.curr_dimension_counter += 1
+    # adds upper limit to t_dimensions
+    dim_count = parser_helper.curr_dimension_counter
+    parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+        parser_helper.curr_slice
+    ]["t_dimensions"]["ls" + str(dim_count)] = upper_limit
+    # print("UPPER", parser_helper.curr_slice, "ls"+str(dim_count), upper_limit)
+    # calculates R
+    lower_limit = 0
+    parser_helper.curr_r = parser_helper.curr_r * (int(upper_limit) - lower_limit + 1)
+
+
 # End of the module deltes the var table
 # snp #7 in Intermediate Code Actions for Module Definition
 def p_snp_end_module(p):
@@ -617,11 +579,14 @@ def p_snp_add_var(p):
         parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             var_name
         ] = {
+            "dimensions": 0,
+            "t_dimensions": {"li1": 0, "ls1": 0, "m1": 0, "li2": 0, "ls2": 0, "m2": 0},
             "type": parser_helper.curr_type,
             "memory_address": var_memory_address,
         }  # TODO : add more info later on
+        parser_helper.curr_slice = var_name
     # For debbuging
-    # print("MEMROEY ADDRESS FOR VAR: ", var_memory_address)
+    # print("MEMROEY ADDRESS FOR VAR: ", var_name, var_memory_address)
     # print(
     #     f"var_name {var_name}, current_scope, {parser_helper.curr_scope}, SCOPE TYPE: {scope_type}"
     # )
@@ -675,7 +640,7 @@ def p_snp_push_pending_token(p):
     token = p[-1]
     quad_helper.push_token(token)
     # debbuging
-    # print("pushed token", quad_helper.top_token())
+    print("pushed token", quad_helper.top_token())
 
 
 def p_snp_push_solitary_operand(p):
@@ -1079,7 +1044,7 @@ def p_snp_push_eval_pending_token(p):
     """snp_push_eval_pending_token : empty"""
     quad_helper.push_token("eval")
     # For debbuging
-    # print("Top token: ", quad_helper.top_token())
+    print("Top token: ", quad_helper.top_token())
 
 
 import ply.yacc as yacc

@@ -4,7 +4,10 @@ from stack.stack import Stack
 class ParserHelper(object):
     def __init__(self):
         self.procedure_directory = {}  # [name] = {type, var_table}
+        self.curr_dimension_counter = 0  # last defined array dimension counter
         self.curr_scope = ""  # The current scope inside the program
+        self.curr_slice = None
+        self.curr_r = 1
         self.curr_type = ""  # The current type used (module or var)
         self.curr_module_param_counter = 0
         self.curr_module_var_counter = 0
@@ -100,3 +103,14 @@ class ParserHelper(object):
         if self.is_module_in_procedure_dir(module_name):
             return self.procedure_directory[module_name]["queue_params"]
         return None
+
+    def get_upper_limit(self, slice_name, dimension):
+        if self.is_var_in_current_scope(slice_name):
+            return self.procedure_directory[self.curr_scope]["var_table"][slice_name][
+                "t_dimensions"
+            ]["ls" + str(dimension)]
+        elif self.is_var_in_global_scope(slice_name):
+            return self.procedure_directory["global_script"]["var_table"][slice_name][
+                "t_dimensions"
+            ]["ls" + str(dimension)]
+        return 0  # slice_name not declared
