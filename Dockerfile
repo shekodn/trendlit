@@ -7,21 +7,6 @@ RUN apt-get update && apt-get install -y \
   build-essential \
   python3.7 \
   wget
-  # sudo add-apt-repository ppa:deadsnakes/ppa
-
-
-  # python3-dev \
-  # && cd /usr/local/bin \
-  # && ln -s /usr/bin/python3 python \
-  # && pip3 install --upgrade pip
-
-# WORKDIR /tmp
-# RUN wget https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tar.xz
-# RUN tar -xf Python-3.7.2.tar.xz
-# RUN cd Python-3.7.2
-# # RUN ./configure --enable-optimizations
-# RUN make -j 1
-# RUN make altinstall
 
 COPY server/index.html /var/www/html/index.html
 
@@ -31,7 +16,7 @@ COPY server/test.py /usr/lib/cgi-bin
 RUN chmod 755 /usr/lib/cgi-bin/test.py
 
 COPY . /usr/lib/cgi-bin
-RUN chmod 755 /usr/lib/cgi-bin/main.py
+RUN chmod 755 /usr/lib/cgi-bin/server.py
 
 WORKDIR /usr/lib/cgi-bin
 
