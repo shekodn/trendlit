@@ -70,7 +70,7 @@ def run_code(queue_quad, const_mem):
     const_memory = const_mem
 
     html_file = open(
-        "trendlit.html", "w"
+        "trendlit.tl", "w"
     )  # TODO: change the file name to the program name the user wrote
 
     instruction_pointer = 0
@@ -79,6 +79,7 @@ def run_code(queue_quad, const_mem):
         # print("ip: ", instruction_pointer)
         exec_quad(queue_quad[instruction_pointer])
         instruction_pointer = instruction_pointer + 1
+    html_file.close()
 
 
 def exec_quad(quad):
