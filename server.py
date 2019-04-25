@@ -13,28 +13,35 @@ form = cgi.FieldStorage()
 if form.getvalue('textcontent'):
    text_content = form.getvalue('textcontent')
 else:
-   text_content = "Not entered YET"
+   text_content = "Nein!"
+   # for debugging
+   text_content = "program the_name_of_the_program script { eval(4 + 1) }"
+
 
 print ("Content-type:text/html\r\n\r\n")
 print ("<html>")
 print ("<head>")
-print ("<title>Text Area - Fifth CGI Program</title>")
+print ("<title> Trendlit - Cloud Based </title>")
 print ("</head>")
+
 print ("<body>")
-print ("<h2> Entered Text Content is %s</h2>" % text_content)
-print ("</body>")
 
 
 tl_file_name = "main.tl"
+html_file_name = "trendlit.html"
+
+
 
 # with open(tl_file_name, 'w') as filetowrite:
 #     filetowrite.write(text_content)
 #     filetowrite.close()
 
+
 try:
-    f = open(tl_file_name, "r")
-    data = f.read()
-    f.close()
+    # f = open(tl_file_name, "r")
+    # data = f.read()
+    # f.close()
+    data = text_content
     try:
         yacc.parse(data, tracking=True)
         if error_helper.error_cont is 0:
@@ -42,18 +49,45 @@ try:
             # _, file_name = file.split("/")
             # quad_helper.print_to_file(f"object_code/{file_name}.obj")
             run_code(quad_helper.queue_quad, memory.constant_values)
-        else:
-            print(f"{tl_file_name} does not compile. Please try harder")
-            print(f"Number of errors: {error_helper.error_cont}")
-            error_helper.print_errors()
-    except:
-        print(f"{tl_file_name} couldn't compile successfully.\n")
+            f = open(html_file_name, "r")
+            print (f.read())
 
-    error_helper.reset()
-    quad_helper.reset()
-    parser_helper.reset()
-    memory.reset()
-    print("--------------------------------------------")
+            # print("if data")
+            # print(data)
+            f.close()
+        else:
+            error = f"{tl_file_name} does not compile. Please try harder \n"
+            # print(error)
+
+            number_of_errors = f"# of Errors: {error_helper.error_cont}\n"
+
+            error_output = error + number_of_errors
+
+            # with open(html_file_name, 'w') as filetowrite:
+            #     filetowrite.write(error_output)
+            #     filetowrite.close()
+            # f = open(html_file_name, "r")
+            # data = f.read()
+            # print("else data")
+            print(error_output)
+            # print ("<h6> 5 </h6>")
+
+
+            # print(f"Number of errors: {error_helper.error_cont}")
+            # error_helper.print_errors()
+    except:
+        error = f"{tl_file_name} couldn't compile successfully.\n"
+        # with open(html_file_name, 'w') as filetowrite:
+        #     filetowrite.write(error)
+        #     filetowrite.close()
+        # f = open(html_file_name, "r")
+        # data = f.read()
+        # print("except data")
+        # print(data)
+        # print ("<h6> 6 </h6>")
+        print(error)
+
+
 
 except EOFError:
     print("EOFError")
@@ -147,3 +181,5 @@ except EOFError:
 #     #         print("EOFError")
 # else:
 #     print("File missing")
+
+print ("</body>")
