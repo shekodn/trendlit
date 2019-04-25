@@ -1,0 +1,7 @@
+version: '3'
+services:
+  server:
+    container_name: cgi
+    build: './server'
+    ports:
+      - "80:80"
