@@ -5,7 +5,9 @@ from semantic_cube.semantic_cube_helper import (
 )
 from runtime_memory.runtime_memory import RuntimeMemory
 from stack.stack import Stack
+from virtual_machine.virtual_machine_helper import VMH
 
+vmh = VMH()
 
 ARTITHMETIC = [
     token_to_code.get("+"),
@@ -69,9 +71,9 @@ def run_code(queue_quad, const_mem):
     global const_memory, html_file, instruction_pointer
     const_memory = const_mem
 
-    html_file = open(
-        "trendlit.tl", "w"
-    )  # TODO: change the file name to the program name the user wrote
+    # html_file = open(
+    #     "trendlit.tl", "w"
+    # )  # TODO: change the file name to the program name the user wrote
 
     instruction_pointer = 0
 
@@ -79,7 +81,7 @@ def run_code(queue_quad, const_mem):
         # print("ip: ", instruction_pointer)
         exec_quad(queue_quad[instruction_pointer])
         instruction_pointer = instruction_pointer + 1
-    html_file.close()
+    # html_file.close()
 
 
 def exec_quad(quad):
@@ -211,8 +213,7 @@ def eval(quad):
         value = "<" + code_to_token.get(quad.operand3).lower() + ">"
     else:
         value = get_value_from_address(quad.operand3)
-    html_file.write(str(value))  # TODO: endl? spaces? make it pretty/understandable
-    html_file.write("\n")
+    vmh.queue_results.append(str(value))
 
 
 def jumps(quad):

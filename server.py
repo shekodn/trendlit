@@ -3,22 +3,22 @@
 # Import modules for CGI handling
 import cgi, cgitb, sys, os
 from parser.parser import parser, yacc, quad_helper, error_helper, parser_helper, memory
-from virtual_machine import run_code
+from virtual_machine.virtual_machine import run_code, vmh
 
 
 # Create instance of FieldStorage
 form = cgi.FieldStorage()
 
 # Get data from fields
-if form.getvalue('textcontent'):
-   text_content = form.getvalue('textcontent')
+if form.getvalue("textcontent"):
+    text_content = form.getvalue("textcontent")
 else:
-   text_content = "Nein!"
-   # for debugging
-   # text_content = "program the_name_of_the_program script { eval(7 + 1) }"
+    text_content = "Nein!"
+    # for debugging
+    # text_content = "program the_name_of_the_program script { eval(7 + 1) }"
 
 
-print ("Content-type:text/plain\n")
+print("Content-type:text/html\n")
 # print ("<html>")
 # print ("<head>")
 # print ("<title> Trendlit - Cloud Based </title>")
@@ -82,7 +82,7 @@ data = text_content
 # """
 # data.replace('', '\n')
 # data.replace(' ', '\n')
-data.replace('\n', ' ')
+data.replace("\n", " ")
 
 # print(len(data))
 data = data.rstrip()
@@ -90,22 +90,14 @@ data = data.rstrip()
 # print(len(data))
 data = data.strip()
 
+
 try:
     yacc.parse(data, tracking=True)
-    if error_helper.error_cont is 0:
-        print(f"{tl_file_name} compiles!\n")
-        # quad_helper.print_to_file("QUAD")
-        print("errors", error_helper.error_cont)
-        data = data[data.find('program'):]
-        print(data)
-        for quad in quad_helper.queue_quad:
-            print(quad)
 
-        # virtual_machine.run_code(quad_helper.queue_quad, memory.constant_values)
-        # os.chmod(compiled_file, 0o644)
-        # with open(compiled_file) as file:
-        #     content = file.read()
-        #     print(content)
+    if error_helper.error_cont is 0:
+        run_code(quad_helper.queue_quad, memory.constant_values)
+        for result in vmh.queue_results:
+            print(result)
     else:
         error = f"{tl_file_name} does not compile. Please try harder \n"
         number_of_errors = f"# of Errors: {error_helper.error_cont}\n"
