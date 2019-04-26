@@ -14,6 +14,7 @@ RUN ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/
 
 COPY . /usr/lib/cgi-bin
 RUN chmod 755 /usr/lib/cgi-bin/server.py
+RUN chmod 755 /usr/lib/cgi-bin/upload.py
 
 WORKDIR /usr/lib/cgi-bin
 
