@@ -9,17 +9,26 @@ from virtual_machine.virtual_machine import run_code, vmh
 # Create instance of FieldStorage
 form = cgi.FieldStorage()
 
-# Get data from fields
+# Get data from text area field
 if form.getvalue("textcontent"):
     text_content = form.getvalue("textcontent")
 else:
     text_content = "Nein!"
+# Get data from radio button fields
+if form.getvalue("type"):
+    # html or plain
+    type = form.getvalue("type")
+else:
+    type = "html"
 
-print("Content-type:text/html\n")
+
+print(f"Content-type:text/{type}\n")
 print("<html>")
 print("<head>")
 print("<title> Trendlit - Cloud Based Programming Language</title>")
 print("</head>")
+
+print("<body>")
 
 data = text_content
 
@@ -38,3 +47,6 @@ try:
 except:
     error = f"Error. We couldn't compile successfully.\n"
     print(error)
+
+print("</body>")
+print("</html>")
