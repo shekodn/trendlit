@@ -34,6 +34,9 @@ clean: ##Removes generated files (eg. .obj)
 	@echo ${ALL_OBJECT_FILES}
 	@rm -r ${ALL_OBJECT_FILES}
 
+build: ##Spins that beautiful container!
+	@echo 'Build triggered'
+	@ docker-compose up --build
 
 format: ##Applies BLACK to all py files in defined modules.
 	@echo 'Format triggered'
