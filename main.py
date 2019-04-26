@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
 from parser.parser import parser, yacc, quad_helper, error_helper, parser_helper, memory
-from virtual_machine import run_code
+from virtual_machine.virtual_machine import run_code
 
 if __name__ == "__main__":
 
