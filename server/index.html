@@ -1,6 +1,49 @@
-<form action = "/cgi-bin/server.py" method = "post" target = "_blank">
-<textarea name = "textcontent" cols = "40" rows = "4">
+<html>
+   <body>
+<!--  REFERENCE: https://codepen.io/kpourdeilami/pen/KDepk -->
+<form action = "/cgi-bin/server.py" method = "post" target = "_blank"  align="center">
+  <textarea name = "textcontent" cols = "40" rows = "4"  ng-keyup="autoExpand($event)">
 program the_name_of_the_program script { eval(1 + 1) }
-</textarea>
-<input type = "submit" value = "Submit" />
+  </textarea>
+  <input type = "submit" value = "Submit" />
 </form>
+
+      <form enctype = "multipart/form-data" action = "/cgi-bin/save_file.py" method = "post">
+      <p>File: <input type = "file" name = "filename" /></p>
+      <p><input type = "submit" value = "Upload" /></p>
+      </form>
+   </body>
+</html>
+
+<style media="screen">
+  body {
+    background:#43434B;
+    padding-top:100px;
+  }
+
+  textarea {
+    height:auto;
+    max-width:600px;
+    color:#999;
+    font-weight:400;
+    font-size:30px;
+    font-family:'Ubuntu', Helvetica, Arial, sans-serif;
+    width:100%;
+    background:#fff;
+    border-radius:3px;
+    line-height:2em;
+    border:none;
+    box-shadow:0px 0px 5px 1px rgba(0,0,0,0.1);
+    padding:30px;
+    -webkit-transition: height 2s ease;
+    -moz-transition: height 2s ease;
+    -ms-transition: height 2s ease;
+    -o-transition: height 2s ease;
+    transition: height 2s ease;
+  }
+
+  * {
+    -webkit-font-smoothing:antialiased !important;
+  }
+
+</style>

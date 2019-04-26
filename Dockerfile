@@ -12,16 +12,10 @@ COPY server/index.html /var/www/html/index.html
 
 RUN ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/
 
-COPY server/test.py /usr/lib/cgi-bin
-RUN chmod 755 /usr/lib/cgi-bin/test.py
-
 COPY . /usr/lib/cgi-bin
 RUN chmod 755 /usr/lib/cgi-bin/server.py
-RUN chmod 755 /usr/lib/cgi-bin/main.tl
-RUN chmod 755 /usr/lib/cgi-bin/trendlit.tl
-RUN cat /dev/null > /usr/lib/cgi-bin/trendlit.tl
 
 WORKDIR /usr/lib/cgi-bin
 
-# By default start up apache in the foreground, override with /bin/bash for interative.
+# By default start up apache in the foreground, override with /bin/bash for iterative.
 CMD ["/usr/sbin/apache2ctl", "-D",  "FOREGROUND"]
