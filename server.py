@@ -18,50 +18,100 @@ else:
    # text_content = "program the_name_of_the_program script { eval(7 + 1) }"
 
 
-print ("Content-type:text/html\r\n\r\n")
-print ("<html>")
-print ("<head>")
-print ("<title> Trendlit - Cloud Based </title>")
-print ("</head>")
-
-print ("<body>")
+print ("Content-type:text/plain\n")
+# print ("<html>")
+# print ("<head>")
+# print ("<title> Trendlit - Cloud Based </title>")
+# print ("</head>")
 
 
+path = "/tmp/"
 tl_file_name = "main.tl"
 compiled_file = "trendlit.tl"
 
 
+data = text_content
 
-# with open(tl_file_name, 'w') as filetowrite:
-#     filetowrite.write(text_content)
-#     filetowrite.close()
 
+# data = ("""
+#  %s
+# """ % (data))
+# data = data.rstrip()
+
+# data = """
+# # Don't move, otherwise the TEST will break
+#
+#
+# program the_name_of_the_program
+#
+#     script {
+#       int A
+#       int B
+#       int C
+#       int D = 1
+#       int E
+#       bool F
+#       str G
+#       double H
+#       eval(A)
+#       eval(1)
+#       eval(True)
+#       eval(A + B)
+#       eval(A > B)
+#     }
+# """
+# data = data.rstrip()
+#
+# # with open(tl_file_name, 'w') as filetowrite:
+# #     filetowrite.write(text_content)
+# #     filetowrite.close()
+#
+#
+#     # f = open(tl_file_name, "r")
+#     # data = f.read()
+#     # f.close()
+#     # data = unicode(text_content, "utf-8")
+#
+
+
+# data = """program the_name_of_the_program
+#
+#     script {
+#         eval(1 + 9)
+#     }
+# """
+# data.replace('', '\n')
+# data.replace(' ', '\n')
+data.replace('\n', ' ')
+
+# print(len(data))
+data = data.rstrip()
+#
+# print(len(data))
+data = data.strip()
 
 try:
-    # f = open(tl_file_name, "r")
-    # data = f.read()
-    # f.close()
-    data = text_content
-    try:
-        yacc.parse(data, tracking=True)
-        if error_helper.error_cont is 0:
-            print(f"{tl_file_name} compiles!\n")
-            run_code(quad_helper.queue_quad, memory.constant_values)
-            os.chmod(compiled_file, 0o644)
-            with open(compiled_file) as file:
-                content = file.read()
-                print(content)
-        else:
-            error = f"{tl_file_name} does not compile. Please try harder \n"
-            number_of_errors = f"# of Errors: {error_helper.error_cont}\n"
-            error_output = error + number_of_errors
+    yacc.parse(data, tracking=True)
+    if error_helper.error_cont is 0:
+        print(f"{tl_file_name} compiles!\n")
+        # quad_helper.print_to_file("QUAD")
+        print("errors", error_helper.error_cont)
+        data = data[data.find('program'):]
+        print(data)
+        for quad in quad_helper.queue_quad:
+            print(quad)
 
-            print(error_output)
-    except:
-        error = f"{tl_file_name} couldn't compile successfully.\n"
-        print(error)
+        # virtual_machine.run_code(quad_helper.queue_quad, memory.constant_values)
+        # os.chmod(compiled_file, 0o644)
+        # with open(compiled_file) as file:
+        #     content = file.read()
+        #     print(content)
+    else:
+        error = f"{tl_file_name} does not compile. Please try harder \n"
+        number_of_errors = f"# of Errors: {error_helper.error_cont}\n"
+        error_output = error + number_of_errors
 
-except EOFError:
-    print("EOFError")
-
-print ("</body>")
+        print(error_output)
+except:
+    error = f"{tl_file_name} couldn't compile successfully.\n"
+    print(error)

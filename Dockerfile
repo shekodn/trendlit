@@ -18,7 +18,8 @@ RUN chmod 755 /usr/lib/cgi-bin/test.py
 COPY . /usr/lib/cgi-bin
 RUN chmod 755 /usr/lib/cgi-bin/server.py
 RUN chmod 755 /usr/lib/cgi-bin/main.tl
-RUN chmod 755 /usr/lib/cgi-bin/trendlit.html
+RUN chmod 755 /usr/lib/cgi-bin/trendlit.tl
+RUN cat /dev/null > /usr/lib/cgi-bin/trendlit.tl
 
 WORKDIR /usr/lib/cgi-bin
 
