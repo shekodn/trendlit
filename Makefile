@@ -1,6 +1,6 @@
 APP=trendlit
 PROJECT=github.com/anakarenbm/trendlit
-RELEASE?=0.0.1
+RELEASE?=0.0.3
 
 COMMIT?=$(shell git rev-parse HEAD)
 BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
@@ -33,8 +33,14 @@ ALL_TL_FILENAMES=$(patsubst our_tests/%, %, $(wildcard our_tests/*.tl))
 
 ALL_OBJECT_FILES=$(wildcard object_code/*.obj)
 
+# List all running containers
+ALL_DOCKER_CONTAINERS=$(shell docker ps -aq)
+
 build:## Spins that beautiful container!
 	@./scripts/docker_build.sh
+
+bump:## Bumps version
+	@./bump_version.sh
 
 check:## Check if the tag that is going to be pushed is unique. In other words, if RELEASE variable was updated in the Makefile.
 	@./scripts/docker_check.sh
@@ -51,8 +57,8 @@ format: ##Applies BLACK to all py files in defined modules.
 help: ##Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-##prepare: Applies FORMAT TEST.
-prepare: format clean run test
+##prepare: Applies format clean trednlit test
+prepare: format trendlit clean test
 
 push: ## Push docker image to docker hub
 	@./scripts/docker_push.sh
@@ -65,10 +71,16 @@ rmi:## Removes docker image
 	@./scripts/docker_rmi.sh
 
 run:## Run latest built
+	@echo 'Run triggered'
 	@./scripts/docker_run.sh
 
 show: ##Show all .tl files
 	@echo ${ALL_TL_FILENAMES}
+
+stop: ### Stop all running containers
+	@echo "The following containers will be stopped"
+	@echo ${ALL_DOCKER_CONTAINERS}
+	@docker stop $(ALL_DOCKER_CONTAINERS)
 
 trendlit: ##Run all .tl files
 	${RUNMAIN} ${ALL_TL_FILES}
@@ -77,6 +89,6 @@ test: ##Run all automated tests (unnitest framework).
 	@echo 'Test triggered'
 	${RUNTEST} ${ALL_TEST_MODULES}
 
-version:
+version: ##Prints current version
 	@echo -n ${RELEASE}
 	@echo
