@@ -26,21 +26,25 @@ ALL_TL_FILENAMES=$(patsubst our_tests/%, %, $(wildcard our_tests/*.tl))
 
 ALL_OBJECT_FILES=$(wildcard object_code/*.obj)
 
-help: ##Show this help.
-	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+build: ##Spins that beautiful container!
+	@echo 'Build triggered'
+	@docker-compose up --build
+
+machine: ##If Docker compose is up, it goes into the container
+	@echo 'Machine triggered'
+	@docker exec -it cgi bash
 
 clean: ##Removes generated files (eg. .obj)
 	@echo 'Clean triggered'
 	@echo ${ALL_OBJECT_FILES}
 	@rm -r ${ALL_OBJECT_FILES}
 
-build: ##Spins that beautiful container!
-	@echo 'Build triggered'
-	@ docker-compose up --build
-
 format: ##Applies BLACK to all py files in defined modules.
 	@echo 'Format triggered'
 	@black ${ALL_MODULES}
+
+help: ##Show this help.
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 ##prepare: Applies FORMAT TEST.
 prepare: format clean run test
