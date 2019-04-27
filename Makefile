@@ -1,3 +1,10 @@
+APP=trendlit
+PROJECT=github.com/anakarenbm/trendlit
+RELEASE?=0.0.1
+
+COMMIT?=$(shell git rev-parse HEAD)
+BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
+
 .DEFAULT_GOAL := help
 
 RUNTEST=python3 -m unittest
@@ -26,13 +33,11 @@ ALL_TL_FILENAMES=$(patsubst our_tests/%, %, $(wildcard our_tests/*.tl))
 
 ALL_OBJECT_FILES=$(wildcard object_code/*.obj)
 
-build: ##Spins that beautiful container!
-	@echo 'Build triggered'
-	@docker-compose up --build
+build:## Spins that beautiful container!
+	@./scripts/docker_build.sh
 
-machine: ##If Docker compose is up, it goes into the container
-	@echo 'Machine triggered'
-	@docker exec -it cgi bash
+check:## Check if the tag that is going to be pushed is unique. In other words, if RELEASE variable was updated in the Makefile.
+	@./scripts/docker_check.sh
 
 clean: ##Removes generated files (eg. .obj)
 	@echo 'Clean triggered'
@@ -49,12 +54,29 @@ help: ##Show this help.
 ##prepare: Applies FORMAT TEST.
 prepare: format clean run test
 
-run: ##Run all .tl files
-	${RUNMAIN} ${ALL_TL_FILES}
+push: ## Push docker image to docker hub
+	@./scripts/docker_push.sh
+
+machine: ##If Docker compose is up, it goes into the container
+	@echo 'Machine triggered'
+	@docker exec -it cgi bash
+
+rmi:## Removes docker image
+	@./scripts/docker_rmi.sh
+
+run:## Run latest built
+	@./scripts/docker_run.sh
 
 show: ##Show all .tl files
 	@echo ${ALL_TL_FILENAMES}
 
+trendlit: ##Run all .tl files
+	${RUNMAIN} ${ALL_TL_FILES}
+
 test: ##Run all automated tests (unnitest framework).
 	@echo 'Test triggered'
 	${RUNTEST} ${ALL_TEST_MODULES}
+
+version:
+	@echo -n ${RELEASE}
+	@echo
