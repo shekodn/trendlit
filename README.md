@@ -1,35 +1,13 @@
-# trendlit
+# Trendlit - Cloud-based Programming Language
 
-## Grammar Development Checklist
-- [ ] add your changes to `grammar_diagram_generator`
-- [ ] add changes to `trendlit_ply.py`
-- [ ] add a test case in `tests/sample_code.html.py`
-- [ ] generate the new [grammar diagrams](https://www.bottlecaps.de/rr/ui#_Production) and edit [documentation](https://docs.google.com/document/d/1Ck1BafYX6NlR3ZgpYAteuunIYXWgEQYde2CUSahFp_Q/edit?ts=5c8a8176#)
+## Setup
+Make sure to install python3.7 and Docker. Also, don't forget to install trendlit's requirements:
 
-## Vision
+`pip3 install -r requirements.txt `
 
-## Main Objective
+## How To Run
+It is almost as easy as pie. Just build the docker image by doing `make build`
 
-## Category
+Then simply do `make run`
 
-## Language Requirements
-
-## Language Requirements
-
-### Basic elements (Tokens)
-
-#### Data Types
-
-#### Tokens
-
-#### Syntax diagrams
-
-#### Main Semantic Characteristics
-
-#### Description of Special Functions
-
-#### Data types
-
-## Language and OS that will be used for development
-
-## References
+If `http://localhost`  is up and running, we are golden.
