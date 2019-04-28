@@ -16,6 +16,7 @@ class ParserHelper(object):
         self.stack_calls.push(999)
         self.stack_param_pointers = Stack()
         self.stack_param_pointers.push(0)
+        self.is_value_slice_enabled = True
 
     def reset(self):
         self.__init__()
