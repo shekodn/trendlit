@@ -16,11 +16,13 @@ class QuadrupleHelper(object):
         self.stack_tags = Stack()
         self.stack_types = Stack()
         self.stack_jumps = Stack()
+        self.stack_dimensions = Stack()
         self.stack_tokens.push(999)
         self.stack_operands.push(999)
         self.stack_types.push(999)
         self.stack_jumps.push(999)
         self.stack_tags.push(999)
+        self.stack_dimensions.push(999)
         self.queue_quad = []
         self.quad_cont = 0
         self.temp_cont = 10001
@@ -78,6 +80,15 @@ class QuadrupleHelper(object):
 
     def top_tag(self):
         return self.stack_tags.top()
+
+    def push_dimension(self, id, dimension):
+        self.stack_dimensions.push((id, dimension))
+
+    def pop_dimension(self):
+        return self.stack_dimensions.pop()
+
+    def top_dimension(self):
+        return self.stack_dimensions.top()
 
     def fill(self, quadruple_index, value):
         self.queue_quad[quadruple_index].operand3 = value
