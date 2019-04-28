@@ -57,7 +57,7 @@ format: ##Applies BLACK to all py files in defined modules.
 help: ##Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-##prepare: Applies format clean trednlit test
+##prepare: Applies format clean trendlit test
 prepare: format trendlit clean test
 
 push: ## Push docker image to docker hub
