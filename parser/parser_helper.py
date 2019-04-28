@@ -126,6 +126,14 @@ class ParserHelper(object):
             return self.procedure_directory[module_name]["queue_params"]
         return None
 
+    def add_var_to_table(self, var_name, var_memory_address):
+        self.procedure_directory[self.curr_scope]["var_table"][var_name] = {
+            "dimensions": 0,
+            "t_dimensions": {"li1": 0, "ls1": 0, "m1": 0, "li2": 0, "ls2": 0, "m2": 0},
+            "type": self.curr_type,
+            "memory_address": var_memory_address,
+        }  # TODO : add more info later on
+
     def get_upper_limit(self, slice_name, dimension):
         if self.is_var_in_current_scope(slice_name):
             return self.procedure_directory[self.curr_scope]["var_table"][slice_name][

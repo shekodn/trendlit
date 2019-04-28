@@ -487,6 +487,7 @@ def p_snp_add_module(p):
         }  # TODO : add more info later on
         parser_helper.curr_scope = module_name
         memory.curr_scope_type = scope_to_code.get("local")
+        # HERE module_name
 
 
 # Save the last type defined
@@ -743,6 +744,7 @@ def p_snp_end_module(p):
 def p_snp_add_var(p):
     """snp_add_var : empty"""
     var_name = p[-1]  # get the last symbol read (left from this neural point)
+
     # For debbuging
     # Check if var already exists and add it to the table in currect scope
     if parser_helper.is_var_in_current_scope(var_name):
@@ -751,22 +753,21 @@ def p_snp_add_var(p):
     else:
         scope_type = parser_helper.get_scope_type(parser_helper.curr_scope)
         var_memory_address = memory.set_var_addr(scope_type, parser_helper.curr_type)
-        parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
-            var_name
-        ] = {
-            "dimensions": 0,
-            "t_dimensions": {"li1": 0, "ls1": 0, "m1": 0, "li2": 0, "ls2": 0, "m2": 0},
-            "type": parser_helper.curr_type,
-            "memory_address": var_memory_address,
-        }  # TODO : add more info later on
         parser_helper.curr_slice = var_name
-        # const_addr = memory.get_or_set_addr_const(0, "int")
-    # For debbuging
-    # print("MEMROEY ADDRESS FOR VAR: ", var_name, var_memory_address)
-    # print(
-    #     f"var_name {var_name}, current_scope, {parser_helper.curr_scope}, SCOPE TYPE: {scope_type}"
-    # )
-    # print("ProcDir for curr_scope:", parser_helper.procedure_directory, "\n")
+        parser_helper.add_var_to_table(var_name, var_memory_address)
+
+    #     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
+    #         var_name
+    #     ] = {
+    #         "type": parser_helper.curr_type,
+    #         "memory_address": var_memory_address,
+    #     }  # TODO : add more info later on
+    # # For debbuging
+    # # print("MEMROEY ADDRESS FOR VAR: ", var_memory_address)
+    # # print(
+    # #     f"var_name {var_name}, current_scope, {parser_helper.curr_scope}, SCOPE TYPE: {scope_type}"
+    # # )
+    # # print("ProcDir for curr_scope:", parser_helper.procedure_directory, "\n")
 
 
 # ---  ESTATUTOS SECUENCIALES ---
