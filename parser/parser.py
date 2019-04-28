@@ -222,6 +222,7 @@ def p_factor1(p):
 
 def p_value(p):
     """value : ID snp_checks_for_previous_declaration snp_push_pending_operand
+        | valueSlice
         | exp_call
         | CTEI snp_save_type_int snp_push_pending_operand
         | CTED snp_save_type_double snp_push_pending_operand
@@ -230,17 +231,68 @@ def p_value(p):
         | TRUE snp_save_type_bool snp_push_pending_operand"""
 
 
+def p_slice_expression(p):
+    """slice_expression : slice_exp slice_expression1 snp_check_precedence_and_create_quadruple_for_rel"""
+
+
+# ASSOCIATIVE => "or|and"
+def p_slice_expression1(p):
+    """slice_expression1 : REL snp_push_pending_token slice_exp
+        | ASSOCIATIVE snp_push_pending_token slice_exp
+        | empty"""
+    # TODO add single expression. Do we allow if(True) ???
+
+
+# Reference: Mathematical Expressions
+# snp_check_precedence_and_create_quadruple => STEP 4
+def p_slice_exp(p):
+    """slice_exp : slice_term snp_check_precedence_and_create_quadruple_for_sign slice_exp1"""
+
+
+# Reference: Mathematical Expressions
+# snp_push_pending_token => STEP 2
+def p_slice_exp1(p):
+    """slice_exp1 : SIGN snp_push_pending_token slice_exp slice_exp1
+        | empty"""
+
+
+def p_slice_term(p):
+    """slice_term : slice_factor snp_check_precedence_and_create_quadruple_for_op slice_term1"""
+
+
+# Reference: Mathematical Expressions
+# snp_push_pending_token => STEP 3
+def p_slice_term1(p):
+    """slice_term1 : OP snp_push_pending_token slice_term slice_term1
+        | empty"""
+
+
+def p_slice_factor(p):
+    """slice_factor : OPAREN snp_push_pending_token slice_expression CPAREN snp_clean_stack_until_false_bottom
+        | slice_factor1"""
+
+
+def p_slice_factor1(p):
+    """slice_factor1 : slice_value
+        | SIGN slice_value"""
+
+
+def p_slice_value(p):
+    """slice_value : ID snp_checks_for_previous_declaration snp_push_pending_operand
+        | CTEI snp_save_type_int snp_push_pending_operand"""
+
+
 def p_valueSlice(p):
     """valueSlice : valueSlice1D
         | valueSlice2D"""
 
 
 def p_valueSlice1D(p):
-    """valueSlice1D : ID OBRACK expression CBRACK"""
+    """valueSlice1D : ID OBRACK slice_expression CBRACK"""
 
 
 def p_valueSlice2D(p):
-    """valueSlice2D : ID OBRACK expression CBRACK OBRACK expression CBRACK"""
+    """valueSlice2D : ID OBRACK slice_expression CBRACK OBRACK slice_expression CBRACK"""
 
 
 def p_condition(p):
@@ -476,7 +528,8 @@ def p_snp_save_void_type(p):
     parser_helper.curr_type = "void"
 
 
-# ----- ARREGLOS -----
+# --- ARRAYS - SLICES ---
+# Acciones para el acceso a una variable dimensionada
 def p_snp_add_dimension(p):
     """snp_add_dimension : empty"""
     slice_name = p[-3]
@@ -505,12 +558,13 @@ def p_snp_add_dimension(p):
     memory.increase_next_mem(scope_type, slice_type, parser_helper.curr_r)
 
     # for debbuging
+    # print("curr_r", parser_helper.curr_r)
     # print(f"Adding {parser_helper.curr_dimension_counter} dim for {slice_name} ")
     # print(
     #     "Dim Table: ",
     #     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
     #         parser_helper.curr_slice
-    #     ]["t_dimensions"],
+    #     ],
     # )
 
     # Reset dimension count
@@ -540,6 +594,13 @@ def p_snp_increase_dimension_count(p):
     # calculates R
     lower_limit = 0
     parser_helper.curr_r = parser_helper.curr_r * (int(upper_limit) - lower_limit + 1)
+
+
+def p_snp_slice_access_2(p):
+    """ snp_slice_access_2 : empty """
+    id = quad_helper.pop_operand()
+    # debuging
+    print("id", id)
 
 
 # End of the module deltes the var table
@@ -610,6 +671,7 @@ def p_snp_add_eval_quad(p):
 
 
 # --- MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION) ---
+# PUSH PilaO (id)
 def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
     operand_id = p[-2] if p[-1] == None else p[-1]
@@ -1055,6 +1117,24 @@ def p_snp_push_eval_pending_token(p):
     quad_helper.push_token("eval")
     # For debbuging
     # print("Top token: ", quad_helper.top_token())
+
+
+# Miscellaneous
+def p_snp_flag_value_slice(p):
+    """snp_flag_value_slice : empty"""
+    print(
+        parser_helper.is_value_slice_enabled, not parser_helper.is_value_slice_enabled
+    )
+    parser_helper.is_value_slice_enabled = not parser_helper.is_value_slice_enabled
+
+
+def p_snp_check_flag_value_slice(p):
+    """snp_check_flag_value_slice : empty"""
+    if not parser_helper.is_value_slice_enabled:
+        print("Slice error: Syntax error at '%s'" % p)
+        exit(1)
+    else:
+        print("Here I am")
 
 
 import ply.yacc as yacc

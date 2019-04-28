@@ -235,7 +235,6 @@ class Memory(object):
         elif type == "str":
             self.next_mem_local_str += amount
 
-
     def reset_local_vars(self):
         """
             Description: reset the local var counter
