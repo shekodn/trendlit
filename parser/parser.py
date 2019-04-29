@@ -481,6 +481,7 @@ def p_snp_script_start(p):
         "queue_params": [],
         "starting_quad": -1,
         "var_table": {},
+        "dim_list": {},
     }  # TODO : add more info later on
 
 
@@ -503,6 +504,7 @@ def p_snp_add_module(p):
             "queue_params": [],
             "starting_quad": -1,
             "var_table": {},
+            "dim_list": {},
         }  # TODO : add more info later on
         parser_helper.curr_scope = module_name
         memory.curr_scope_type = scope_to_code.get("local")
@@ -537,6 +539,13 @@ def p_snp_add_dimension(p):
     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
         slice_name
     ]["dimensions"] = parser_helper.curr_dimension_counter
+    # Add slice to dimensioned var list
+    parser_helper.procedure_directory[parser_helper.curr_scope]["dim_list"][
+        slice_name
+    ] = parser_helper.get_var_address_from_dir(slice_name)
+    # For debuging
+    # print("DIMENSIONED VAR LIST \n")
+    # print(parser_helper.procedure_directory[parser_helper.curr_scope]["dim_list"])
     # segunda pasada
     if parser_helper.curr_dimension_counter is 2:
         lower_limit = 0
