@@ -133,34 +133,34 @@ class Memory(object):
     # Select an address for TEMPORARY variable, and increase the memory pointer
     def set_addr_temp(self, type):
         assigned_address = None
-        if self.curr_scope_type is scope_to_code.get("global"):
+        if self.curr_scope_type == scope_to_code.get("global"):
             assigned_address = self.set_addr_temp_global(type)
-        elif type is "int":
+        elif type == "int":
             assigned_address = self.next_mem_temp_int
             self.next_mem_temp_int += 1
-        elif type is "double":
+        elif type == "double":
             assigned_address = self.next_mem_temp_double
             self.next_mem_temp_double += 1
-        elif type is "bool":
+        elif type == "bool":
             assigned_address = self.next_mem_temp_bool
             self.next_mem_temp_bool += 1
-        elif type is "str":
+        elif type == "str":
             assigned_address = self.next_mem_temp_str
             self.next_mem_temp_str += 1
         return assigned_address
 
     def set_addr_temp_global(self, type):
         assigned_address = None
-        if type is "int":
+        if type == "int":
             assigned_address = self.next_mem_temp_global_int
             self.next_mem_temp_global_int += 1
-        elif type is "double":
+        elif type == "double":
             assigned_address = self.next_mem_temp_global_double
             self.next_mem_temp_global_double += 1
-        elif type is "bool":
+        elif type == "bool":
             assigned_address = self.next_mem_temp_global_bool
             self.next_mem_temp_global_bool += 1
-        elif type is "str":
+        elif type == "str":
             assigned_address = self.next_mem_temp_global_str
             self.next_mem_temp_global_str += 1
         return assigned_address

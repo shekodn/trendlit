@@ -477,7 +477,7 @@ def p_snp_add_module(p):
         error_helper.add_error(0, error_message)
     else:
         parser_helper.procedure_directory[module_name] = {
-            "type": parser_helper.curr_type,
+            "type": None,
             "scope_type": scope_to_code.get("local"),
             "params_count": 0,
             "queue_params": [],
@@ -487,15 +487,22 @@ def p_snp_add_module(p):
         }  # TODO : add more info later on
         parser_helper.curr_scope = module_name
         memory.curr_scope_type = scope_to_code.get("local")
-        # HERE module_name
 
 
 # Save the last type defined
 def p_snp_save_type_to_module_table(p):
     """snp_save_type_to_module_table : empty"""
-    parser_helper.procedure_directory[parser_helper.curr_scope][
-        "type"
-    ] = parser_helper.curr_type
+    module_name = parser_helper.curr_scope
+
+    parser_helper.procedure_directory[module_name]["type"] = parser_helper.curr_type
+
+    print("Curr type module_name", parser_helper.curr_type, module_name)
+    var_memory_address = memory.set_var_addr(
+        scope_to_code.get("global"), parser_helper.curr_type
+    )
+    if var_memory_address is not None:
+        print("MEMORY ADDRE ", var_memory_address)
+        parser_helper.add_var_to_table(module_name, var_memory_address, "global_script")
 
 
 # Save the last type defined
@@ -754,7 +761,10 @@ def p_snp_add_var(p):
         scope_type = parser_helper.get_scope_type(parser_helper.curr_scope)
         var_memory_address = memory.set_var_addr(scope_type, parser_helper.curr_type)
         parser_helper.curr_slice = var_name
-        parser_helper.add_var_to_table(var_name, var_memory_address)
+        parser_helper.add_var_to_table(
+            var_name, var_memory_address, parser_helper.curr_scope
+        )
+
 
     #     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
     #         var_name
@@ -1185,6 +1195,36 @@ def p_snp_add_gosub(p):
         if param_pointer is len(module_queue_params):
             # Clear the stack and pointer after call ends
             quad_helper.add_quad(token_to_code.get("GOSUB"), module_name, -1, -1)
+            # Assign return temporal to module
+            module_type = parser_helper.get_module_type(module_name)
+            print("THE MODULE TYPE ", module_type)
+            if module_type is not "void":
+                # get the memory_address for the module variable
+                if parser_helper.is_var_declared(module_name):
+                    module_address = parser_helper.get_var_address_from_dir(module_name)
+                    # get the memory_address for the return variable
+                    temp_memory_address = memory.set_addr_temp(module_type)
+                    # add the quad
+                    quad_helper.add_quad(
+                        token_to_code.get("="), module_address, -1, temp_memory_address
+                    )
+                    # For debbuging
+                    # print(
+                    #     "added quadd: ",
+                    #     token_to_code.get("="),
+                    #     module_address,
+                    #     -1,
+                    #     temp_memory_address,
+                    # )
+                    # expression
+                    quad_helper.push_operand(temp_memory_address)
+                    # add the result type (temp var) to the type stack
+                    quad_helper.push_type(module_type)
+                else:
+                    print(
+                        "HEL:LWDHkjSHD"
+                    )  # TODO: lanzar un error de var/module not defined?
+                    exit(1)
         else:
             error_helper.add_error(
                 304,
