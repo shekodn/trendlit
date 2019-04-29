@@ -37,7 +37,6 @@ class ParserHelper(object):
             ]
         return self.curr_type
 
-    
     def get_dimensioned_name(self, var_addr):
         if var_addr in self.procedure_directory[self.curr_scope]["dim_list"]:
             return self.procedure_directory[self.curr_scope]["dim_list"][var_addr]
