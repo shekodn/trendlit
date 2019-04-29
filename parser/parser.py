@@ -288,11 +288,11 @@ def p_valueSlice(p):
 
 
 def p_valueSlice1D(p):
-    """valueSlice1D : ID OBRACK slice_expression CBRACK"""
+    """valueSlice1D : ID OBRACK snp_slice_access_2 slice_expression CBRACK"""
 
 
 def p_valueSlice2D(p):
-    """valueSlice2D : ID OBRACK slice_expression CBRACK OBRACK slice_expression CBRACK"""
+    """valueSlice2D : ID OBRACK snp_slice_access_2 slice_expression CBRACK OBRACK snp_slice_access_2 slice_expression CBRACK"""
 
 
 def p_condition(p):
@@ -597,10 +597,10 @@ def p_snp_increase_dimension_count(p):
 
 
 def p_snp_slice_access_2(p):
-    """ snp_slice_access_2 : empty """
+    """snp_slice_access_2 : empty"""
     id = quad_helper.pop_operand()
     # debuging
-    print("id", id)
+    # print("id", id)
 
 
 # End of the module deltes the var table
