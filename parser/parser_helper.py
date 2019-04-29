@@ -37,7 +37,29 @@ class ParserHelper(object):
             ]
         return self.curr_type
 
+    
+    def get_dimensioned_name(self, var_addr):
+        if var_addr in self.procedure_directory[self.curr_scope]["dim_list"]:
+            return self.procedure_directory[self.curr_scope]["dim_list"][var_addr]
+        elif var_addr in self.procedure_directory["global_script"]["dim_list"]:
+            return self.procedure_directory["global_script"]["dim_list"][var_addr]
+        else:
+            return None
+
+    def get_dimensions(self):
+        return self.procedure_directory[self.curr_scope]["var_table"][slice_name][
+            "dimensions"
+        ]
+
     def get_var_address_from_dir(self, var_name):
+        """
+        Description:
+            Get the addres from the variable directory
+        params:
+            var_name (str) : Variable Name
+
+        return (int): Memory Address
+        """
         if self.is_var_in_current_scope(var_name):
             return self.procedure_directory[self.curr_scope]["var_table"][var_name][
                 "memory_address"
