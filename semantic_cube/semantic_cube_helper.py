@@ -25,7 +25,7 @@ token_to_code = {
     "PARAMETER": 502,
     "ENDPROC": 503,
     "RET": 504,
-    "VER" : 505,
+    "VER": 505,
     # Html
     "H1": 600,
     "/H1": 601,

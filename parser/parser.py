@@ -290,7 +290,6 @@ def p_valueSlice1D(p):
     """valueSlice1D : ID snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 slice_expression snp_slice_access_3 CBRACK snp_reset_dim_access_count"""
 
 
-
 def p_condition(p):
     """condition : IF OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock condition1 snp_conditional_statement_2"""
 
@@ -633,8 +632,10 @@ def p_snp_slice_access_2(p):
 
 def p_snp_slice_access_3(p):
     """ snp_slice_access_3 : empty """
-    s = quad_helper.top_operand() # No se saca
-    quad_helper.add_quad(token_to_code.get("VER"), "limite inferior N", "limite superior N", s)
+    s = quad_helper.top_operand()  # No se saca
+    quad_helper.add_quad(
+        token_to_code.get("VER"), "limite inferior N", "limite superior N", s
+    )
 
 
 def p_snp_increase_dim_access_count(p):
@@ -647,6 +648,7 @@ def p_snp_reset_dim_access_count(p):
     """snp_reset_dim_access_count : empty"""
     # indicates another dimension in slice
     parser_helper.curr_dimension_counter = 0
+
 
 def p_snp_init_slice_1d(p):
     """snp_init_slice_1d : empty"""
@@ -662,19 +664,25 @@ def p_snp_init_slice_1d(p):
 
         counter = 0
         default_value = type_to_init_value.get(slice_type)
-        default_initial_value_address = memory.get_or_set_addr_const(default_value, slice_type)
+        default_initial_value_address = memory.get_or_set_addr_const(
+            default_value, slice_type
+        )
         operand_address = parser_helper.get_var_address_from_dir(slice_name)
 
-        while (upper_limit > counter):
-            quad_helper.add_quad(token_to_code.get("="), default_initial_value_address, -1, operand_address)
+        while upper_limit > counter:
+            quad_helper.add_quad(
+                token_to_code.get("="),
+                default_initial_value_address,
+                -1,
+                operand_address,
+            )
             print("=", default_initial_value_address, -1, operand_address)
             counter += 1
             operand_address += 1
 
-
-
     else:
         print("Error: Invalid type")
+
 
 # End of the module deltes the var table
 # snp #7 in Intermediate Code Actions for Module Definition
