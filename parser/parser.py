@@ -550,12 +550,14 @@ def p_snp_add_dimension(p):
         parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             parser_helper.curr_slice
         ]["t_dimensions"]["m1"] = int(m1)
+        const_addr = memory.get_or_set_addr_const(int(m1), "int")
         upper_limit = parser_helper.get_upper_limit(slice_name, 2)
         # m2 = m1/((int(upper_limit) - lower_limit + 1))
         k = 0
         parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             parser_helper.curr_slice
         ]["t_dimensions"]["m2"] = k
+        const_addr = memory.get_or_set_addr_const(int(k), "int")
     #
     scope_type = parser_helper.get_scope_type(parser_helper.curr_scope)
     slice_type = parser_helper.get_var_type_from_dir(slice_name)
@@ -594,6 +596,7 @@ def p_snp_increase_dimension_count(p):
     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
         parser_helper.curr_slice
     ]["t_dimensions"]["ls" + str(dim_count)] = upper_limit
+    const_addr = memory.get_or_set_addr_const(int(upper_limit), "int")
     # print("UPPER", parser_helper.curr_slice, "ls"+str(dim_count), upper_limit)
     # calculates R
     lower_limit = 0
@@ -631,16 +634,26 @@ def p_snp_slice_access_2(p):
 def p_snp_slice_access_3(p):
     """ snp_slice_access_3 : empty """
     s = quad_helper.top_operand()  # No se saca
-    lower_limit = 0
 
     slice_name = parser_helper.curr_slice
     slice_type = parser_helper.get_var_type_from_dir(slice_name)
-    upper_limit = int(parser_helper.get_upper_limit(slice_name, parser_helper.curr_dimension_counter))
     print(f"slice_name: {slice_name}, dim: {parser_helper.curr_dimension_counter}")
 
-    quad_helper.add_quad(
-        token_to_code.get("VER"), lower_limit, upper_limit, s
-    )
+    # Add VER quad
+    lower_limit = 0
+    upper_limit = int(parser_helper.get_upper_limit(slice_name, parser_helper.curr_dimension_counter))
+    lower_limit_addr = memory.get_or_set_addr_const(lower_limit, "int")
+    upper_limit_addr = memory.get_or_set_addr_const(upper_limit, "int")
+    quad_helper.add_quad( token_to_code.get("VER"), lower_limit_addr, upper_limit_addr, s)
+
+    # Add base address to quad : +dirB(slice)
+    base_dir = parser_helper.get_var_address_from_dir(slice_name)
+    # assign memory address to temporary result variable and increase counter for temp/result vars
+    temp_memory_address = memory.set_addr_temp("int") #should always be an int
+    # add the quad
+    quad_helper.add_quad(token_to_code.get("+"), s, base_dir, temp_memory_address)
+    # TODO: agregar quaad de (dircasilla) [pointer like address]
+
 
 def p_snp_update_curr_slice(p):
     """snp_update_curr_slice : empty"""
@@ -746,6 +759,7 @@ def p_snp_add_var(p):
             "memory_address": var_memory_address,
         }  # TODO : add more info later on
         parser_helper.curr_slice = var_name
+        const_addr = memory.get_or_set_addr_const(0, "int")
     # For debbuging
     # print("MEMROEY ADDRESS FOR VAR: ", var_name, var_memory_address)
     # print(
