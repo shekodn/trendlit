@@ -22,7 +22,6 @@ reserved_words = {
     "def": "DEF",
     "eval": "EVAL",
     "spit": "SPIT",
-    # TODO: Special Functions
     # reserved words html tags
     "class": "CLASS",
     "div": "DIV",

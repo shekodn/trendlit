@@ -121,7 +121,6 @@ def p_constSlices(p):
 
 def p_constSlice1D(p):
     """constSlice1D : OBRACK CBRACK  snp_init_slice_1d"""
-    # """constSlice1D : OBRACK value constSlice1D1 CBRACK"""
 
 
 def p_constSlice1D1(p):
@@ -318,12 +317,10 @@ def p_module1(p):
 
 def p_call(p):
     """call : ID snp_verify_module_existance call1 snp_add_gosub"""
-    # TODO: add predef
 
 
 def p_exp_call(p):
     """exp_call : ID snp_verify_module_existance call1 snp_check_return snp_add_gosub"""
-    # TODO: add predef
 
 
 def p_call1(p):
@@ -547,7 +544,8 @@ def p_snp_add_dimension(p):
     if parser_helper.curr_dimension_counter is 2:
         lower_limit = 0
         upper_limit = parser_helper.get_upper_limit(slice_name, 1)
-        print("R ", parser_helper.curr_r, "Upper", upper_limit, "Lower", lower_limit)
+        # For debuging
+        # print("R ", parser_helper.curr_r, "Upper", upper_limit, "Lower", lower_limit)
         m1 = parser_helper.curr_r / ((int(upper_limit) - lower_limit + 1))
         parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             parser_helper.curr_slice
@@ -1200,24 +1198,6 @@ def p_snp_push_eval_pending_token(p):
     quad_helper.push_token("eval")
     # For debbuging
     # print("Top token: ", quad_helper.top_token())
-
-
-# Miscellaneous
-def p_snp_flag_value_slice(p):
-    """snp_flag_value_slice : empty"""
-    print(
-        parser_helper.is_value_slice_enabled, not parser_helper.is_value_slice_enabled
-    )
-    parser_helper.is_value_slice_enabled = not parser_helper.is_value_slice_enabled
-
-
-def p_snp_check_flag_value_slice(p):
-    """snp_check_flag_value_slice : empty"""
-    if not parser_helper.is_value_slice_enabled:
-        print("Slice error: Syntax error at '%s'" % p)
-        exit(1)
-    else:
-        print("Here I am")
 
 
 import ply.yacc as yacc
