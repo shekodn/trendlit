@@ -650,15 +650,12 @@ def p_snp_reset_dim_access_count(p):
 
 def p_snp_init_slice_1d(p):
     """snp_init_slice_1d : empty"""
-    print("curr slice", parser_helper.curr_slice)
+    # print("curr slice", parser_helper.curr_slice)
     slice_name = parser_helper.curr_slice
     slice_type = parser_helper.get_var_type_from_dir(slice_name)
 
-    print("Slice type", slice_type)
     if slice_type in type_to_code:
-        print("Valid type")
         upper_limit = int(parser_helper.get_upper_limit(slice_name, 1))
-        print("upper_limit: ", upper_limit)
 
         counter = 0
         default_value = type_to_init_value.get(slice_type)
@@ -674,7 +671,8 @@ def p_snp_init_slice_1d(p):
                 -1,
                 operand_address,
             )
-            print("=", default_initial_value_address, -1, operand_address)
+            # for debugging
+            # print("=", default_initial_value_address, -1, operand_address)
             counter += 1
             operand_address += 1
 
