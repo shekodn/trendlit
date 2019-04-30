@@ -9,6 +9,7 @@ var_not_defined = "Var"
 module_not_defined = "Module"
 wrong_params_num = "Wrong number of params"
 zero_division = "ZeroDivisionError: division by zero"
+index_out_of_range = "Index Out Of Range"
 
 error_to_code = {
     # Unkown 0
@@ -16,6 +17,7 @@ error_to_code = {
     # Lexer 100
     # Sintax 200
     syntax_error: 201,
+    index_out_of_range: 202,
     # Semantic 300
     type_mismatch: 301,
     var_not_defined: 302,
@@ -31,6 +33,7 @@ code_to_error = {
     # Lexer 100
     # Sintax 200
     201: syntax_error,
+    202: index_out_of_range,
     # Semantic 300
     301: type_mismatch,
     302: var_not_defined,
