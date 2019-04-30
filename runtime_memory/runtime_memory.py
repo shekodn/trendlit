@@ -34,12 +34,17 @@ class RuntimeMemory(object):
         self.mem_temp_str_start = 12000
         self.mem_temp_str_end = 12999
 
+        # Address range for POINTER variables
+        self.next_mem_global_ptr = 17000
+        self.next_mem_local_ptr = 18000
+
         # Memory data structure
         self.int_memory = {}
         self.double_memory = {}
         self.bool_memory = {}
         self.str_memory = {}
         self.temp_memory = {} # All in the same hash (int, str, double, bool)
+        self.ptr_memory = {}
 
 
     # ---- GET INFO FROM A MEMORY ADDRESS ----
@@ -53,8 +58,10 @@ class RuntimeMemory(object):
             return self.bool_memory[addr]
         elif self.is_str_addr(addr): # str
             return self.str_memory[addr]
-        else: # temp
+        elif self.is_temp_addr(addr): # temp
             return self.temp_memory[addr]
+        else: # ptr
+            return self.ptr_memory[addr]
 
     def set_value(self, value, addr):
         if self.is_int_addr(addr): # int
@@ -65,8 +72,10 @@ class RuntimeMemory(object):
             self.bool_memory[addr] = value
         elif self.is_str_addr(addr): # str
             self.str_memory[addr] = value
-        else: # temp
+        elif self.is_temp_addr(addr): # temp
             self.temp_memory[addr] = value
+        else: # ptr
+            self.ptr_memory[addr] = value
 
 
     def is_int_addr(self, addr):
