@@ -84,7 +84,7 @@ def p_declareBlock(p):
 
 def p_declare(p):
     """declare : type ID snp_add_var snp_push_solitary_operand
-        | type ID snp_add_var initializeSlices
+        | type ID snp_add_var initializeSlices snp_add_dimension EQ constSlices
         | initialize"""
 
 
@@ -93,8 +93,7 @@ def p_initialize(p):
 
 
 def p_initialize1(p):
-    """initialize1 : ID snp_add_var snp_push_pending_operand EQ snp_push_pending_token value
-        | ID snp_add_var initializeSlices snp_add_dimension EQ constSlices"""
+    """initialize1 : ID snp_add_var snp_push_pending_operand EQ snp_push_pending_token value"""
 
 
 def p_initialize2(p):
@@ -121,7 +120,8 @@ def p_constSlices(p):
 
 
 def p_constSlice1D(p):
-    """constSlice1D : OBRACK value constSlice1D1 CBRACK"""
+    """constSlice1D : OBRACK CBRACK  snp_init_slice_1d"""
+    # """constSlice1D : OBRACK value constSlice1D1 CBRACK"""
 
 
 def p_constSlice1D1(p):
@@ -283,16 +283,12 @@ def p_slice_value(p):
 
 
 def p_valueSlice(p):
-    """valueSlice : valueSlice1D
-        | valueSlice2D"""
+    """valueSlice : valueSlice1D """
 
 
 def p_valueSlice1D(p):
-    """valueSlice1D : ID OBRACK snp_slice_access_2 slice_expression CBRACK"""
+    """valueSlice1D : ID snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 slice_expression snp_slice_access_3 CBRACK snp_reset_dim_access_count"""
 
-
-def p_valueSlice2D(p):
-    """valueSlice2D : ID OBRACK snp_slice_access_2 slice_expression CBRACK OBRACK snp_slice_access_2 slice_expression CBRACK"""
 
 
 def p_condition(p):
@@ -540,12 +536,14 @@ def p_snp_add_dimension(p):
         slice_name
     ]["dimensions"] = parser_helper.curr_dimension_counter
     # Add slice to dimensioned var list
+    slice_addr = parser_helper.get_var_address_from_dir(slice_name)
     parser_helper.procedure_directory[parser_helper.curr_scope]["dim_list"][
-        slice_name
-    ] = parser_helper.get_var_address_from_dir(slice_name)
+        slice_addr
+    ] = slice_name
     # For debuging
     # print("DIMENSIONED VAR LIST \n")
     # print(parser_helper.procedure_directory[parser_helper.curr_scope]["dim_list"])
+
     # segunda pasada
     if parser_helper.curr_dimension_counter is 2:
         lower_limit = 0
@@ -607,10 +605,76 @@ def p_snp_increase_dimension_count(p):
 
 def p_snp_slice_access_2(p):
     """snp_slice_access_2 : empty"""
-    id = quad_helper.pop_operand()
-    # debuging
-    # print("id", id)
+    var_addr = quad_helper.pop_operand()
+    slice_name = parser_helper.get_dimensioned_name(var_addr)
+    # For debuging
+    print(f"Var addr: {var_addr}")
+    print(f"Var name: {slice_name}")
 
+    # Verifies that ud is a Dimnensional Variable
+    if slice_name is not None:
+        dim = parser_helper.get_dimensions(slice_name)
+        print("dim", dim)
+
+        # Check if dimension being accessed is valid
+        dim_counter = parser_helper.curr_dimension_counter
+
+        if dim <= dim_counter:
+            # valid
+            print(f"dim {dim} is valid")
+            # Obtener el primer campo
+            print("Obtener el primer campoF")
+        else:
+            error_helper.add_error(202, f": {slice_name}")
+
+    else:
+        error_helper.add_error(302, f"{slice_name} is not defined")
+
+
+def p_snp_slice_access_3(p):
+    """ snp_slice_access_3 : empty """
+    s = quad_helper.top_operand() # No se saca
+    quad_helper.add_quad(token_to_code.get("VER"), "limite inferior N", "limite superior N", s)
+
+
+def p_snp_increase_dim_access_count(p):
+    """snp_increase_dim_access_count : empty"""
+    # indicates another dimension in slice
+    parser_helper.curr_dimension_counter += 1
+
+
+def p_snp_reset_dim_access_count(p):
+    """snp_reset_dim_access_count : empty"""
+    # indicates another dimension in slice
+    parser_helper.curr_dimension_counter = 0
+
+def p_snp_init_slice_1d(p):
+    """snp_init_slice_1d : empty"""
+    print("curr slice", parser_helper.curr_slice)
+    slice_name = parser_helper.curr_slice
+    slice_type = parser_helper.get_var_type_from_dir(slice_name)
+
+    print("Slice type", slice_type)
+    if slice_type in type_to_code:
+        print("Valid type")
+        upper_limit = int(parser_helper.get_upper_limit(slice_name, 1))
+        print("upper_limit: ", upper_limit)
+
+        counter = 0
+        default_value = type_to_init_value.get(slice_type)
+        default_initial_value_address = memory.get_or_set_addr_const(default_value, slice_type)
+        operand_address = parser_helper.get_var_address_from_dir(slice_name)
+
+        while (upper_limit > counter):
+            quad_helper.add_quad(token_to_code.get("="), default_initial_value_address, -1, operand_address)
+            print("=", default_initial_value_address, -1, operand_address)
+            counter += 1
+            operand_address += 1
+
+
+
+    else:
+        print("Error: Invalid type")
 
 # End of the module deltes the var table
 # snp #7 in Intermediate Code Actions for Module Definition
@@ -699,6 +763,8 @@ def p_snp_push_pending_operand(p):
 def p_snp_save_type_int(p):
     """snp_save_type_int : empty"""
     parser_helper.curr_type = "int"
+    # For debugging
+    # print("save ", p[-1])
 
 
 def p_snp_save_type_double(p):
