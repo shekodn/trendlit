@@ -45,7 +45,7 @@ class ParserHelper(object):
         else:
             return None
 
-    def get_dimensions(self):
+    def get_dimensions(self, slice_name):
         return self.procedure_directory[self.curr_scope]["var_table"][slice_name][
             "dimensions"
         ]
