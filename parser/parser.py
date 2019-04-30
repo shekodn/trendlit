@@ -286,7 +286,7 @@ def p_valueSlice(p):
 
 
 def p_valueSlice1D(p):
-    """valueSlice1D : ID snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 slice_expression snp_slice_access_3 CBRACK snp_reset_dim_access_count"""
+    """valueSlice1D : ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 slice_expression snp_slice_access_3 CBRACK snp_reset_dim_access_count"""
 
 
 def p_condition(p):
@@ -631,9 +631,22 @@ def p_snp_slice_access_2(p):
 def p_snp_slice_access_3(p):
     """ snp_slice_access_3 : empty """
     s = quad_helper.top_operand()  # No se saca
+    lower_limit = 0
+
+    slice_name = parser_helper.curr_slice
+    slice_type = parser_helper.get_var_type_from_dir(slice_name)
+    upper_limit = int(parser_helper.get_upper_limit(slice_name, parser_helper.curr_dimension_counter))
+    print(f"slice_name: {slice_name}, dim: {parser_helper.curr_dimension_counter}")
+
     quad_helper.add_quad(
-        token_to_code.get("VER"), "limite inferior N", "limite superior N", s
+        token_to_code.get("VER"), lower_limit, upper_limit, s
     )
+
+def p_snp_update_curr_slice(p):
+    """snp_update_curr_slice : empty"""
+    var_name = p[-1]
+    parser_helper.curr_slice = var_name
+
 
 
 def p_snp_increase_dim_access_count(p):
