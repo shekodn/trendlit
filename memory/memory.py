@@ -174,8 +174,8 @@ class Memory(object):
     def set_addr_ptr(self, type):
         assigned_address = None
         if self.curr_scope_type is scope_to_code.get("global"):
-            assigned_address = self.next_mem_ptr_global
-            self.next_mem_ptr_global += 1
+            assigned_address = self.next_mem_global_ptr
+            self.next_mem_global_ptr += 1
         else:
             assigned_address = self.next_mem_local_ptr
             self.next_mem_local_ptr += 1

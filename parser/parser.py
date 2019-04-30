@@ -633,7 +633,7 @@ def p_snp_slice_access_2(p):
 
 def p_snp_slice_access_3(p):
     """ snp_slice_access_3 : empty """
-    s = quad_helper.top_operand()  # No se saca
+    s = quad_helper.pop_operand()  # No se saca
 
     slice_name = parser_helper.curr_slice
     slice_type = parser_helper.get_var_type_from_dir(slice_name)
@@ -652,7 +652,12 @@ def p_snp_slice_access_3(p):
     temp_memory_address = memory.set_addr_temp("int") #should always be an int
     # add the quad
     quad_helper.add_quad(token_to_code.get("+"), s, base_dir, temp_memory_address)
-    # TODO: agregar quaad de (dircasilla) [pointer like address]
+
+    # Agregar (dircasilla) [pointer like address]
+    # Push a la pila con la (dircasilla) para que el siguiente cuadruplo la use
+    ptr_addr_cell = memory.set_addr_ptr(code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope)))
+    # print(f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}")
+    quad_helper.push_operand(ptr_addr_cell)
 
 
 def p_snp_update_curr_slice(p):
