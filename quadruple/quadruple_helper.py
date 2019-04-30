@@ -82,7 +82,7 @@ class QuadrupleHelper(object):
         return self.stack_tags.top()
 
     def push_dimension(self, id, dimension):
-        self.stack_dimensions.push((id, dimension))
+        self.stack_dimensions.push(id, dimension)
 
     def pop_dimension(self):
         return self.stack_dimensions.pop()
