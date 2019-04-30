@@ -655,8 +655,8 @@ def p_snp_slice_access_3(p):
 
     # Agregar (dircasilla) [pointer like address]
     # Push a la pila con la (dircasilla) para que el siguiente cuadruplo la use
-    ptr_addr_cell = memory.set_addr_ptr(code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope)))
-    # print(f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}")
+    ptr_addr_cell = memory.set_addr_ptr(temp_memory_address)
+    print(f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}")
     quad_helper.push_operand(ptr_addr_cell)
 
 

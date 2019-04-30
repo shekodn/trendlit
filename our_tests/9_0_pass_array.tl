@@ -2,9 +2,11 @@
 
 program the_name_of_the_program
     script {
-        int intArr[3] = []
-        int a
+            int a
 
-        a = intArr[1]
+        int intArr[3] = []
+
+        a = intArr[1+20]
+        # intArr[0] = 6
     }
 #

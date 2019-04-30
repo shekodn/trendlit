@@ -67,13 +67,8 @@ class Memory(object):
         self.constant_addresses = {}
         self.constant_values = {}
 
-        self.next_mem_global_ptr = 17000
-        self.mem_global_ptr_start = 17000
-        self.mem_global_ptr_end = 17999
-
-        self.next_mem_local_ptr = 18000
-        self.mem_local_ptr_start = 18000
-        self.mem_local_ptr_end = 18999
+        self.mem_global_ptr_start = 1000000
+        self.mem_local_ptr_start = 2000000
 
     def reset(self):
         self.__init__()
@@ -171,14 +166,21 @@ class Memory(object):
         return assigned_address
 
     # Select an address for POINTER variable, and increase the memory pointer
-    def set_addr_ptr(self, type):
+    def set_addr_ptr(self, ptr_value):
+        """
+            Description:
+                Select an address for POINTER variable.
+                assigned_address = mem_ptr_start + ptr_value
+            Params:
+                ptr_value (int): the memory address that will be 'stored' as value in ptr
+            Return:
+                assigned_address (int): returns None if there was an error
+         """
         assigned_address = None
         if self.curr_scope_type is scope_to_code.get("global"):
-            assigned_address = self.next_mem_global_ptr
-            self.next_mem_global_ptr += 1
+            assigned_address = self.mem_global_ptr_start + ptr_value
         else:
-            assigned_address = self.next_mem_local_ptr
-            self.next_mem_local_ptr += 1
+            assigned_address = self.mem_local_ptr_start + ptr_value
         return assigned_address
 
     # Makes sure constants don't have multiple addresses

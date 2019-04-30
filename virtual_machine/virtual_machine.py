@@ -33,6 +33,9 @@ JUMPS = [
 html_file = None
 instruction_pointer = 0
 
+mem_const_start = 13000
+mem_const_end = 16999
+
 const_memory = {}
 g_memory = RuntimeMemory(scope_to_code.get("global"))
 # memory_context_stack = Stack() # TODO: how to keep track of local contexts
@@ -40,16 +43,18 @@ g_memory = RuntimeMemory(scope_to_code.get("global"))
 
 # MEMORY HELPERS
 def get_value_from_address(addr):
-    if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end:
+    if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end: # global
         return g_memory.get_value(addr)
-    elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end:
+    elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end: # local
         return l_memory.get_value(addr)  # TODO: current memory context?
-    elif addr >= g_memory.mem_temp_int_start and addr <= g_memory.mem_temp_str_end:
+    elif addr >= g_memory.mem_temp_int_start and addr <= g_memory.mem_temp_str_end: # temp
         return g_memory.get_value(
             addr
-        )  # TODO: how to know if temp from local vs global
-    else:  # constant
+        )  # TODO: how to know if temp from local vs global (change this to return temp memory from context)
+    elif addr >= mem_const_start and addr <= mem_const_end: # constant
         return const_memory[addr]
+    else: # ptr
+        return addr - 1000000 # TODO: change this to return ptr memory from context? (- 1000000 or - 2000000 for local scopes)
 
 
 def set_value_to_address(value, addr):
