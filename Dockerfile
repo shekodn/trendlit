@@ -8,13 +8,13 @@ RUN apt-get update && apt-get install -y \
   python3.7 \
   wget
 
-COPY server/index.html /var/www/html/index.html
-
 RUN ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/
 
 COPY . /usr/lib/cgi-bin
 
 WORKDIR /usr/lib/cgi-bin
+
+COPY server/index.html /var/www/html/index.html
 
 RUN pip3 install -r requirements.txt
 
