@@ -21,14 +21,20 @@ if form.getvalue("type"):
 else:
     type = "html"
 
-
 print(f"Content-type:text/{type}\n")
-print("<html>")
-print("<head>")
-print("<title> Trendlit - Cloud Based Programming Language</title>")
-print("</head>")
+print("""
+<html>
+<head>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title> Trendlit - Cloud Based Programming Language</title>
+</head>
 
-print("<body>")
+<body>
+    <div class="container">
+""")
 
 data = text_content
 
@@ -48,5 +54,17 @@ except:
     error = f"Error. We couldn't compile successfully.\n"
     print(error)
 
-print("</body>")
-print("</html>")
+
+print("""
+    </div>
+""")
+
+print("""
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+""")
+
+print("""
+</body>
+</html>
+""")
