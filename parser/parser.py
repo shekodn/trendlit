@@ -550,14 +550,14 @@ def p_snp_add_dimension(p):
         parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             parser_helper.curr_slice
         ]["t_dimensions"]["m1"] = int(m1)
-        const_addr = memory.get_or_set_addr_const(int(m1), "int")
+        const_addr = memory.get_or_set_addr_const(m1, "int")
         upper_limit = parser_helper.get_upper_limit(slice_name, 2)
         # m2 = m1/((int(upper_limit) - lower_limit + 1))
         k = 0
         parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             parser_helper.curr_slice
         ]["t_dimensions"]["m2"] = k
-        const_addr = memory.get_or_set_addr_const(int(k), "int")
+        const_addr = memory.get_or_set_addr_const(k, "int")
     #
     scope_type = parser_helper.get_scope_type(parser_helper.curr_scope)
     slice_type = parser_helper.get_var_type_from_dir(slice_name)
@@ -596,7 +596,7 @@ def p_snp_increase_dimension_count(p):
     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
         parser_helper.curr_slice
     ]["t_dimensions"]["ls" + str(dim_count)] = upper_limit
-    const_addr = memory.get_or_set_addr_const(int(upper_limit), "int")
+    const_addr = memory.get_or_set_addr_const(upper_limit, "int")
     # print("UPPER", parser_helper.curr_slice, "ls"+str(dim_count), upper_limit)
     # calculates R
     lower_limit = 0
@@ -640,10 +640,11 @@ def p_snp_slice_access_3(p):
 
     # Add VER quad
     lower_limit = 0
-    upper_limit = int(
-        parser_helper.get_upper_limit(slice_name, parser_helper.curr_dimension_counter)
+    upper_limit = parser_helper.get_upper_limit(
+        slice_name, parser_helper.curr_dimension_counter
     )
-    lower_limit_addr = memory.get_or_set_addr_const(lower_limit, "int")
+
+    lower_limit_addr = memory.get_or_set_addr_const("0", "int")
     upper_limit_addr = memory.get_or_set_addr_const(upper_limit, "int")
     # print(f"lower_limit: {lower_limit}, upper_limit: {upper_limit}")
     quad_helper.add_quad(

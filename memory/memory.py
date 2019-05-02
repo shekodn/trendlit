@@ -67,8 +67,8 @@ class Memory(object):
         self.constant_addresses = {}
         self.constant_values = {}
 
-        self.mem_global_ptr_start = 1000000
-        self.mem_local_ptr_start = 2000000
+        self.mem_global_ptr_start = 1_000_000
+        self.mem_local_ptr_start = 2_000_000
 
     def reset(self):
         self.__init__()
