@@ -156,21 +156,8 @@ def p_statement(p):
 
 
 def p_assignment(p):
-    """assignment : ID snp_push_pending_operand assignmentSlice EQ snp_push_pending_token expression snp_add_assignation_quad"""
-
-
-def p_assignmentSlice(p):
-    """assignmentSlice : assignmentSlice1D
-        | assignmentSlice2D
-        | empty"""
-
-
-def p_assignmentSlice1D(p):
-    """assignmentSlice1D : OBRACK expression CBRACK"""
-
-
-def p_assignmentSlice2D(p):
-    """assignmentSlice2D : OBRACK expression CBRACK OBRACK expression CBRACK"""
+    """assignment : ID snp_push_pending_operand EQ snp_push_pending_token expression snp_add_assignation_quad
+    | valueSlice EQ snp_push_pending_token expression snp_add_assignation_quad"""
 
 
 def p_expression(p):
@@ -608,8 +595,8 @@ def p_snp_slice_access_2(p):
     var_addr = quad_helper.pop_operand()
     slice_name = parser_helper.get_dimensioned_name(var_addr)
     # For debuging
-    print(f"Var addr: {var_addr}")
-    print(f"Var name: {slice_name}")
+    # print(f"Var addr: {var_addr}")
+    # print(f"Var name: {slice_name}")
 
     # Verifies that ud is a Dimnensional Variable
     if slice_name is not None:
@@ -636,7 +623,7 @@ def p_snp_slice_access_3(p):
 
     slice_name = parser_helper.curr_slice
     slice_type = parser_helper.get_var_type_from_dir(slice_name)
-    print(f"slice_name: {slice_name}, dim: {parser_helper.curr_dimension_counter}")
+    # print(f"slice_name: {slice_name}, dim: {parser_helper.curr_dimension_counter}")
 
     # Add VER quad
     lower_limit = 0
@@ -661,9 +648,10 @@ def p_snp_slice_access_3(p):
     # Agregar (dircasilla) [pointer like address]
     # Push a la pila con la (dircasilla) para que el siguiente cuadruplo la use
     ptr_addr_cell = memory.set_addr_ptr(temp_memory_address)
-    print(
-        f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}"
-    )
+    # For debugging
+    # print(
+    #     f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}"
+    # )
     quad_helper.push_operand(ptr_addr_cell)
 
 
