@@ -614,7 +614,6 @@ def p_snp_slice_access_2(p):
     # Verifies that ud is a Dimnensional Variable
     if slice_name is not None:
         dim = parser_helper.get_dimensions(slice_name)
-        print("dim", dim)
 
         # Check if dimension being accessed is valid
         dim_counter = parser_helper.curr_dimension_counter
@@ -646,6 +645,7 @@ def p_snp_slice_access_3(p):
     )
     lower_limit_addr = memory.get_or_set_addr_const(lower_limit, "int")
     upper_limit_addr = memory.get_or_set_addr_const(upper_limit, "int")
+    # print(f"lower_limit: {lower_limit}, upper_limit: {upper_limit}")
     quad_helper.add_quad(
         token_to_code.get("VER"), lower_limit_addr, upper_limit_addr, s
     )
@@ -769,7 +769,7 @@ def p_snp_add_var(p):
             "memory_address": var_memory_address,
         }  # TODO : add more info later on
         parser_helper.curr_slice = var_name
-        const_addr = memory.get_or_set_addr_const(0, "int")
+        # const_addr = memory.get_or_set_addr_const(0, "int")
     # For debbuging
     # print("MEMROEY ADDRESS FOR VAR: ", var_name, var_memory_address)
     # print(

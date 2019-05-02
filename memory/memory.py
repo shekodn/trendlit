@@ -185,12 +185,26 @@ class Memory(object):
 
     # Makes sure constants don't have multiple addresses
     def get_or_set_addr_const(self, value, type):
+        """
+            Description:
+                Assigns and/or returns a memory address for a constant variable
+            Params:
+                value (str): the memory address that will be stored as value
+                type (str): the type of the value that will be stored (int, double, bool etc)
+            Return:
+                assigned_address (int): the memory address assigned to the constant sent
+         """
+        real_value = self.convert_to_type(value, type)
         if value in self.constant_addresses:
             assigned_address = self.constant_addresses[value]
         else:  # add new constant
             assigned_address = self.set_addr_const(type)
             self.constant_addresses[value] = assigned_address
-            self.constant_values[assigned_address] = self.convert_to_type(value, type)
+            self.constant_values[assigned_address] = real_value
+        # For debuging
+        # print(f"VLUE: {value}, REALVAL:{real_value}, REALTYPE:{type}, assigned_address:{assigned_address}")
+        # print(f"\n constant_addresses: {self.constant_addresses}\n")
+        # print(f"\n constant_values: {self.constant_values}\n")
         return assigned_address
 
     def convert_to_type(self, value, type):
