@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
 from parser.parser import parser, yacc, quad_helper, error_helper, parser_helper, memory
-from virtual_machine.virtual_machine import run_code
+from virtual_machine.virtual_machine import run_code, vmh
 
 if __name__ == "__main__":
 
@@ -22,6 +22,7 @@ if __name__ == "__main__":
                 _, file_name = file.split("/")
                 quad_helper.print_to_file(f"object_code/{file_name}.obj")
                 run_code(quad_helper.queue_quad, memory.constant_values)
+                vmh.print_to_file(f"{file_name}.html")
             else:
                 print(f"{file} does not compile. Please try harder")
                 print(f"Number of errors: {error_helper.error_cont}")

@@ -641,22 +641,28 @@ def p_snp_slice_access_3(p):
 
     # Add VER quad
     lower_limit = 0
-    upper_limit = int(parser_helper.get_upper_limit(slice_name, parser_helper.curr_dimension_counter))
+    upper_limit = int(
+        parser_helper.get_upper_limit(slice_name, parser_helper.curr_dimension_counter)
+    )
     lower_limit_addr = memory.get_or_set_addr_const(lower_limit, "int")
     upper_limit_addr = memory.get_or_set_addr_const(upper_limit, "int")
-    quad_helper.add_quad( token_to_code.get("VER"), lower_limit_addr, upper_limit_addr, s)
+    quad_helper.add_quad(
+        token_to_code.get("VER"), lower_limit_addr, upper_limit_addr, s
+    )
 
     # Add base address to quad : +dirB(slice)
     base_dir = parser_helper.get_var_address_from_dir(slice_name)
     # assign memory address to temporary result variable and increase counter for temp/result vars
-    temp_memory_address = memory.set_addr_temp("int") #should always be an int
+    temp_memory_address = memory.set_addr_temp("int")  # should always be an int
     # add the quad
     quad_helper.add_quad(token_to_code.get("+"), s, base_dir, temp_memory_address)
 
     # Agregar (dircasilla) [pointer like address]
     # Push a la pila con la (dircasilla) para que el siguiente cuadruplo la use
     ptr_addr_cell = memory.set_addr_ptr(temp_memory_address)
-    print(f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}")
+    print(
+        f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}"
+    )
     quad_helper.push_operand(ptr_addr_cell)
 
 
@@ -664,7 +670,6 @@ def p_snp_update_curr_slice(p):
     """snp_update_curr_slice : empty"""
     var_name = p[-1]
     parser_helper.curr_slice = var_name
-
 
 
 def p_snp_increase_dim_access_count(p):
