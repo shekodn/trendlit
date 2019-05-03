@@ -1,3 +1,4 @@
+import sys
 from semantic_cube.semantic_cube_helper import (
     token_to_code,
     scope_to_code,
@@ -261,7 +262,6 @@ def is_arr_out_of_bounds(quad):
 
     if (s >= lower_limit and s < upper_limit):
         return True
-
     print(f"Slice error: Value should be between {lower_limit} {upper_limit - 1}")
     sys.exit(1)
-    # return False
+    return False
