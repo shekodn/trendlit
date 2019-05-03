@@ -643,7 +643,9 @@ def p_snp_slice_access_3(p):
     # assign memory address to temporary result variable and increase counter for temp/result vars
     temp_memory_address = memory.set_addr_temp("int")  # should always be an int
     # add the quad
-    quad_helper.add_quad(token_to_code.get("+"), s, base_dir, temp_memory_address)
+    # assigns a constant to the base_dir so that VM can read it properly
+    base_dir_addr = memory.get_or_set_addr_const(str(base_dir), "int")
+    quad_helper.add_quad(token_to_code.get("+"), s, base_dir_addr, temp_memory_address)
 
     # Agregar (dircasilla) [pointer like address]
     # Push a la pila con la (dircasilla) para que el siguiente cuadruplo la use

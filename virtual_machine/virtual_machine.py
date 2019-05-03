@@ -54,7 +54,7 @@ def get_value_from_address(addr):
     elif addr >= mem_const_start and addr <= mem_const_end: # constant
         return const_memory[addr]
     else: # ptr
-        return addr - 1000000 # TODO: change this to return ptr memory from context? (- 1000000 or - 2000000 for local scopes)
+        return get_value_from_address(get_value_from_address(addr - 1000000)) # TODO: change this to return ptr memory from context? (- 1000000 or - 2000000 for local scopes)
 
 
 def set_value_to_address(value, addr):
@@ -64,11 +64,15 @@ def set_value_to_address(value, addr):
     elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end:
         # Set LOCAL variable address
         l_memory.set_value(value, addr)  # TODO: current memory context?
-    else:  # temp
+    elif addr >= g_memory.mem_temp_int_start and addr <= g_memory.mem_temp_str_end:  # temp
         # Set TEMP variable address
         g_memory.set_value(
             value, addr
         )  # TODO: how to know if temp from local vs global
+    else: # ptr
+        # Set PTR variable address
+        ptr_value_addr = get_value_from_address(addr - 1000000)
+        g_memory.set_value(value, ptr_value_addr)  # TODO: how to know if temp from local vs global
 
 
 def run_code(queue_quad, const_mem):
@@ -110,6 +114,7 @@ def arithmetic(quad):
         right_op = get_value_from_address(quad.operand2)
         # Execute addition
         res_val = left_op + right_op
+        print(f"Added: {left_op} + {right_op}")
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
     elif quad.token == token_to_code.get("-"):  # Substraction
@@ -151,13 +156,15 @@ def arithmetic(quad):
         value = get_value_from_address(quad.operand1)
         # Assign by storing value in memory
         set_value_to_address(value, quad.operand3)
+        # print(f"VALUE!: {value}, VARIABLE: {quad.operand3}")
         # For debbuging
-        # print("-------")
-        # print("int", g_memory.int_memory)
+        print("-------")
+        print("int", g_memory.int_memory)
         # print("double", g_memory.double_memory)
         # print("bool", g_memory.bool_memory)
         # print("str", g_memory.str_memory)
-        # print("temp", g_memory.temp_memory)
+        print("temp", g_memory.temp_memory)
+        print("const", const_memory)
 
 
 def relational(quad):
@@ -218,6 +225,7 @@ def eval(quad):
         value = "<" + code_to_token.get(quad.operand3).lower() + ">"
     else:
         value = get_value_from_address(quad.operand3)
+        print(f"VLUE TO PRINT: {value}, ADDRE: {quad.operand3}")
     vmh.queue_results.append(str(value))
 
 
