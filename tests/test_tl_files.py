@@ -199,3 +199,17 @@ class OurTestCase(unittest.TestCase):
             aux_tl_file(file_name, expected_errors)
         expected_exit_code = 1
         self.assertEqual(cm.exception.code, expected_exit_code)
+
+
+    # def test_9_3_fail_array_out_of_bounds(self):
+    #     with self.assertRaises(SystemExit) as cm:
+    #         file_name = TESTING_PREFIX + "9_3_fail_array_out_of_bounds.tl"
+    #         print(f"\nTESTING: {file_name}\n")
+    #         # expected_errors: None, since error_helper cannot help here (program should exit)
+    #         expected_errors = None
+    #
+    #         # No result expected since program should exit (1)
+    #         # result = aux_tl_file(file_name, expected_errors)
+    #         aux_tl_file(file_name, expected_errors)
+    #     expected_exit_code = 1
+    #     self.assertEqual(cm.exception.code, expected_exit_code)

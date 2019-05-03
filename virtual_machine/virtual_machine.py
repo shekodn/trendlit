@@ -261,7 +261,7 @@ def is_arr_out_of_bounds(quad):
 
     if (s >= lower_limit and s < upper_limit):
         return True
-    else:
-        print(f"Slice error: Value should be between {lower_limit} {upper_limit - 1}")
-        exit(1)
-        return False
+
+    print(f"Slice error: Value should be between {lower_limit} {upper_limit - 1}")
+    sys.exit(1)
+    # return False
