@@ -759,7 +759,6 @@ def p_snp_add_var(p):
             var_name, var_memory_address, parser_helper.curr_scope
         )
 
-
     #     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
     #         var_name
     #     ] = {

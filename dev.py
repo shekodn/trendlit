@@ -12,6 +12,6 @@ if __name__ == "__main__":
 
     if len(file) > 0:
         dir = "compiled_code/"
-        trendlit_helper.reads_file(dir ,file)
+        trendlit_helper.reads_file(dir, file)
     else:
         print("File missing")
