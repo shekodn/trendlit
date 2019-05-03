@@ -289,13 +289,23 @@ def modules(quad):
         memory_context_stack.top().return_quad = quad.operand1
         # print("return to: ", memory_context_stack.top().return_quad)
         instruction_pointer = quad.operand3-1
-        # print("GOSUB: ", instruction_pointer)
-    elif quad.token == token_to_code.get("ENDPROC"): #Go to subroutine
+    elif quad.token == token_to_code.get("ENDPROC"): #Void module ends
         # The function ends, IP must return to where call was made
         # ENDPROC will only appear in void functions
 
         # Get the return quad number from the curr context
         instruction_pointer = memory_context_stack.top().return_quad-1
-        # print("ENDPROC: ", instruction_pointer)
         # Pop the module context from the stack
         memory_context_stack.pop()
+
+    elif quad.token == token_to_code.get("RET"): # Return module ends
+        # RET, return_val , -1, -1
+        # The function ends, IP must return to where call was made
+        # RET will appear only un returning functions
+
+        # Get the return quad number from the curr context
+        instruction_pointer = memory_context_stack.top().return_quad-1
+        # Pop the module context from the stack
+        memory_context_stack.pop()
+        # Assign return_val to call??????????????? #TODO: how to send return value back to where call was made
+        
