@@ -22,9 +22,10 @@ ALL_RUNTIME_MEMORY_MODULES=$(wildcard *.py)
 ALL_SEMANTIC_CUBE_MODULES=$(wildcard semantic_cube/*.py)
 ALL_STACK_MODULES=$(wildcard stack/*.py)
 ALL_TEST_MODULES=$(wildcard tests/test_*.py)
+ALL_TRENDLIT_MODULES=$(wildcard trendlit_helper/*.py)
 ALL_VIRTUAL_MACHINE_MODULES=$(wildcard tests/test_*.py)
 
-ALL_MODULES=$(ALL_ERROR_MODULES) $(ALL_LEXER_MODULES) $(ALL_MEMORY_MODULES) $(ALL_PARSER_MODULES) $(ALL_QUADRUPLE_MODULES) $(ALL_ROOT_MODULES) $(ALL_RUNTIME_MEMORY_MODULES) $(ALL_SEMANTIC_CUBE_MODULES) $(ALL_STACK_MODULES) $(ALL_TEST_MODULES) $(ALL_VIRTUAL_MACHINE_MODULES)
+ALL_MODULES=$(ALL_ERROR_MODULES) $(ALL_LEXER_MODULES) $(ALL_MEMORY_MODULES) $(ALL_PARSER_MODULES) $(ALL_QUADRUPLE_MODULES) $(ALL_ROOT_MODULES) $(ALL_RUNTIME_MEMORY_MODULES) $(ALL_SEMANTIC_CUBE_MODULES) $(ALL_STACK_MODULES) $(ALL_TEST_MODULES) $(ALL_TRENDLIT_MODULES) $(ALL_VIRTUAL_MACHINE_MODULES)
 
 # Path from all .tl files (inside our_tests)
 ALL_TL_FILES=$(wildcard our_tests/*.tl)
@@ -32,6 +33,7 @@ ALL_TL_FILES=$(wildcard our_tests/*.tl)
 ALL_TL_FILENAMES=$(patsubst our_tests/%, %, $(wildcard our_tests/*.tl))
 
 ALL_OBJECT_FILES=$(wildcard object_code/*.obj)
+ALL_COMPILED_FILES=$(wildcard compiled_code/*.html)
 
 # List all running containers
 ALL_DOCKER_CONTAINERS=$(shell docker ps -aq)
@@ -45,10 +47,14 @@ bump:## Bumps version
 check:## Check if the tag that is going to be pushed is unique. In other words, if RELEASE variable was updated in the Makefile.
 	@./scripts/docker_check.sh
 
-clean: ##Removes generated files (eg. .obj)
+clean: ##Removes generated files (eg. .obj and .html)
 	@echo 'Clean triggered'
+	@echo 'Removing object code (obj)'
 	@echo ${ALL_OBJECT_FILES}
 	@rm -r ${ALL_OBJECT_FILES}
+	# @echo 'Removing compiled code (html)'
+	# @echo ${ALL_COMPILED_FILES}
+	# @rm -r ${ALL_COMPILED_FILES}
 
 format: ##Applies BLACK to all py files in defined modules.
 	@echo 'Format triggered'
