@@ -102,6 +102,8 @@ def exec_quad(quad):
         eval(quad)
     elif quad.token in JUMPS:
         jumps(quad)
+    elif quad.token == token_to_code.get("VER"):
+        is_arr_out_of_bounds(quad)
     else:
         return
 
@@ -114,7 +116,7 @@ def arithmetic(quad):
         right_op = get_value_from_address(quad.operand2)
         # Execute addition
         res_val = left_op + right_op
-        print(f"Added: {left_op} + {right_op}")
+        # print(f"Added: {left_op} + {right_op}")
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
     elif quad.token == token_to_code.get("-"):  # Substraction
@@ -158,13 +160,13 @@ def arithmetic(quad):
         set_value_to_address(value, quad.operand3)
         # print(f"VALUE!: {value}, VARIABLE: {quad.operand3}")
         # For debbuging
-        print("-------")
-        print("int", g_memory.int_memory)
+        # print("-------")
+        # print("int", g_memory.int_memory)
         # print("double", g_memory.double_memory)
         # print("bool", g_memory.bool_memory)
         # print("str", g_memory.str_memory)
-        print("temp", g_memory.temp_memory)
-        print("const", const_memory)
+        # print("temp", g_memory.temp_memory)
+        # print("const", const_memory)
 
 
 def relational(quad):
@@ -225,7 +227,7 @@ def eval(quad):
         value = "<" + code_to_token.get(quad.operand3).lower() + ">"
     else:
         value = get_value_from_address(quad.operand3)
-        print(f"VLUE TO PRINT: {value}, ADDRE: {quad.operand3}")
+        # print(f"VLUE TO PRINT: {value}, ADDRE: {quad.operand3}")
     vmh.queue_results.append(str(value))
 
 
@@ -251,3 +253,15 @@ def jumps(quad):
         # Change inst = destination quad IF trigger is FALSE
         if trigger:
             instruction_pointer = quad.operand3 - 1
+
+def is_arr_out_of_bounds(quad):
+    lower_limit = get_value_from_address(quad.operand1) # Should always be 0
+    upper_limit = get_value_from_address(quad.operand2)
+    s = get_value_from_address(quad.operand3)
+
+    if (s >= lower_limit and s < upper_limit):
+        return True
+    else:
+        print(f"Slice error: Value should be between {lower_limit} {upper_limit - 1}")
+        exit(1)
+        return False

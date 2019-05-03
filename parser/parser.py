@@ -613,14 +613,8 @@ def p_snp_slice_access_2(p):
         # Check if dimension being accessed is valid
         dim_counter = parser_helper.curr_dimension_counter
 
-        if dim <= dim_counter:
-            # valid
-            print(f"dim {dim} is valid")
-            # Obtener el primer campo
-            print("Obtener el primer campoF")
-        else:
+        if not (dim <= dim_counter):
             error_helper.add_error(202, f": {slice_name}")
-
     else:
         error_helper.add_error(302, f"{slice_name} is not defined")
 

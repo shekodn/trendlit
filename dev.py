@@ -22,7 +22,7 @@ if __name__ == "__main__":
                 _, file_name = file.split("/")
                 quad_helper.print_to_file(f"object_code/{file_name}.obj")
                 run_code(quad_helper.queue_quad, memory.constant_values)
-                vmh.print_to_file(f"{file_name}.html")
+                vmh.print_to_file(f"compiled_code/{file_name}.html")
             else:
                 print(f"{file} does not compile. Please try harder")
                 print(f"Number of errors: {error_helper.error_cont}")

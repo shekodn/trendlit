@@ -6,7 +6,7 @@ program the_name_of_the_program
 
         int intArr[3] = []
 
-        a = intArr[1+1]
+        a = intArr[2] 
         # eval (a)
         # intArr[0] = 6
     }
