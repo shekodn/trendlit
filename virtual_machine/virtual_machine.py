@@ -30,6 +30,14 @@ JUMPS = [
     token_to_code.get("GOTOT"),
 ]
 
+MODULES = [
+    token_to_code.get("ERA"),
+    token_to_code.get("PARAMETER"),
+    token_to_code.get("GOSUB"),
+    token_to_code.get("RET"),
+    token_to_code.get("ENDPROC"),
+]
+
 html_file = None
 instruction_pointer = 0
 
@@ -38,7 +46,7 @@ mem_const_end = 16999
 
 const_memory = {}
 g_memory = RuntimeMemory(scope_to_code.get("global"))
-# memory_context_stack = Stack() # TODO: how to keep track of local contexts
+memory_context_stack = Stack() # TODO: how to keep track of local contexts
 
 
 # MEMORY HELPERS
@@ -104,6 +112,9 @@ def exec_quad(quad):
         jumps(quad)
     elif quad.token == token_to_code.get("VER"):
         is_arr_out_of_bounds(quad)
+    elif quad.token in MODULES:
+        # modules(quad)
+        print("kewl")
     else:
         return
 
@@ -265,3 +276,8 @@ def is_arr_out_of_bounds(quad):
     print(f"Slice error: Value should be between {lower_limit} {upper_limit - 1}")
     sys.exit(1)
     # return False
+#
+# def modules(quad):
+#     if quad.token == token_to_code.get("ERA"): # Activation Record
+#         # Start a Local Memory Context
+        # Push to stack

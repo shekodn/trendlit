@@ -118,6 +118,9 @@ class ParserHelper(object):
 
         return num_local_vars
 
+    def get_starting_quad(self, scope_name):
+        return self.procedure_directory[scope_name]["starting_quad"]
+
     def is_module_in_procedure_dir(self, module_name):
         return module_name in self.procedure_directory
 

@@ -31,6 +31,7 @@ if __name__ == "__main__":
             quad_helper.reset()
             parser_helper.reset()
             memory.reset()
+            vmh.reset()
             print("--------------------------------------------")
 
         except EOFError:
