@@ -1,7 +1,9 @@
 # Don't move, otherwise the TEST will break
+# GOTO -1 -1 4
 # + a b 9000
 # eval -1 -1 9000
 # ENDPROC -1 -1 -1
+# GOTO -1 -1 8
 # + a b 9000
 # eval -1 -1 9000
 # ENDPROC -1 -1 -1

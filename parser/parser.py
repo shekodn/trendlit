@@ -488,6 +488,8 @@ def p_snp_add_module(p):
         }  # TODO : add more info later on
         parser_helper.curr_scope = module_name
         memory.curr_scope_type = scope_to_code.get("local")
+        quad_helper.add_quad(token_to_code.get("GOTO"), -1, -1, "pending_endproc")
+        quad_helper.push_jump(quad_helper.quad_cont - 1)
 
 
 # Save the last type defined
@@ -738,6 +740,9 @@ def p_snp_end_module(p):
             quad_helper.add_quad(
                 token_to_code.get("RET"), return_value, -1, "memory address"
             )
+    end = quad_helper.pop_jump()
+    cont = quad_helper.quad_cont
+    quad_helper.fill(end, cont)
 
 
 # --- VARIABLE SEMANTIC ACTIONS ---

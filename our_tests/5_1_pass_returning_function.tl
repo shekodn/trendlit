@@ -1,4 +1,5 @@
 # Don't move, otherwise the TEST will break
+# GOTO -1 -1 3
 # + a b 9000
 # RET, 9000, -1, memory address
 
