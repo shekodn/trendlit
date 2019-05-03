@@ -47,6 +47,7 @@ mem_const_end = 16999
 const_memory = {}
 g_memory = RuntimeMemory(scope_to_code.get("global"))
 memory_context_stack = Stack() # TODO: how to keep track of local contexts
+memory_context_stack.push(g_memory)
 
 
 # MEMORY HELPERS
@@ -54,7 +55,7 @@ def get_value_from_address(addr):
     if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end: # global
         return g_memory.get_value(addr)
     elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end: # local
-        return l_memory.get_value(addr)  # TODO: current memory context?
+        return memory_context_stack.top().get_value(addr)  # TODO: current memory context?
     elif addr >= g_memory.mem_temp_int_start and addr <= g_memory.mem_temp_str_end: # temp
         return g_memory.get_value(
             addr
@@ -71,7 +72,7 @@ def set_value_to_address(value, addr):
         g_memory.set_value(value, addr)
     elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end:
         # Set LOCAL variable address
-        l_memory.set_value(value, addr)  # TODO: current memory context?
+        memory_context_stack.top().set_value(value, addr)  # TODO: current memory context?
     elif addr >= g_memory.mem_temp_int_start and addr <= g_memory.mem_temp_str_end:  # temp
         # Set TEMP variable address
         g_memory.set_value(
@@ -113,8 +114,7 @@ def exec_quad(quad):
     elif quad.token == token_to_code.get("VER"):
         is_arr_out_of_bounds(quad)
     elif quad.token in MODULES:
-        # modules(quad)
-        print("kewl")
+        modules(quad)
     else:
         return
 
@@ -276,8 +276,26 @@ def is_arr_out_of_bounds(quad):
     print(f"Slice error: Value should be between {lower_limit} {upper_limit - 1}")
     sys.exit(1)
     # return False
-#
-# def modules(quad):
-#     if quad.token == token_to_code.get("ERA"): # Activation Record
-#         # Start a Local Memory Context
+
+def modules(quad):
+    global instruction_pointer
+    if quad.token == token_to_code.get("ERA"): # Activation Record
+        # Start a Local Memory Context
+        curr_l_memory = RuntimeMemory(scope_to_code.get("global"))
         # Push to stack
+        memory_context_stack.push(curr_l_memory)
+    elif quad.token == token_to_code.get("GOSUB"): #Go to subroutine
+        # GOSUB, next_quad, -1, destination
+        memory_context_stack.top().return_quad = quad.operand1
+        # print("return to: ", memory_context_stack.top().return_quad)
+        instruction_pointer = quad.operand3-1
+        # print("GOSUB: ", instruction_pointer)
+    elif quad.token == token_to_code.get("ENDPROC"): #Go to subroutine
+        # The function ends, IP must return to where call was made
+        # ENDPROC will only appear in void functions
+
+        # Get the return quad number from the curr context
+        instruction_pointer = memory_context_stack.top().return_quad-1
+        # print("ENDPROC: ", instruction_pointer)
+        # Pop the module context from the stack
+        memory_context_stack.pop()

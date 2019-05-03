@@ -4,6 +4,7 @@ from semantic_cube.semantic_cube_helper import scope_to_code, code_to_scope
 class RuntimeMemory(object):
     def __init__(self, scope_type):
         self.scope_type = scope_type
+        self.return_quad = -1
         # Address range for GLOBAL variables
         self.mem_global_int_start = 1000
         self.mem_global_int_end = 1999
