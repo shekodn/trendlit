@@ -12,6 +12,7 @@ class ParserHelper(object):
         self.curr_module_param_counter = 0
         self.curr_module_var_counter = 0
         self.queue_params = []
+        self.queue_params_addresses = []
         self.stack_calls = Stack()
         self.stack_calls.push(999)
         self.stack_param_pointers = Stack()
@@ -125,8 +126,27 @@ class ParserHelper(object):
         return module_name in self.procedure_directory
 
     def get_queue_params(self, module_name):
+        """
+            Description: Returns the types (in order of appearance) of the params in a module context
+            Params:
+                module_name (str): module you want the types/order of
+            Return:
+                queue_params_addresses (queue[]): list of type of the params (ordered)
+         """
         if self.is_module_in_procedure_dir(module_name):
             return self.procedure_directory[module_name]["queue_params"]
+        return None
+
+    def get_queue_params_addresses(self, module_name):
+        """
+            Description: Returns the memory addresses assigned to the params in a module context
+            Params:
+                module_name (str): module you want the addresses of
+            Return:
+                queue_params_addresses (queue[]): list of addreses of the params (ordered)
+         """
+        if self.is_module_in_procedure_dir(module_name):
+            return self.procedure_directory[module_name]["queue_params_addresses"]
         return None
 
     def add_var_to_table(self, var_name, var_memory_address, scope):

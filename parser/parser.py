@@ -477,6 +477,7 @@ def p_snp_script_start(p):
         "scope_type": scope_to_code.get("global"),
         "params_count": 0,
         "queue_params": [],
+        "queue_params_addresses": [],
         "starting_quad": -1,
         "var_table": {},
         "dim_list": {},
@@ -500,6 +501,7 @@ def p_snp_add_module(p):
             "scope_type": scope_to_code.get("local"),
             "params_count": 0,
             "queue_params": [],
+            "queue_params_addresses": [],
             "starting_quad": -1,
             "var_table": {},
             "dim_list": {},
@@ -1130,8 +1132,13 @@ def p_snp_counts_params(p):
     parser_helper.curr_module_param_counter = (
         parser_helper.curr_module_param_counter + 1
     )
+    param_var_name = p[-2]
+    param_var_addr = parser_helper.get_var_address_from_dir(param_var_name)
+    parser_helper.queue_params_addresses.append(param_var_addr)
     # For debbuging
     # print ("Pushed type: ",parser_helper.queue_params[len(parser_helper.queue_params)-1])
+    # print("PARAM NAME: ", param_var_name, "PARAM VALUE: ", param_var_addr)
+    # print("Pushed addr: ",parser_helper.queue_params_addresses[len(parser_helper.queue_params_addresses)-1])
 
 
 # snp_add_params_count_to_table is snp #4 in Intermediate Code Actions for Module Definition
@@ -1145,10 +1152,16 @@ def p_snp_add_params_count_to_table(p):
     parser_helper.procedure_directory[parser_helper.curr_scope][
         "queue_params"
     ] = parser_helper.queue_params
+    # add the param address list to the table
+    parser_helper.procedure_directory[parser_helper.curr_scope][
+        "queue_params_addresses"
+    ] = parser_helper.queue_params_addresses
     # clears counter
     parser_helper.curr_module_param_counter = 0
     # clears the param list
     parser_helper.queue_params = []
+    # clears the param address list
+    parser_helper.queue_params_addresses = []
     # debbuging
     # counter = parser_helper.procedure_directory[parser_helper.curr_scope][
     #     "params_count"
@@ -1206,6 +1219,9 @@ def p_snp_check_param(p):
     # Get the last call from the stack and its queue_params
     module_name = parser_helper.stack_calls.top()
     module_queue_params = parser_helper.get_queue_params(module_name)
+    module_queue_params_addresses = parser_helper.get_queue_params_addresses(
+        module_name
+    )
     pointer = parser_helper.stack_param_pointers.top()
 
     # Check if param matches the type/order
@@ -1215,8 +1231,10 @@ def p_snp_check_param(p):
         and pointer <= len(module_queue_params) - 1
         and input_param_type is module_queue_params[pointer]
     ):
+        param_assigned_addr = module_queue_params_addresses[pointer]
+        # print("MODULE PARAM ADDRES: ", module_queue_params_addresses)
         quad_helper.add_quad(
-            token_to_code.get("PARAMETER"), input_param, -1, "param" + str(pointer + 1)
+            token_to_code.get("PARAMETER"), input_param, -1, param_assigned_addr
         )  # assignation
     else:
         error_helper.add_error(301, "Params do not match type")
