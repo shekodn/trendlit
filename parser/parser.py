@@ -92,11 +92,11 @@ def p_declare(p):
 
 
 def p_initialize(p):
-    """initialize : type initialize1 snp_add_assignation_quad initialize2"""
+    """initialize : type initialize1 initialize2"""
 
 
 def p_initialize1(p):
-    """initialize1 : ID snp_add_var snp_push_pending_operand EQ snp_push_pending_token value"""
+    """initialize1 : ID snp_add_var snp_push_pending_operand EQ snp_push_pending_token value snp_add_assignation_quad"""
 
 
 def p_initialize2(p):
@@ -335,7 +335,16 @@ def p_params1(p):
 
 
 def p_writing(p):
-    """writing : EVAL snp_push_pending_token OPAREN expression CPAREN snp_add_eval_quad"""
+    """writing : EVAL OPAREN writing1 CPAREN"""
+
+
+def p_writing1(p):
+    """writing1 : snp_push_pending_eval_token expression snp_add_eval_quad writing2"""
+
+
+def p_writing2(p):
+    """writing2 : COMMA writing1
+        | empty"""
 
 
 # snp_add_var is the equivalent of snp #2 and #3 from Intermediate code actions
@@ -787,7 +796,7 @@ def add_ret_endproc_quad():
 def p_snp_add_var(p):
     """snp_add_var : empty"""
     var_name = p[-1]  # get the last symbol read (left from this neural point)
-
+    print("var_name", var_name)
     # For debbuging
     # Check if var already exists and add it to the table in currect scope
     if parser_helper.is_var_in_current_scope(var_name):
@@ -865,7 +874,12 @@ def p_snp_push_pending_token(p):
     token = p[-1]
     quad_helper.push_token(token)
     # debbuging
-    # print("pushed token", quad_helper.top_token())
+    # print("pushed token: ", quad_helper.top_token())
+
+
+def p_snp_push_pending_eval_token(p):
+    """snp_push_pending_eval_token : empty"""
+    quad_helper.push_token("eval")
 
 
 def p_snp_push_solitary_operand(p):
