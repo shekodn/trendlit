@@ -66,6 +66,7 @@ def p_voidModuleBlock(p):
 
 def p_voidModuleBlock1(p):
     """voidModuleBlock1 : statement voidModuleBlock1
+        | SPIT snp_return_module voidModuleBlock1
         | empty"""
 
 
