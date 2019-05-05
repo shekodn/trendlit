@@ -1,0 +1,14 @@
+program the_name_of_the_program
+    script {
+
+        int product = 1
+        int j = 1
+        int N = 100 
+
+        loop(j <= N) {
+            product = product * j
+            j = j + 1
+        }
+
+        eval(product)
+    }
