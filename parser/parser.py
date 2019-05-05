@@ -92,11 +92,11 @@ def p_declare(p):
 
 
 def p_initialize(p):
-    """initialize : type initialize1 snp_add_assignation_quad initialize2"""
+    """initialize : type initialize1 initialize2"""
 
 
 def p_initialize1(p):
-    """initialize1 : ID snp_add_var snp_push_pending_operand EQ snp_push_pending_token value"""
+    """initialize1 : ID snp_add_var snp_push_pending_operand EQ snp_push_pending_token value snp_add_assignation_quad"""
 
 
 def p_initialize2(p):
@@ -787,7 +787,7 @@ def add_ret_endproc_quad():
 def p_snp_add_var(p):
     """snp_add_var : empty"""
     var_name = p[-1]  # get the last symbol read (left from this neural point)
-
+    print("var_name", var_name)
     # For debbuging
     # Check if var already exists and add it to the table in currect scope
     if parser_helper.is_var_in_current_scope(var_name):
