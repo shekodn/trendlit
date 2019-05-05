@@ -215,10 +215,9 @@ def p_factor1(p):
         | SIGN value"""
 
 
-# | OPAREN snp_push_pending_token valueSlice CPAREN snp_clean_stack_until_false_bottom
 def p_value(p):
     """value : ID snp_checks_for_previous_declaration snp_push_pending_operand
-        | snp_push_start_false_bottom valueSlice snp_clean_stack_until_false_bottom
+        | valueSlice
         | exp_call
         | CTEI snp_save_type_int snp_push_pending_operand
         | CTED snp_save_type_double snp_push_pending_operand
