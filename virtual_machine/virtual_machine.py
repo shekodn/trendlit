@@ -59,36 +59,28 @@ memory_context_stack.push(g_memory)
 
 # MEMORY HELPERS
 def get_value_from_address(addr):
+
     if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end: # global
         return g_memory.get_value(addr)
-    elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end: # local
-        return memory_context_stack.top().get_value(addr)  # TODO: current memory context?
-    elif addr >= g_memory.mem_temp_int_start and addr <= g_memory.mem_temp_str_end: # temp
-        return g_memory.get_value(
-            addr
-        )  # TODO: how to know if temp from local vs global (change this to return temp memory from context)
+    elif addr >= 1000000: # ptr
+        return get_value_from_address(get_value_from_address(addr - 1000000)) # TODO: change this to return ptr memory from context? (- 1000000 or - 2000000 for local scopes)
     elif addr >= mem_const_start and addr <= mem_const_end: # constant
         return const_memory[addr]
-    else: # ptr
-        return get_value_from_address(get_value_from_address(addr - 1000000)) # TODO: change this to return ptr memory from context? (- 1000000 or - 2000000 for local scopes)
+    else: # local or temp
+        return memory_context_stack.top().get_value(addr)
 
 
 def set_value_to_address(value, addr):
     if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end:
         # Set GLOBAL variable address
         g_memory.set_value(value, addr)
-    elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end:
-        # Set LOCAL variable address
-        memory_context_stack.top().set_value(value, addr)  # TODO: current memory context?
-    elif addr >= g_memory.mem_temp_int_start and addr <= g_memory.mem_temp_str_end:  # temp
-        # Set TEMP variable address
-        g_memory.set_value(
-            value, addr
-        )  # TODO: how to know if temp from local vs global
-    else: # ptr
+    elif addr >= 1000000: # ptr
         # Set PTR variable address
-        ptr_value_addr = get_value_from_address(addr - 1000000)
-        g_memory.set_value(value, ptr_value_addr)  # TODO: how to know if temp from local vs global
+        ptr_value_addr = get_value_from_address(addr - 1000000) # TODO: change this to return ptr memory from context? (- 1000000 or - 2000000 for local scopes)
+        memory_context_stack.top().set_value(value, ptr_value_addr)  # TODO: how to know if temp from local vs global
+    else: #local or temp
+        # Set LOCAL or TEMP variable address (from current context)
+        memory_context_stack.top().set_value(value, addr)
 
 
 def run_code(quads, const_mem):
