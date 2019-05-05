@@ -53,8 +53,9 @@ queue_quad = []
 
 const_memory = {}
 g_memory = RuntimeMemory(scope_to_code.get("global"))
-memory_context_stack = Stack() # TODO: how to keep track of local contexts
+memory_context_stack = Stack()
 memory_context_stack.push(g_memory)
+call_context_stack = Stack()
 
 
 # MEMORY HELPERS
@@ -307,9 +308,12 @@ def modules(quad):
     if quad.token == token_to_code.get("ERA"): # Activation Record
         # Start a Local Memory Context
         curr_l_memory = RuntimeMemory(scope_to_code.get("local"))
-        # Push to stack
-        memory_context_stack.push(curr_l_memory)
+        # Push to Call Stack
+        call_context_stack.push(curr_l_memory)
     elif quad.token == token_to_code.get("GOSUB"): #Go to subroutine
+        # Remove from call stack and push to memory_context_stack
+        curr_l_memory = call_context_stack.pop()
+        memory_context_stack.push(curr_l_memory)
         # GOSUB, next_quad, -1, destination
         memory_context_stack.top().return_quad = quad.operand1
         # print("return to: ", memory_context_stack.top().return_quad)

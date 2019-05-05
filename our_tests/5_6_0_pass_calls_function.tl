@@ -4,24 +4,26 @@
 program the_name_of_the_program
     script {
 
-        int my_int
-        double my_double
-        bool my_bool
-        str my_str
+        # int my_int
+        # double my_double
+        # bool my_bool
+        # str my_str
 
         def param_func (int my_int, double my_double, bool my_bool, str my_str) {
           eval("hi")
         }
 
-        def another_func (str my_str) {
-          eval("hi")
-        }
+        param_func(1, 2.0, True, "Hi")
 
-        def no_param_func () {
-          eval("hi")
-        }
+        # def another_func (str my_str) {
+        #   eval("hi")
+        # }
+        #
+        # def no_param_func () {
+        #   eval("hi")
+        # }
 
-        param_func(my_int, 2.0, True, "Hi")
+        # param_func(my_int, 2.0, True, "Hi")
 
 
     }
