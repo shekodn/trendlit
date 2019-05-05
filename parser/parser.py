@@ -75,7 +75,8 @@ def p_returnModuleBlock(p):
 
 def p_returnModuleBlock1(p):
     """returnModuleBlock1 : statement returnModuleBlock1
-        | SPIT expression"""
+        | SPIT expression snp_return_module returnModuleBlock1
+        | empty"""
 
 
 def p_declareBlock(p):
@@ -723,24 +724,46 @@ def p_snp_push_start_false_bottom(p):
     """snp_push_start_false_bottom : empty"""
     quad_helper.push_token("(")
     # debbuging
-    print("pushed token", quad_helper.top_token())
+    # print("pushed token", quad_helper.top_token())
+
+
+def p_snp_return_module(p):
+    """snp_return_module : empty"""
+    print("here")
+    add_ret_endproc_quad()
 
 
 # End of the module deltes the var table
 # snp #7 in Intermediate Code Actions for Module Definition
 def p_snp_end_module(p):
     """snp_end_module : empty"""
+    # add_ret_endproc_quad()
     curr_module_type = parser_helper.procedure_directory[parser_helper.curr_scope][
         "type"
     ]
+    if curr_module_type is "void":  # VOID MODULE
+        # Delete var table for the module that ended
+        quad_helper.add_quad(token_to_code.get("ENDPROC"), -1, -1, -1)
+    reset_local_contex()
+    end = quad_helper.pop_jump()
+    cont = quad_helper.quad_cont
+    quad_helper.fill(end, cont)
+
+
+def reset_local_contex():
     # debbuging
     # print(f"CURR SCOPE: {parser_helper.curr_scope}")
     # print(f"TABLE: {parser_helper.procedure_directory} \n")
-    # print("CURR TYPEEEE",curr_module_type)
     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"].clear()
     memory.reset_local_vars()
     parser_helper.curr_scope = "global_script"
     memory.curr_scope_type = scope_to_code.get("global")
+
+
+def add_ret_endproc_quad():
+    curr_module_type = parser_helper.procedure_directory[parser_helper.curr_scope][
+        "type"
+    ]
     if curr_module_type is "void":  # VOID MODULE
         # Delete var table for the module that ended
         quad_helper.add_quad(token_to_code.get("ENDPROC"), -1, -1, -1)
@@ -748,15 +771,14 @@ def p_snp_end_module(p):
         return_value = quad_helper.pop_operand()
         return_type = code_to_type.get(quad_helper.pop_type())
         if return_type != curr_module_type:
-            # print(return_type, curr_module_type)
-            error_helper.add_error(301, f"Error in line {p.lexer.lineno}")
+            print(
+                f"return_type: {return_type}, return_value: {return_value}, curr_module_type: {curr_module_type}"
+            )
+            error_helper.add_error(301, f"Return type is a mismatch")
         else:
             quad_helper.add_quad(
                 token_to_code.get("RET"), return_value, -1, "memory address"
             )
-    end = quad_helper.pop_jump()
-    cont = quad_helper.quad_cont
-    quad_helper.fill(end, cont)
 
 
 # --- VARIABLE SEMANTIC ACTIONS ---
