@@ -76,11 +76,11 @@ class RuntimeMemory(object):
 
 
     def is_int_addr(self, addr):
-        if self.scope_type is scope_to_code.get("global"):
-            return self.is_addr_in_range(addr, self.mem_global_int_start, self.mem_global_int_end)
-        else:
-            return self.is_addr_in_range(addr, self.mem_local_int_start, self.mem_local_int_end)
-        return False
+        # if self.scope_type is scope_to_code.get("global"):
+        return self.is_addr_in_range(addr, self.mem_global_int_start, self.mem_global_int_end) or  self.is_addr_in_range(addr, self.mem_local_int_start, self.mem_local_int_end)
+        # else:
+        #     return self.is_addr_in_range(addr, self.mem_local_int_start, self.mem_local_int_end)
+        # return False
 
     def is_double_addr(self, addr):
         if self.scope_type is scope_to_code.get("global"):

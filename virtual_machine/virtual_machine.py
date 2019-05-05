@@ -44,6 +44,8 @@ instruction_pointer = 0
 mem_const_start = 13000
 mem_const_end = 16999
 
+queue_quad = []
+
 const_memory = {}
 g_memory = RuntimeMemory(scope_to_code.get("global"))
 memory_context_stack = Stack() # TODO: how to keep track of local contexts
@@ -84,10 +86,11 @@ def set_value_to_address(value, addr):
         g_memory.set_value(value, ptr_value_addr)  # TODO: how to know if temp from local vs global
 
 
-def run_code(queue_quad, const_mem):
+def run_code(quads, const_mem):
     # Set the constant memory (retrieved during compilation)
-    global const_memory, html_file, instruction_pointer
+    global const_memory, html_file, instruction_pointer, queue_quad
     const_memory = const_mem
+    queue_quad = quads
 
     # html_file = open(
     #     "trendlit.tl", "w"
@@ -281,7 +284,7 @@ def modules(quad):
     global instruction_pointer
     if quad.token == token_to_code.get("ERA"): # Activation Record
         # Start a Local Memory Context
-        curr_l_memory = RuntimeMemory(scope_to_code.get("global"))
+        curr_l_memory = RuntimeMemory(scope_to_code.get("local"))
         # Push to stack
         memory_context_stack.push(curr_l_memory)
     elif quad.token == token_to_code.get("GOSUB"): #Go to subroutine
@@ -303,9 +306,16 @@ def modules(quad):
         # The function ends, IP must return to where call was made
         # RET will appear only un returning functions
 
+        # Get the return value addr
+        return_value = get_value_from_address(quad.operand1)
         # Get the return quad number from the curr context
-        instruction_pointer = memory_context_stack.top().return_quad-1
+        instruction_pointer = memory_context_stack.top().return_quad
         # Pop the module context from the stack
         memory_context_stack.pop()
-        # Assign return_val to call??????????????? #TODO: how to send return value back to where call was made
-        
+        # Relocate IP and get call assignation quad from the quads
+        # instruction_pointer = memory_context_stack.top().return_quad
+        quad = queue_quad[instruction_pointer]
+        # Assign the resut to the func_var_addr
+        # =, func_var_addr, -1, temp
+        set_value_to_address(return_value, quad.operand1)
+        arithmetic(quad) # Vm will move unto whatever quad comes after the assignment of func call var to a temp
