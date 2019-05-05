@@ -12,6 +12,17 @@ OUR_TESTS_PATH = "our_tests/"
 
 
 class QuadruplesTestCase(unittest.TestCase):
+    def test_0_2_1_pass_eval_comma(self):
+        tl_file_to_compile = "0_2_1_pass_eval_comma.tl"
+        trendlit_helper.reads_file(
+            COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
+        )
+        expected_file = TESTING_CODE_DIR + tl_file_to_compile + ".html.test"
+        generated_file = COMPILED_CODE_DIR + tl_file_to_compile + ".html"
+        result = filecmp.cmp(expected_file, generated_file)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
     def test_0_2_1_pass_uminus(self):
         tl_file_to_compile = "0_2_1_pass_uminus.tl"
         trendlit_helper.reads_file(

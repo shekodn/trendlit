@@ -335,7 +335,16 @@ def p_params1(p):
 
 
 def p_writing(p):
-    """writing : EVAL snp_push_pending_token OPAREN expression CPAREN snp_add_eval_quad"""
+    """writing : EVAL OPAREN writing1 CPAREN"""
+
+
+def p_writing1(p):
+    """writing1 : snp_push_pending_eval_token expression snp_add_eval_quad writing2"""
+
+
+def p_writing2(p):
+    """writing2 : COMMA writing1
+        | empty"""
 
 
 # snp_add_var is the equivalent of snp #2 and #3 from Intermediate code actions
@@ -865,7 +874,12 @@ def p_snp_push_pending_token(p):
     token = p[-1]
     quad_helper.push_token(token)
     # debbuging
-    # print("pushed token", quad_helper.top_token())
+    # print("pushed token: ", quad_helper.top_token())
+
+
+def p_snp_push_pending_eval_token(p):
+    """snp_push_pending_eval_token : empty"""
+    quad_helper.push_token("eval")
 
 
 def p_snp_push_solitary_operand(p):
