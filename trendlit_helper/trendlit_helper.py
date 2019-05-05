@@ -27,6 +27,7 @@ class TrendlitHelper(object):
             quad_helper.reset()
             parser_helper.reset()
             memory.reset()
+            vmh.reset()
             print("--------------------------------------------")
         except EOFError:
             print("EOFError")

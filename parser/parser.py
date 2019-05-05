@@ -233,7 +233,6 @@ def p_slice_expression(p):
 # ASSOCIATIVE => "or|and"
 def p_slice_expression1(p):
     """slice_expression1 : REL snp_push_pending_token slice_exp
-        | ASSOCIATIVE snp_push_pending_token slice_exp
         | empty"""
     # TODO add single expression. Do we allow if(True) ???
 
@@ -282,7 +281,7 @@ def p_valueSlice(p):
 
 
 def p_valueSlice1D(p):
-    """valueSlice1D : ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 slice_expression snp_slice_access_3 CBRACK snp_reset_dim_access_count"""
+    """valueSlice1D : ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 snp_push_start_false_bottom slice_expression snp_slice_access_3 CBRACK snp_clean_stack_until_false_bottom snp_reset_dim_access_count"""
 
 
 def p_condition(p):
@@ -718,6 +717,13 @@ def p_snp_init_slice_1d(p):
 
     else:
         print("Error: Invalid type")
+
+
+def p_snp_push_start_false_bottom(p):
+    """snp_push_start_false_bottom : empty"""
+    quad_helper.push_token("(")
+    # debbuging
+    print("pushed token", quad_helper.top_token())
 
 
 # End of the module deltes the var table
