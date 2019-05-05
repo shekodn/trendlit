@@ -200,6 +200,14 @@ class OurTestCase(unittest.TestCase):
         expected_exit_code = 1
         self.assertEqual(cm.exception.code, expected_exit_code)
 
+    def test_9_3_fail_array_init_index(self):
+        file_name = TESTING_PREFIX + "9_3_fail_array_init_index.tl"
+        print(f"\nTESTING: {file_name}\n")
+        expected_errors = 2
+        result = aux_tl_file(file_name, expected_errors)
+        print(f"\nTESTING: {file_name}\n")
+        self.assertEqual(result, expected_errors)
+
     # def test_9_3_fail_array_out_of_bounds(self):
     #     with self.assertRaises(SystemExit) as cm:
     #         file_name = TESTING_PREFIX + "9_3_fail_array_out_of_bounds.tl"

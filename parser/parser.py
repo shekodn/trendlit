@@ -111,6 +111,7 @@ def p_initializeSlices(p):
 
 def p_initializeSlices1D(p):
     """initializeSlices1D : OBRACK CTEI CBRACK snp_increase_dimension_count"""
+    # """initializeSlices1D : OBRACK CTEI snp_check_ctei CBRACK snp_increase_dimension_count"""
 
 
 def p_initializeSlices2D(p):
@@ -607,6 +608,14 @@ def p_snp_add_dimension(p):
 def p_snp_increase_dimension_count(p):
     """snp_increase_dimension_count : empty"""
     upper_limit = p[-2]
+    ctei = int(upper_limit)
+
+    # Checks that array has a value bigger than 0
+    if ctei <= 0:
+        error_helper.add_error(
+            305, f"Slice index value ({ctei}) should be a CTEI greater than 0"
+        )
+
     # indicates another dimension in slice
     parser_helper.curr_dimension_counter += 1
     # adds upper limit to t_dimensions
@@ -732,6 +741,7 @@ def p_snp_init_slice_1d(p):
         print("Error: Invalid type")
 
 
+# Add a false bottom to maintain presedence with arrays []
 def p_snp_push_start_false_bottom(p):
     """snp_push_start_false_bottom : empty"""
     quad_helper.push_token("(")
@@ -798,7 +808,6 @@ def add_ret_endproc_quad():
 def p_snp_add_var(p):
     """snp_add_var : empty"""
     var_name = p[-1]  # get the last symbol read (left from this neural point)
-    print("var_name", var_name)
     # For debbuging
     # Check if var already exists and add it to the table in currect scope
     if parser_helper.is_var_in_current_scope(var_name):

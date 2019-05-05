@@ -10,6 +10,7 @@ module_not_defined = "Module"
 wrong_params_num = "Wrong number of params"
 zero_division = "ZeroDivisionError: division by zero"
 index_out_of_range = "Index Out Of Range"
+invalid_index = "Slice's CTEI index not valid."
 
 error_to_code = {
     # Unkown 0
@@ -23,6 +24,7 @@ error_to_code = {
     var_not_defined: 302,
     module_not_defined: 303,
     wrong_params_num: 304,
+    invalid_index: 305,
     # Runtime errors 400
     zero_division: 401,
 }
@@ -39,6 +41,7 @@ code_to_error = {
     302: var_not_defined,
     303: module_not_defined,
     304: wrong_params_num,
+    305: invalid_index,
     # Runtime errors 400
     401: zero_division,
 }
