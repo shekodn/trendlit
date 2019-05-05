@@ -233,7 +233,6 @@ def p_slice_expression(p):
 # ASSOCIATIVE => "or|and"
 def p_slice_expression1(p):
     """slice_expression1 : REL snp_push_pending_token slice_exp
-        | ASSOCIATIVE snp_push_pending_token slice_exp
         | empty"""
     # TODO add single expression. Do we allow if(True) ???
 
@@ -719,6 +718,11 @@ def p_snp_init_slice_1d(p):
     else:
         print("Error: Invalid type")
 
+def p_snp_push_start_false_bottom(p):
+    """snp_push_start_false_bottom : empty"""
+    quad_helper.push_token("(")
+    # debbuging
+    print("pushed token", quad_helper.top_token())
 
 # End of the module deltes the var table
 # snp #7 in Intermediate Code Actions for Module Definition
@@ -798,6 +802,11 @@ def p_snp_add_eval_quad(p):
 def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
     operand_id = p[-2] if p[-1] == None else p[-1]
+
+    # For debbuging
+    print("OPERAND", operand_id, quad_helper.top_operand())
+    print("TYPE", quad_helper.top_type())
+
     operand_type = parser_helper.get_var_type_from_dir(operand_id)
     quad_helper.push_type(operand_type)
     if parser_helper.is_var_declared(operand_id):
@@ -805,9 +814,6 @@ def p_snp_push_pending_operand(p):
     else:  # operand is a constant
         operand_address = memory.get_or_set_addr_const(operand_id, operand_type)
     quad_helper.push_operand(operand_address)
-    # For debbuging
-    # print("OPERAND", operand_id, quad_helper.top_operand())
-    # print("TYPE", quad_helper.top_type())
 
 
 def p_snp_save_type_int(p):
@@ -907,6 +913,7 @@ def p_snp_check_precedence_and_create_quadruple_for_op(p):
     """snp_check_precedence_and_create_quadruple_for_op : empty"""
 
     top = quad_helper.top_token()
+    print("TOP:", top)
     division = token_to_code.get("/")
     product = token_to_code.get("*")
     is_op = (top is division) or (top is product)
@@ -955,6 +962,7 @@ def p_snp_check_precedence_and_create_quadruple_for_logic(p):
 
 def p_snp_clean_stack_until_false_bottom(p):
     """snp_clean_stack_until_false_bottom : empty"""
+    print(f"TOP: {quad_helper.top_token()}")
     # CPAREN ", "stack should pop until finding ')' or '(' ")
     quad_helper.pop_token()
 
