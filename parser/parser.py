@@ -281,7 +281,7 @@ def p_valueSlice(p):
 
 
 def p_valueSlice1D(p):
-    """valueSlice1D : ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 slice_expression snp_slice_access_3 CBRACK snp_reset_dim_access_count"""
+    """valueSlice1D : ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 snp_push_start_false_bottom slice_expression snp_slice_access_3 CBRACK snp_clean_stack_until_false_bottom snp_reset_dim_access_count"""
 
 
 def p_condition(p):
@@ -802,11 +802,6 @@ def p_snp_add_eval_quad(p):
 def p_snp_push_pending_operand(p):
     """snp_push_pending_operand : empty"""
     operand_id = p[-2] if p[-1] == None else p[-1]
-
-    # For debbuging
-    print("OPERAND", operand_id, quad_helper.top_operand())
-    print("TYPE", quad_helper.top_type())
-
     operand_type = parser_helper.get_var_type_from_dir(operand_id)
     quad_helper.push_type(operand_type)
     if parser_helper.is_var_declared(operand_id):
@@ -814,6 +809,9 @@ def p_snp_push_pending_operand(p):
     else:  # operand is a constant
         operand_address = memory.get_or_set_addr_const(operand_id, operand_type)
     quad_helper.push_operand(operand_address)
+    # For debbuging
+    # print("OPERAND", operand_id, quad_helper.top_operand())
+    # print("TYPE", quad_helper.top_type())
 
 
 def p_snp_save_type_int(p):
@@ -913,7 +911,6 @@ def p_snp_check_precedence_and_create_quadruple_for_op(p):
     """snp_check_precedence_and_create_quadruple_for_op : empty"""
 
     top = quad_helper.top_token()
-    print("TOP:", top)
     division = token_to_code.get("/")
     product = token_to_code.get("*")
     is_op = (top is division) or (top is product)
@@ -962,7 +959,6 @@ def p_snp_check_precedence_and_create_quadruple_for_logic(p):
 
 def p_snp_clean_stack_until_false_bottom(p):
     """snp_clean_stack_until_false_bottom : empty"""
-    print(f"TOP: {quad_helper.top_token()}")
     # CPAREN ", "stack should pop until finding ')' or '(' ")
     quad_helper.pop_token()
 
