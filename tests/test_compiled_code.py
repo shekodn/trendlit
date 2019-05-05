@@ -18,7 +18,30 @@ class QuadruplesTestCase(unittest.TestCase):
             COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
         )
         expected_file = TESTING_CODE_DIR + "0_2_1_pass_uminus.tl.html.test"
-        generated_file = COMPILED_CODE_DIR + "generated_file.tl.html"
-        result = filecmp.cmp(expected_file, expected_file)
+        generated_file = COMPILED_CODE_DIR + "0_2_1_pass_uminus.tl.html"
+        result = filecmp.cmp(expected_file, generated_file)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
+    def test_2_5_pass_and_or(self):
+        tl_file_to_compile = "2_5_pass_and_or.tl"
+        trendlit_helper.reads_file(
+            COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
+        )
+        expected_file = TESTING_CODE_DIR + "2_5_pass_and_or.tl.html.test"
+        generated_file = COMPILED_CODE_DIR + "2_5_pass_and_or.tl.html"
+        result = filecmp.cmp(expected_file, generated_file)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
+
+    def test_9_2_1_pass_array_precedence(self):
+        tl_file_to_compile = "9_2_1_pass_array_precedence.tl"
+        trendlit_helper.reads_file(
+            COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
+        )
+        expected_file = TESTING_CODE_DIR + "9_2_1_pass_array_precedence.tl.html.test"
+        generated_file = COMPILED_CODE_DIR + "9_2_1_pass_array_precedence.tl.html"
+        result = filecmp.cmp(expected_file, generated_file)
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
