@@ -24,6 +24,7 @@ memory = Memory()
 
 def p_program(p):
     """program : PROGRAM ID program1"""
+    # print("DIR TABLE: ", parser_helper.procedure_directory)
 
 
 def p_program1(p):
@@ -60,7 +61,7 @@ def p_simpleBlock1(p):
 
 
 def p_voidModuleBlock(p):
-    """voidModuleBlock : snp_save_void_type snp_save_type_to_module_table OBRACE declareBlock snp_add_quad_cont_to_table voidModuleBlock1 CBRACE"""
+    """voidModuleBlock : snp_save_void_type snp_save_type_to_module_table OBRACE snp_add_quad_cont_to_table declareBlock voidModuleBlock1 CBRACE"""
 
 
 def p_voidModuleBlock1(p):
@@ -69,7 +70,7 @@ def p_voidModuleBlock1(p):
 
 
 def p_returnModuleBlock(p):
-    """returnModuleBlock : COLON type snp_save_type_to_module_table OBRACE declareBlock snp_add_quad_cont_to_table returnModuleBlock1 CBRACE"""
+    """returnModuleBlock : COLON type snp_save_type_to_module_table OBRACE snp_add_quad_cont_to_table declareBlock returnModuleBlock1 CBRACE"""
 
 
 def p_returnModuleBlock1(p):
@@ -496,6 +497,8 @@ def p_snp_add_module(p):
         }  # TODO : add more info later on
         parser_helper.curr_scope = module_name
         memory.curr_scope_type = scope_to_code.get("local")
+        quad_helper.add_quad(token_to_code.get("GOTO"), -1, -1, "pending_endproc")
+        quad_helper.push_jump(quad_helper.quad_cont - 1)
 
 
 # Save the last type defined
@@ -505,12 +508,12 @@ def p_snp_save_type_to_module_table(p):
 
     parser_helper.procedure_directory[module_name]["type"] = parser_helper.curr_type
 
-    print("Curr type module_name", parser_helper.curr_type, module_name)
+    # print("Curr type module_name", parser_helper.curr_type, module_name)
     var_memory_address = memory.set_var_addr(
         scope_to_code.get("global"), parser_helper.curr_type
     )
     if var_memory_address is not None:
-        print("MEMORY ADDRE ", var_memory_address)
+        # print("MEMORY ADDRE ", var_memory_address)
         parser_helper.add_var_to_table(module_name, var_memory_address, "global_script")
 
 
@@ -746,6 +749,9 @@ def p_snp_end_module(p):
             quad_helper.add_quad(
                 token_to_code.get("RET"), return_value, -1, "memory address"
             )
+    end = quad_helper.pop_jump()
+    cont = quad_helper.quad_cont
+    quad_helper.fill(end, cont)
 
 
 # --- VARIABLE SEMANTIC ACTIONS ---
@@ -1209,10 +1215,17 @@ def p_snp_add_gosub(p):
         parser_helper.stack_param_pointers.push(0)
         if param_pointer is len(module_queue_params):
             # Clear the stack and pointer after call ends
-            quad_helper.add_quad(token_to_code.get("GOSUB"), module_name, -1, -1)
+            module_quad_num = parser_helper.get_starting_quad(module_name)
+            # Generate a quad with GOSUB, next_quad after this call, -1, quad where VM needs to jump
+            quad_helper.add_quad(
+                token_to_code.get("GOSUB"),
+                quad_helper.quad_cont + 1,
+                -1,
+                module_quad_num,
+            )
             # Assign return temporal to module
             module_type = parser_helper.get_module_type(module_name)
-            print("THE MODULE TYPE ", module_type)
+            # print("THE MODULE TYPE ", module_type)
             if module_type is not "void":
                 # get the memory_address for the module variable
                 if parser_helper.is_var_declared(module_name):

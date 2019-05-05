@@ -4,6 +4,7 @@ from semantic_cube.semantic_cube_helper import scope_to_code, code_to_scope
 class RuntimeMemory(object):
     def __init__(self, scope_type):
         self.scope_type = scope_type
+        self.return_quad = -1
         # Address range for GLOBAL variables
         self.mem_global_int_start = 1000
         self.mem_global_int_end = 1999
@@ -75,11 +76,11 @@ class RuntimeMemory(object):
 
 
     def is_int_addr(self, addr):
-        if self.scope_type is scope_to_code.get("global"):
-            return self.is_addr_in_range(addr, self.mem_global_int_start, self.mem_global_int_end)
-        else:
-            return self.is_addr_in_range(addr, self.mem_local_int_start, self.mem_local_int_end)
-        return False
+        # if self.scope_type is scope_to_code.get("global"):
+        return self.is_addr_in_range(addr, self.mem_global_int_start, self.mem_global_int_end) or  self.is_addr_in_range(addr, self.mem_local_int_start, self.mem_local_int_end)
+        # else:
+        #     return self.is_addr_in_range(addr, self.mem_local_int_start, self.mem_local_int_end)
+        # return False
 
     def is_double_addr(self, addr):
         if self.scope_type is scope_to_code.get("global"):

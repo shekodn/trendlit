@@ -35,15 +35,26 @@ JUMPS = [
     token_to_code.get("GOTOT"),
 ]
 
+MODULES = [
+    token_to_code.get("ERA"),
+    token_to_code.get("PARAMETER"),
+    token_to_code.get("GOSUB"),
+    token_to_code.get("RET"),
+    token_to_code.get("ENDPROC"),
+]
+
 html_file = None
 instruction_pointer = 0
 
 mem_const_start = 13000
 mem_const_end = 16999
 
+queue_quad = []
+
 const_memory = {}
 g_memory = RuntimeMemory(scope_to_code.get("global"))
-# memory_context_stack = Stack() # TODO: how to keep track of local contexts
+memory_context_stack = Stack() # TODO: how to keep track of local contexts
+memory_context_stack.push(g_memory)
 
 
 # MEMORY HELPERS
@@ -51,7 +62,7 @@ def get_value_from_address(addr):
     if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end: # global
         return g_memory.get_value(addr)
     elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end: # local
-        return l_memory.get_value(addr)  # TODO: current memory context?
+        return memory_context_stack.top().get_value(addr)  # TODO: current memory context?
     elif addr >= g_memory.mem_temp_int_start and addr <= g_memory.mem_temp_str_end: # temp
         return g_memory.get_value(
             addr
@@ -68,7 +79,7 @@ def set_value_to_address(value, addr):
         g_memory.set_value(value, addr)
     elif addr >= g_memory.mem_local_int_start and addr <= g_memory.mem_local_str_end:
         # Set LOCAL variable address
-        l_memory.set_value(value, addr)  # TODO: current memory context?
+        memory_context_stack.top().set_value(value, addr)  # TODO: current memory context?
     elif addr >= g_memory.mem_temp_int_start and addr <= g_memory.mem_temp_str_end:  # temp
         # Set TEMP variable address
         g_memory.set_value(
@@ -80,10 +91,11 @@ def set_value_to_address(value, addr):
         g_memory.set_value(value, ptr_value_addr)  # TODO: how to know if temp from local vs global
 
 
-def run_code(queue_quad, const_mem):
+def run_code(quads, const_mem):
     # Set the constant memory (retrieved during compilation)
-    global const_memory, html_file, instruction_pointer
+    global const_memory, html_file, instruction_pointer, queue_quad
     const_memory = const_mem
+    queue_quad = quads
 
     # html_file = open(
     #     "trendlit.tl", "w"
@@ -111,6 +123,8 @@ def exec_quad(quad):
         jumps(quad)
     elif quad.token == token_to_code.get("VER"):
         is_arr_out_of_bounds(quad)
+    elif quad.token in MODULES:
+        modules(quad)
     else:
         return
 
@@ -295,3 +309,43 @@ def is_arr_out_of_bounds(quad):
     print(f"Slice error: Value should be between {lower_limit} {upper_limit - 1}")
     sys.exit(1)
     return False
+
+def modules(quad):
+    global instruction_pointer
+    if quad.token == token_to_code.get("ERA"): # Activation Record
+        # Start a Local Memory Context
+        curr_l_memory = RuntimeMemory(scope_to_code.get("local"))
+        # Push to stack
+        memory_context_stack.push(curr_l_memory)
+    elif quad.token == token_to_code.get("GOSUB"): #Go to subroutine
+        # GOSUB, next_quad, -1, destination
+        memory_context_stack.top().return_quad = quad.operand1
+        # print("return to: ", memory_context_stack.top().return_quad)
+        instruction_pointer = quad.operand3-1
+    elif quad.token == token_to_code.get("ENDPROC"): #Void module ends
+        # The function ends, IP must return to where call was made
+        # ENDPROC will only appear in void functions
+
+        # Get the return quad number from the curr context
+        instruction_pointer = memory_context_stack.top().return_quad-1
+        # Pop the module context from the stack
+        memory_context_stack.pop()
+
+    elif quad.token == token_to_code.get("RET"): # Return module ends
+        # RET, return_val , -1, -1
+        # The function ends, IP must return to where call was made
+        # RET will appear only un returning functions
+
+        # Get the return value addr
+        return_value = get_value_from_address(quad.operand1)
+        # Get the return quad number from the curr context
+        instruction_pointer = memory_context_stack.top().return_quad
+        # Pop the module context from the stack
+        memory_context_stack.pop()
+        # Relocate IP and get call assignation quad from the quads
+        # instruction_pointer = memory_context_stack.top().return_quad
+        quad = queue_quad[instruction_pointer]
+        # Assign the resut to the func_var_addr
+        # =, func_var_addr, -1, temp
+        set_value_to_address(return_value, quad.operand1)
+        arithmetic(quad) # Vm will move unto whatever quad comes after the assignment of func call var to a temp
