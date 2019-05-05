@@ -161,16 +161,24 @@ def p_assignment(p):
     | valueSlice EQ snp_push_pending_token expression snp_add_assignation_quad"""
 
 
+# LOGICAL => "or|and"
 def p_expression(p):
-    """expression : exp expression1 snp_check_precedence_and_create_quadruple_for_rel"""
+    """expression : rel_expression expression1 snp_check_precedence_and_create_quadruple_for_logic"""
 
 
-# ASSOCIATIVE => "or|and"
 def p_expression1(p):
-    """expression1 : REL snp_push_pending_token exp
-        | ASSOCIATIVE snp_push_pending_token exp
+    """expression1 : ASSOCIATIVE snp_push_pending_token expression
         | empty"""
-    # TODO add single expression. Do we allow if(True) ???
+
+
+# REL => is|not|>=|<=|>|<
+def p_rel_expression(p):
+    """rel_expression : exp rel_expression1 snp_check_precedence_and_create_quadruple_for_rel"""
+
+
+def p_rel_expression1(p):
+    """rel_expression1 : REL snp_push_pending_token exp rel_expression1
+    | empty"""
 
 
 # Reference: Mathematical Expressions
@@ -207,9 +215,10 @@ def p_factor1(p):
         | SIGN value"""
 
 
+# | OPAREN snp_push_pending_token valueSlice CPAREN snp_clean_stack_until_false_bottom
 def p_value(p):
     """value : ID snp_checks_for_previous_declaration snp_push_pending_operand
-        | valueSlice
+        | snp_push_start_false_bottom valueSlice snp_clean_stack_until_false_bottom
         | exp_call
         | CTEI snp_save_type_int snp_push_pending_operand
         | CTED snp_save_type_double snp_push_pending_operand
@@ -798,7 +807,7 @@ def p_snp_push_pending_operand(p):
         operand_address = memory.get_or_set_addr_const(operand_id, operand_type)
     quad_helper.push_operand(operand_address)
     # For debbuging
-    # print("OPERAND", quad_helper.top_operand())
+    # print("OPERAND", operand_id, quad_helper.top_operand())
     # print("TYPE", quad_helper.top_type())
 
 
@@ -929,6 +938,19 @@ def p_snp_check_precedence_and_create_quadruple_for_rel(p):
     )
 
     if is_rel:
+        add_quadruple_expression()
+
+
+# logic => "and|or"
+def p_snp_check_precedence_and_create_quadruple_for_logic(p):
+    """snp_check_precedence_and_create_quadruple_for_logic : empty"""
+    top = quad_helper.top_token()
+    and_op = token_to_code.get("and")
+    or_op = token_to_code.get("or")
+
+    is_logic = (top is and_op) or (top is or_op)
+
+    if is_logic:
         add_quadruple_expression()
 
 

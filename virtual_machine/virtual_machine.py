@@ -1,3 +1,4 @@
+import sys
 from semantic_cube.semantic_cube_helper import (
     token_to_code,
     scope_to_code,
@@ -23,6 +24,10 @@ RELATIONAL = [
     token_to_code.get("<="),
     token_to_code.get(">"),
     token_to_code.get("<"),
+]
+LOGICAL = [
+    token_to_code.get("and"),
+    token_to_code.get("or"),
 ]
 JUMPS = [
     token_to_code.get("GOTO"),
@@ -110,6 +115,8 @@ def exec_quad(quad):
         arithmetic(quad)
     elif quad.token in RELATIONAL:
         relational(quad)
+    elif quad.token in LOGICAL:
+        logical(quad)
     elif quad.token == token_to_code.get("eval"):
         eval(quad)
     elif quad.token in JUMPS:
@@ -224,16 +231,38 @@ def relational(quad):
         res_val = left_op > right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-    else:  # '<'
+    elif quad.token == token_to_code.get("<"):# '<'
         # <, left_op, right_op, result
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
+        # For debbuging
+        # print(f"left_op {left_op} right_op {right_op}")
         # Execute substraction
         res_val = left_op < right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
 
+def logical(quad):
+    if quad.token == token_to_code.get("and"):
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute substraction
+        res_val = left_op and right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
+    elif quad.token == token_to_code.get("or"):
+        # Get value from memory
+        left_op = get_value_from_address(quad.operand1)
+        right_op = get_value_from_address(quad.operand2)
+        # Execute substraction
+        res_val = left_op or right_op
+        # Save result in memory
+        set_value_to_address(res_val, quad.operand3)
+    else:
+        print("Invalid logical operator.")
+        sys.exit(1)
 
 def eval(quad):
     # eval, -1, -1, 16000
@@ -272,13 +301,14 @@ def is_arr_out_of_bounds(quad):
     lower_limit = get_value_from_address(quad.operand1) # Should always be 0
     upper_limit = get_value_from_address(quad.operand2)
     s = get_value_from_address(quad.operand3)
+    # For debbuging
+    # print(f"is_arr_out_of_bounds: lower: {lower_limit}, upper: {upper_limit}, S: {s}")
 
     if (s >= lower_limit and s < upper_limit):
         return True
-
     print(f"Slice error: Value should be between {lower_limit} {upper_limit - 1}")
     sys.exit(1)
-    # return False
+    return False
 
 def modules(quad):
     global instruction_pointer

@@ -65,7 +65,6 @@ tokens = list(reserved_words.values()) + [
 
 t_SIGN = r"\+|-"
 t_OP = r"\*|/"  # * or /
-t_ASSOCIATIVE = r"or|and"
 t_EQ = r"="
 t_COMMA = r","
 t_COLON = r":"
@@ -109,6 +108,11 @@ def t_CCODEHTML(t):
 
 def t_REL(t):
     r"is|not|>=|<=|>|<"
+    return t
+
+
+def t_ASSOCIATIVE(t):
+    r"or|and"
     return t
 
 
