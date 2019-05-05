@@ -34,7 +34,6 @@ class QuadruplesTestCase(unittest.TestCase):
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
 
-
     def test_9_2_1_pass_array_precedence(self):
         tl_file_to_compile = "9_2_1_pass_array_precedence.tl"
         trendlit_helper.reads_file(

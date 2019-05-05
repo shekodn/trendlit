@@ -718,11 +718,13 @@ def p_snp_init_slice_1d(p):
     else:
         print("Error: Invalid type")
 
+
 def p_snp_push_start_false_bottom(p):
     """snp_push_start_false_bottom : empty"""
     quad_helper.push_token("(")
     # debbuging
     print("pushed token", quad_helper.top_token())
+
 
 # End of the module deltes the var table
 # snp #7 in Intermediate Code Actions for Module Definition
