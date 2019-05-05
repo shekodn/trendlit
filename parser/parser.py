@@ -729,7 +729,6 @@ def p_snp_push_start_false_bottom(p):
 
 def p_snp_return_module(p):
     """snp_return_module : empty"""
-    print("here")
     add_ret_endproc_quad()
 
 
