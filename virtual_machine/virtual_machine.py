@@ -310,6 +310,12 @@ def modules(quad):
         curr_l_memory = RuntimeMemory(scope_to_code.get("local"))
         # Push to Call Stack
         call_context_stack.push(curr_l_memory)
+    elif quad.token == token_to_code.get("PARAMETER"): #Go to subroutine
+        # PARAMETER, addr_value_being_sent, -1, param1
+        # Get value being sent from address (param value)
+        param_value = get_value_from_address(quad.operand1)
+        # Set the param value to the corresponding address in the most recent call
+        call_context_stack.top().set_value(param_value, 8000) # TODO: change the address to be the correct one (dpendinf on the type)
     elif quad.token == token_to_code.get("GOSUB"): #Go to subroutine
         # Remove from call stack and push to memory_context_stack
         curr_l_memory = call_context_stack.pop()

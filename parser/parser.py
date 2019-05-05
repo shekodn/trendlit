@@ -24,7 +24,7 @@ memory = Memory()
 
 def p_program(p):
     """program : PROGRAM ID program1"""
-    print("DIR TABLE: ", parser_helper.procedure_directory)
+    # print("DIR TABLE: ", parser_helper.procedure_directory)
 
 
 def p_program1(p):
