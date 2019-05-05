@@ -14,6 +14,9 @@ token_to_code = {
     "<=": 204,
     ">": 205,
     "<": 206,
+    # LOGIC
+    "and": 207,
+    "or": 208,
     # TODO - assign good name
     "eval": 301,
     # TODO - assign good name
@@ -64,6 +67,9 @@ code_to_token = {
     204: "<=",
     205: ">",
     206: "<",
+    # LOGIC
+    207: "and",
+    208: "or",
     # TODO - assign good name
     301: "eval",
     # TODO - assign good name
