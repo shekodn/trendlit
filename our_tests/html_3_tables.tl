@@ -1,62 +1,62 @@
 program the_name_of_the_program
     script {}
-    h1 class : "header" {
-      <^ "Heading h1" ^>
-    }
 
     div class : "container" {
       <^ "I'm a div in a class named container" ^>
-    }
 
-
-    table {
-      thead {
-        tr {
-          th {
-            <^ "Name" ^>
-          }
-          th {
-            <^ "Item Name" ^>
-          }
-
-          th {
-            <^ "Item Price" ^>
-          }
-        }
+      h1 class : "header" {
+        <^ "Heading h1" ^>
       }
 
-      tbody{
-        tr {
-          td {
-            <^ "Alvin"^>
-          }
-          td {
-            <^ "Eclair"^>
-          }
-          td {
-            <^ "$0.87"^>
-          }
-        }
-        tr {
-          td {
-            <^ "Alan"^>
-          }
-          td {
-            <^ "Jellybean"^>
-          }
-          td {
-            <^ "$3.76"^>
+      table {
+        thead {
+          tr {
+            th {
+              <^ "Name" ^>
+            }
+            th {
+              <^ "Item Name" ^>
+            }
+
+            th {
+              <^ "Item Price" ^>
+            }
           }
         }
-        tr {
-          td {
-            <^ "Jonathan"^>
+
+        tbody {
+          tr {
+            td {
+              <^ "Alvin"^>
+            }
+            td {
+              <^ "Eclair"^>
+            }
+            td {
+              <^ "$0.87"^>
+            }
           }
-          td {
-            <^ "Lollipop"^>
+          tr {
+            td {
+              <^ "Alan"^>
+            }
+            td {
+              <^ "Jellybean"^>
+            }
+            td {
+              <^ "$3.76"^>
+            }
           }
-          td {
-            <^ "$7.0"^>
+          tr {
+            td {
+              <^ "Jonathan"^>
+            }
+            td {
+              <^ "Lollipop"^>
+            }
+            td {
+              <^ "$7.0"^>
+            }
           }
         }
       }

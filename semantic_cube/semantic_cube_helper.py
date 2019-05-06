@@ -60,6 +60,13 @@ token_to_code = {
     "/TD": 626,
     "TBODY": 627,
     "/TBODY": 628,
+    # Lists
+    "LI": 629,
+    "/LI": 630,
+    "OL": 631,
+    "/OL": 632,
+    "UL": 633,
+    "/UL": 634,
     "CLASS": 699,
     # Aux
     "false_bottom": 999,
@@ -129,6 +136,13 @@ code_to_token = {
     626: "/TD",
     627: "TBODY",
     628: "/TBODY",
+    # Lists
+    629: "LI",
+    630: "/LI",
+    631: "OL",
+    632: "/OL",
+    633: "UL",
+    634: "/UL",
     699: "CLASS",
     # Aux
     999: "false_bottom",

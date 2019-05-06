@@ -25,7 +25,7 @@ reserved_words = {
     # reserved words html tags
     "class": "CLASS",
     "div": "DIV",
-    # "embed": "EMBED",
+    # Headers
     "h1": "H1",
     "h2": "H2",
     "h3": "H3",
@@ -33,14 +33,19 @@ reserved_words = {
     "h5": "H5",
     "h6": "H6",
     "p": "P",
+    # Tables
     "table": "TABLE",
     "th": "TH",
     "tr": "TR",
     "thead": "THEAD",
     "td": "TD",
     "tbody": "TBODY",
+    # Others
     "br": "BR",
-    # reserved html code
+    # Lists
+    "ol": "OL",
+    "ul": "UL",
+    "li": "LI",
 }
 
 tokens = list(reserved_words.values()) + [

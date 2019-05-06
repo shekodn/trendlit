@@ -156,7 +156,7 @@ def arithmetic(quad):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
-        # Execute multiplication
+        # Execute division
         if right_op != 0:
             res_val = left_op / right_op
         else:

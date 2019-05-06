@@ -378,7 +378,12 @@ def p_tag(p):
         | TR html_class snp_open_html_tag
         | THEAD html_class snp_open_html_tag
         | TD html_class snp_open_html_tag
-        | TBODY html_class snp_open_html_tag"""
+        | TBODY html_class snp_open_html_tag
+        | OL html_class snp_open_html_tag
+        | UL html_class snp_open_html_tag
+        | LI html_class snp_open_html_tag
+        """
+
 
 def p_html_class(p):
     """html_class : CLASS COLON CTESTR snp_class_quad
