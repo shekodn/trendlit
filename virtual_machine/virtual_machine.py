@@ -77,8 +77,8 @@ def set_value_to_address(value, addr):
         g_memory.set_value(value, addr)
     elif addr >= 1000000: # ptr
         # Set PTR variable address
-        ptr_value_addr = get_value_from_address(addr - 1000000) # TODO: change this to return ptr memory from context? (- 1000000 or - 2000000 for local scopes)
-        memory_context_stack.top().set_value(value, ptr_value_addr)  # TODO: how to know if temp from local vs global
+        ptr_value_addr = get_value_from_address(addr - 1000000)
+        g_memory.set_value(value, ptr_value_addr)
     else: #local or temp
         # Set LOCAL or TEMP variable address (from current context)
         memory_context_stack.top().set_value(value, addr)
