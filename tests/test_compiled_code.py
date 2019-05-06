@@ -122,8 +122,8 @@ class QuadruplesTestCase(unittest.TestCase):
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
 
-    def test_final_func_fibonacci_it(self):
-        tl_file_to_compile = "final_func_fibonacci_it.tl"
+    def test_final_fibonacci_iterative(self):
+        tl_file_to_compile = "final_fibonacci_iterative.tl"
         trendlit_helper.reads_file(
             COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
         )
@@ -133,9 +133,41 @@ class QuadruplesTestCase(unittest.TestCase):
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
 
+    def test_final_fibonacci_recursive(self):
+        tl_file_to_compile = "final_fibonacci_recursive.tl"
+        trendlit_helper.reads_file(
+            COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
+        )
+        expected_file = TESTING_CODE_DIR + tl_file_to_compile + ".html.test"
+        generated_file = COMPILED_CODE_DIR + tl_file_to_compile + ".html"
+        result = filecmp.cmp(expected_file, generated_file)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
 
-    def test_final_double_recursion_1(self):
-        tl_file_to_compile = "final_double_recursion_1.tl"
+    def test_final_factorial_iterative(self):
+        tl_file_to_compile = "final_factorial_iterative.tl"
+        trendlit_helper.reads_file(
+            COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
+        )
+        expected_file = TESTING_CODE_DIR + tl_file_to_compile + ".html.test"
+        generated_file = COMPILED_CODE_DIR + tl_file_to_compile + ".html"
+        result = filecmp.cmp(expected_file, generated_file)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
+    def test_final_factorial_recursive(self):
+        tl_file_to_compile = "final_factorial_recursive.tl"
+        trendlit_helper.reads_file(
+            COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
+        )
+        expected_file = TESTING_CODE_DIR + tl_file_to_compile + ".html.test"
+        generated_file = COMPILED_CODE_DIR + tl_file_to_compile + ".html"
+        result = filecmp.cmp(expected_file, generated_file)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
+    def test_final_factorial_recursive(self):
+        tl_file_to_compile = "final_factorial_recursive.tl"
         trendlit_helper.reads_file(
             COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
         )

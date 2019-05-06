@@ -3,7 +3,7 @@ program the_name_of_the_program
 
         int product = 1
         int j = 1
-        int N = 100 
+        int N = 11 
 
         loop(j <= N) {
             product = product * j

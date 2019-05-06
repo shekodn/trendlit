@@ -34,6 +34,7 @@ ALL_TL_FILENAMES=$(patsubst our_tests/%, %, $(wildcard our_tests/*.tl))
 
 ALL_OBJECT_FILES=$(wildcard object_code/*.obj)
 ALL_COMPILED_FILES=$(wildcard compiled_code/*.html)
+ALL_COMPILED_TEST_FILES=$(wildcard compiled_code_test/*.html)
 
 # List all running containers
 ALL_DOCKER_CONTAINERS=$(shell docker ps -aq)
@@ -55,6 +56,10 @@ clean: ##Removes generated files (eg. .obj and .html)
 	@echo 'Removing compiled code (html)'
 	@echo ${ALL_COMPILED_FILES}
 	@rm -r ${ALL_COMPILED_FILES}
+	@echo 'Removing compiled test file'
+	@echo ${ALL_COMPILED_TEST_FILES}
+	@rm -r ${ALL_COMPILED_TEST_FILES}
+
 
 format: ##Applies BLACK to all py files in defined modules.
 	@echo 'Format triggered'
@@ -64,7 +69,7 @@ help: ##Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 ##prepare: Applies format clean trendlit test
-prepare: format trendlit clean test
+prepare: format trendlit test clean
 
 push: ## Push docker image to docker hub
 	@./scripts/docker_push.sh
