@@ -377,6 +377,10 @@ def p_arguments1(p):
 def p_tag(p):
     """tag : H1 snp_open_html_tag
         | H2 snp_open_html_tag
+        | H3 snp_open_html_tag
+        | H4 snp_open_html_tag
+        | H5 snp_open_html_tag
+        | H6 snp_open_html_tag
         | DIV snp_open_html_tag
         | P snp_open_html_tag
         | TABLE snp_open_html_tag
