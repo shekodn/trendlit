@@ -69,8 +69,11 @@ token_to_code = {
     "/UL": 634,
     "SPAN": 635,
     "/SPAN": 636,
-    "LINK": 637, # uses LINK tag instead of standard A html tag to not make A a reserved word
-    "/A": 638, # closes link
+    "LINK": 637,  # uses LINK tag instead of standard A html tag to not make A a reserved word
+    "/A": 638,  # closes link
+    "IMG": 639,
+    "/IMG": 640,
+    "SRC": 697,
     "HREF": 698,
     "CLASS": 699,
     # Aux
@@ -150,8 +153,11 @@ code_to_token = {
     634: "/UL",
     635: "SPAN",
     636: "/SPAN",
-    637: "LINK", # uses LINK tag instead of standard A html tag to not make A a reserved word
-    638: "/A", # closes link
+    637: "LINK",  # uses LINK tag instead of standard A html tag to not make A a reserved word
+    638: "/A",  # closes link
+    639: "IMG",
+    640: "/IMG",
+    697: "SRC",
     698: "HREF",
     699: "CLASS",
     # Aux

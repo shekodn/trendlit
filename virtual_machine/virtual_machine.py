@@ -271,6 +271,12 @@ def eval(quad):
         instruction_pointer +=1
         quad = queue_quad[instruction_pointer]
         value = f"<a href=\"{href_name}\">"
+    elif quad.operand3 == token_to_code.get("SRC"):
+        # eval, -1, src_name, HREF
+        src_name = get_value_from_address(quad.operand2)
+        instruction_pointer +=1
+        quad = queue_quad[instruction_pointer]
+        value = f"<img src=\"{src_name}\">"
     elif quad.operand3 >= 600 and quad.operand3 <= 699:  # html tag
         # eval, -1, -1, TAG
         value = "<" + code_to_token.get(quad.operand3).lower() + ">"

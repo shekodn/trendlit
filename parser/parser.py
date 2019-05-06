@@ -384,6 +384,7 @@ def p_tag(p):
         | LI html_class snp_open_html_tag
         | SPAN html_class snp_open_html_tag
         | LINK html_href snp_open_html_tag
+        | IMG html_img snp_open_html_tag
         """
 
 
@@ -394,6 +395,11 @@ def p_html_class(p):
 
 def p_html_href(p):
     """html_href : HREF COLON CTESTR snp_href_quad
+        | empty"""
+
+
+def p_html_img(p):
+    """html_img : SRC COLON CTESTR snp_img_quad
         | empty"""
 
 
@@ -1382,10 +1388,21 @@ def p_snp_href_quad(p):
     )
 
 
+def p_snp_img_quad(p):
+    """snp_img_quad : empty"""
+    img_str = p[-1]
+    cte_s = memory.get_or_set_addr_const(img_str, "str")
+    quad_helper.add_quad(token_to_code.get("eval"), -1, cte_s, token_to_code.get("SRC"))
+
+
 def p_snp_close_html_tag(p):
     """snp_close_html_tag : empty"""
-    html_tag = quad_helper.pop_tag() + 1
-    quad_helper.add_quad(token_to_code.get("eval"), -1, -1, html_tag)
+    html_tag = quad_helper.pop_tag()
+    closing_tag = html_tag + 1
+    # Checks that the respective html_tag has a closing tag
+    # for example: img doesn't have one, but h1 yes (<h1></h1>)
+    if html_tag is not token_to_code.get("IMG"):
+        quad_helper.add_quad(token_to_code.get("eval"), -1, -1, closing_tag)
 
 
 def p_snp_br_html_tag(p):

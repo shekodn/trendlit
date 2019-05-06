@@ -27,6 +27,8 @@ reserved_words = {
     "div": "DIV",
     "href": "HREF",
     "link": "LINK",
+    "img": "IMG",
+    "src": "SRC",
     # Headers
     "h1": "H1",
     "h2": "H2",
