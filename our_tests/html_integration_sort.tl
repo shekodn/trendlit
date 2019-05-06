@@ -13,8 +13,22 @@ program the_name_of_the_program
       arr[5] = 100
       arr[6] = -2
       arr[7] = 3
-      arr[8] = 44
+      arr[8] = 42
 
+      def my_find(int num, int arr_size) : bool {
+          int i
+          bool result
+
+          loop(i < arr_size)  {
+              if(arr[i] is num){
+                  result = True
+                  spit result
+              }
+              i = i + 1
+          }
+
+          spit result
+      }
 
       def init_array(int size_array){
 
@@ -60,7 +74,7 @@ program the_name_of_the_program
     head class : "pretty" {}
     div class : "container" {
     h1 {<^ "Cards Are Out Of Order!" ^>}
-    p {<^ "Why not apply a sort?" ^>}
+    h2 {<^ "Why not apply a sort?" ^>}
       div class : "row" {
       <% loop (aux_counter < card_counter) %>
         div class : "col m4" {
@@ -151,4 +165,20 @@ program the_name_of_the_program
           <% aux_counter = aux_counter + 1 %>
           <% end %>
         }
+    h1 { <^ "Is 1234 in the card list? "^> }
+    h3 { <^ "Let's find out! "^> }
+    <% if (my_find(1234, arr_size)) %>
+        h4 { <^ "Yes! it is! "^> }
+    <% else %>
+        h4 { <^ "It is not :( "^> }
+    <% end %>
+
+    h1 { <^ "What about number 42? "^> }
+    <% if (my_find(42, arr_size)) %>
+        h4 { <^ "Yes! it is! "^> }
+        h5 { <^ "Coincidence? I don't think so ;)" ^> }
+    <% else %>
+        h4 { <^ "It is not :( "^> }
+    <% end %>
+
     }
