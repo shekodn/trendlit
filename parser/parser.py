@@ -404,6 +404,10 @@ def p_html_img(p):
         | empty"""
 
 
+# def p_html_head_class():
+#     """html_head_class : CLASS COLON CTESTR snp_head_quad
+#         | empty"""
+
 # gorritos <^ ^>
 def p_htmlscript(p):
     """htmlscript : OEVALSCRIPT snp_push_eval_pending_token expression CEVALSCRIPT snp_add_eval_quad"""

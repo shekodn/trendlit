@@ -73,6 +73,8 @@ token_to_code = {
     "/A": 638,  # closes link
     "IMG": 639,
     "/IMG": 640,
+    "HEAD": 641,
+    "/HEAD": 642,
     "SRC": 697,
     "HREF": 698,
     "CLASS": 699,
@@ -157,6 +159,8 @@ code_to_token = {
     638: "/A",  # closes link
     639: "IMG",
     640: "/IMG",
+    641: "HEAD",
+    642: "/HEAD",
     697: "SRC",
     698: "HREF",
     699: "CLASS",

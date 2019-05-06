@@ -1,10 +1,18 @@
 program the_name_of_the_program
     script {}
 
+    head class : "pretty" {}
+
     div class : "row" {
       div class : "col s12 m6" {
-        div class : "card blue-grey darken-1" {
-          div class : "card-content white-text" {
+        div class : "card " {
+          div class : "card-image" {
+            img src : "https://via.placeholder.com/150" {}
+            span class : "card-title" {
+              <^"Card Title"^>
+            }
+          }
+          div class : "card-content" {
             span class : "card-title" {
               <^"Card Title"^>
             }

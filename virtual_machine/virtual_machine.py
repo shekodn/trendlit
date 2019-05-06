@@ -264,7 +264,21 @@ def eval(quad):
         class_name = get_value_from_address(quad.operand2)
         instruction_pointer +=1
         quad = queue_quad[instruction_pointer]
-        value = "<" + code_to_token.get(quad.operand3).lower() + f" class=\"{class_name}\">"
+
+        head_pretty  = """
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title> Trendlit - Cloud Based Programming Language</title>
+        """
+
+        if (quad.operand3 is token_to_code.get("HEAD")) and (class_name.lower() == "pretty"):
+            value = "<" + code_to_token.get(quad.operand3).lower() + f"> \n {head_pretty}"
+        else:
+            value = "<" + code_to_token.get(quad.operand3).lower() + f" class=\"{class_name}\">"
+
+
     elif quad.operand3 == token_to_code.get("HREF"):
         # eval, -1, href_name, HREF
         href_name = get_value_from_address(quad.operand2)

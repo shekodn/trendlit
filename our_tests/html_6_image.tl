@@ -1,7 +1,6 @@
 program the_name_of_the_program
     script {}
 
-    # <img src="images/sample-1.jpg">
     div class : "row" {
       div class : "col s12 m6" {
         div class : "card " {
