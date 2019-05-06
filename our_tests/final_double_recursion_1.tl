@@ -17,6 +17,30 @@ program the_name_of_the_program
             spit fib(n - 1) + fib(n - 2);
         }
 
+        def multiplyNumbers(int n) : int {
+            if (n >= 1){
+                spit (n * multiplyNumbers(n - 1))
+            }
+            else {
+                spit 1
+            }
+        }
+
+        def factorial(int n) : int {
+            if (n is 0) {
+                spit 1;
+            }
+
+            spit n * (factorial(n - 1))
+        }
+
+
+
         # print_recursive(0)
-        fib(10)
+        # eval("---")
+        # eval(fib(10))
+        # eval("---")
+        # multiplyNumbers(10)
+        # eval("---")
+        eval(factorial(10)) # savior
     }

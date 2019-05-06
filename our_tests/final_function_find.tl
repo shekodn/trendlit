@@ -22,7 +22,8 @@ program the_name_of_the_program
 
             loop(i < arr_size)  {
                 if(arr[i] is num){
-                    result = True                    
+                    result = True
+                    spit result
                 }
                 i = i + 1
             }

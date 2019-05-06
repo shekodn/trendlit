@@ -57,6 +57,8 @@ def p_simpleBlock(p):
 
 def p_simpleBlock1(p):
     """simpleBlock1 : statement simpleBlock1
+        | SPIT snp_return_module voidModuleBlock1
+        | SPIT expression snp_return_module returnModuleBlock1
         | empty"""
 
 
@@ -157,6 +159,16 @@ def p_statement(p):
         | doCycle
         | call
         | writing"""
+
+
+# def p_module_statement(p):
+#     """module_statement : assignment
+#         | condition_statement
+#         | cycle_statement
+#         | doCycle_statement
+#         | call
+#         | writing"""
+#
 
 
 def p_assignment(p):
@@ -751,7 +763,10 @@ def p_snp_push_start_false_bottom(p):
 
 def p_snp_return_module(p):
     """snp_return_module : empty"""
-    add_ret_endproc_quad()
+    if parser_helper.curr_scope is "global_script":
+        error_helper.add_error(0, "FIX ME")
+    else:
+        add_ret_endproc_quad()
 
 
 # End of the module deltes the var table
