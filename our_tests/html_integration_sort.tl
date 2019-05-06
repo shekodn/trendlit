@@ -69,10 +69,58 @@ program the_name_of_the_program
           }
           i = 0
       }
+
+      def fibo_it (int nth_number) : int {
+
+        int previous_previous_number = 0
+        int previous_number = 0
+        int current_number = 1
+        int i = 1
+            loop (i < nth_number)  {
+                previous_previous_number = previous_number
+                previous_number = current_number
+                current_number = previous_previous_number + previous_number
+
+                i = i+1
+            }
+            spit (current_number)
+        }
+
+      def factorial_it(int N) : int {
+            int product = 1
+            int j = 1
+
+            loop(j <= N) {
+                product = product * j
+                j = j + 1
+            }
+
+            spit (product)
+      }
+
+
+
     }
 
     head class : "pretty" {}
     div class : "container" {
+
+
+    h1 { <^ "Headers" ^> }
+    p {
+        <^ "We provide some basic styling on header tags. In the example, you can
+        see the the 6 header tags' different sizes."^>
+    }
+
+    div class : "card-panel" {
+        h1 { <^ "Header1" ^> }
+        h2 { <^ "Header2" ^> }
+        h3 { <^ "Header3" ^> }
+        h4 { <^ "Header4" ^> }
+        h5 { <^ "Header5" ^> }
+        h6 { <^ "Header6" ^> }
+    }
+
     h1 {<^ "Cards Are Out Of Order!" ^>}
     h2 {<^ "Why not apply a sort?" ^>}
       div class : "row" {
@@ -180,5 +228,42 @@ program the_name_of_the_program
     <% else %>
         h4 { <^ "It is not :( "^> }
     <% end %>
+
+    h1 { <^ "Speaking about number 42 ..."^> }
+    h2 { <^ "What's the 42th fibonacci number?"^> }
+    h3 { <^ fibo_it(42 - 1) ^> }
+    h2 { <^ "And the first 42 numbers?"^> }
+    h3 { <^ "I Don't know, let's count!"^> }
+    ol {
+        <% aux_counter = 0 %>
+        <% loop (aux_counter < 42) %>
+            li { <^ fibo_it(aux_counter) ^> }
+            <% aux_counter = aux_counter + 1 %>
+        <% end %>
+    }
+
+    h2 { <^ "This is correct, but SUPER ugly."^> }
+    h3 { <^"Let's make it prettier!"^> }
+
+    table {
+        thead {
+            tr {
+                th {
+                    <^ "Fibonacci Sequence like a boss" ^>
+                }
+            }
+        }
+
+        <% aux_counter = 0 %>
+        tbody {
+
+            <% loop (aux_counter < 42) %>
+                tr {
+                    td { <^ fibo_it(aux_counter) ^>  }
+                }
+                <% aux_counter = aux_counter + 1 %>
+            <% end %>
+        }
+    }
 
     }
