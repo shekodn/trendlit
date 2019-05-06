@@ -36,6 +36,9 @@ reserved_words = {
     "table": "TABLE",
     "th": "TH",
     "tr": "TR",
+    "thead": "THEAD",
+    "td": "TD",
+    "tbody": "TBODY",
     "br": "BR",
     # reserved html code
 }

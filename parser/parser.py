@@ -161,16 +161,6 @@ def p_statement(p):
         | writing"""
 
 
-# def p_module_statement(p):
-#     """module_statement : assignment
-#         | condition_statement
-#         | cycle_statement
-#         | doCycle_statement
-#         | call
-#         | writing"""
-#
-
-
 def p_assignment(p):
     """assignment : ID snp_push_pending_operand EQ snp_push_pending_token expression snp_add_assignation_quad
     | valueSlice EQ snp_push_pending_token expression snp_add_assignation_quad"""
@@ -384,9 +374,11 @@ def p_tag(p):
         | DIV html_class snp_open_html_tag
         | P html_class snp_open_html_tag
         | TABLE html_class snp_open_html_tag
+        | TH html_class snp_open_html_tag
         | TR html_class snp_open_html_tag
-        | TH html_class snp_open_html_tag"""
-
+        | THEAD html_class snp_open_html_tag
+        | TD html_class snp_open_html_tag
+        | TBODY html_class snp_open_html_tag"""
 
 def p_html_class(p):
     """html_class : CLASS COLON CTESTR snp_class_quad

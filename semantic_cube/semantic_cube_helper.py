@@ -53,6 +53,13 @@ token_to_code = {
     "/H5": 620,
     "H6": 621,
     "/H6": 622,
+    # Table as in: https://materializecss.com/table.html
+    "THEAD": 623,
+    "/THEAD": 624,
+    "TD": 625,
+    "/TD": 626,
+    "TBODY": 627,
+    "/TBODY": 628,
     "CLASS": 699,
     # Aux
     "false_bottom": 999,
@@ -115,6 +122,13 @@ code_to_token = {
     620: "/H5",
     621: "H6",
     622: "/H6",
+    # Table as in: https://materializecss.com/table.html
+    623: "THEAD",
+    624: "/THEAD",
+    625: "TD",
+    626: "/TD",
+    627: "TBODY",
+    628: "/TBODY",
     699: "CLASS",
     # Aux
     999: "false_bottom",
