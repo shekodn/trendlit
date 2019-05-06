@@ -29,6 +29,7 @@ reserved_words = {
     "link": "LINK",
     "img": "IMG",
     "src": "SRC",
+    "head": "HEAD",
     # Headers
     "h1": "H1",
     "h2": "H2",

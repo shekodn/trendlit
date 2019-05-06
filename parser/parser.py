@@ -385,6 +385,7 @@ def p_tag(p):
         | SPAN html_class snp_open_html_tag
         | LINK html_href snp_open_html_tag
         | IMG html_img snp_open_html_tag
+        | HEAD html_class snp_open_html_tag
         """
 
 
