@@ -47,9 +47,14 @@ class ParserHelper(object):
             return None
 
     def get_dimensions(self, slice_name):
-        return self.procedure_directory[self.curr_scope]["var_table"][slice_name][
-            "dimensions"
-        ]
+        if self.is_var_in_current_scope(slice_name):
+            return self.procedure_directory[self.curr_scope]["var_table"][slice_name][
+                "dimensions"
+            ]
+        else:
+            return self.procedure_directory["global_script"]["var_table"][slice_name][
+                "dimensions"
+            ]
 
     def get_var_address_from_dir(self, var_name):
         """
