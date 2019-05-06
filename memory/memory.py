@@ -68,7 +68,6 @@ class Memory(object):
         self.constant_values = {}
 
         self.mem_global_ptr_start = 1_000_000
-        self.mem_local_ptr_start = 2_000_000
 
     def reset(self):
         self.__init__()
@@ -176,12 +175,7 @@ class Memory(object):
             Return:
                 assigned_address (int): returns None if there was an error
          """
-        assigned_address = None
-        if self.curr_scope_type is scope_to_code.get("global"):
-            assigned_address = self.mem_global_ptr_start + ptr_value
-        else:
-            assigned_address = self.mem_local_ptr_start + ptr_value
-        return assigned_address
+        return self.mem_global_ptr_start + ptr_value
 
     # Makes sure constants don't have multiple addresses
     def get_or_set_addr_const(self, value, type):
