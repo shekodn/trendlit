@@ -53,12 +53,12 @@ clean: ##Removes generated files (eg. .obj and .html)
 	@echo 'Removing object code (obj)'
 	@echo ${ALL_OBJECT_FILES}
 	@rm -r ${ALL_OBJECT_FILES}
-	@echo 'Removing compiled code (html)'
-	@echo ${ALL_COMPILED_FILES}
-	@rm -r ${ALL_COMPILED_FILES}
 	@echo 'Removing compiled test file'
 	@echo ${ALL_COMPILED_TEST_FILES}
 	@rm -r ${ALL_COMPILED_TEST_FILES}
+	@echo 'Removing compiled code (html)'
+	@echo ${ALL_COMPILED_FILES}
+	@rm -r ${ALL_COMPILED_FILES}
 
 
 format: ##Applies BLACK to all py files in defined modules.
