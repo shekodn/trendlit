@@ -13,10 +13,11 @@ program the_name_of_the_program
               <^ "I am convenient because I require little markup to use effectively." ^>
             }
           }
+
+          div class : "card-action" {
+           link href : "#" {<^"This is a link"^>}
+           link href : "#" {<^"This is a link"^>}
+          }
         }
       }
     }
-
-            # <div class="card-action">
-            # <a href="#">This is a link</a>
-            # <a href="#">This is a link</a>

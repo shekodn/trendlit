@@ -383,11 +383,17 @@ def p_tag(p):
         | UL html_class snp_open_html_tag
         | LI html_class snp_open_html_tag
         | SPAN html_class snp_open_html_tag
+        | LINK html_href snp_open_html_tag
         """
 
 
 def p_html_class(p):
     """html_class : CLASS COLON CTESTR snp_class_quad
+        | empty"""
+
+
+def p_html_href(p):
+    """html_href : HREF COLON CTESTR snp_href_quad
         | empty"""
 
 
@@ -1364,6 +1370,15 @@ def p_snp_class_quad(p):
     cte_s = memory.get_or_set_addr_const(class_str, "str")
     quad_helper.add_quad(
         token_to_code.get("eval"), -1, cte_s, token_to_code.get("CLASS")
+    )
+
+
+def p_snp_href_quad(p):
+    """snp_href_quad : empty"""
+    href_str = p[-1]
+    cte_s = memory.get_or_set_addr_const(href_str, "str")
+    quad_helper.add_quad(
+        token_to_code.get("eval"), -1, cte_s, token_to_code.get("HREF")
     )
 
 

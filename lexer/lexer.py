@@ -25,6 +25,8 @@ reserved_words = {
     # reserved words html tags
     "class": "CLASS",
     "div": "DIV",
+    "href": "HREF",
+    "link": "LINK",
     # Headers
     "h1": "H1",
     "h2": "H2",
