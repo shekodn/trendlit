@@ -31,3 +31,19 @@ class TrendlitHelper(object):
             print("--------------------------------------------")
         except EOFError:
             print("EOFError")
+
+    def run(self, data):
+        try:
+            yacc.parse(data, tracking=True)
+
+            if error_helper.error_cont is 0:
+                run_code(quad_helper.queue_quad, memory.constant_values)
+                for result in vmh.queue_results:
+                    print(result)
+            else:
+                print(f"Your code doesn't compile. Please try harder \n")
+                print(f"# of Errors: {error_helper.error_cont}\n")
+                error_helper.print_errors()
+        except:
+            error = f"Error. We couldn't compile successfully.\n"
+            print(error)
