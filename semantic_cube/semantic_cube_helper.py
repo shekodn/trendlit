@@ -53,6 +53,7 @@ token_to_code = {
     "TH": 620,
     "/TH": 621,
     "BR": 622,
+    "CLASS": 623,
     # Aux
     "false_bottom": 999,
     "(": 1001,
@@ -114,6 +115,7 @@ code_to_token = {
     620: "TH",
     621: "/TH",
     622: "BR",
+    623: "CLASS",
     # Aux
     999: "false_bottom",
     1001: "(",

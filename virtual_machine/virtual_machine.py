@@ -258,10 +258,18 @@ def logical(quad):
         sys.exit(1)
 
 def eval(quad):
-    # eval, -1, -1, 16000
-    if quad.operand3 >= 600 and quad.operand3 <= 699:  # html tag
+    global instruction_pointer
+    if quad.operand3 == token_to_code.get("CLASS"):
+        # eval, -1, class_name, CLASS
+        class_name = get_value_from_address(quad.operand2)
+        instruction_pointer +=1
+        quad = queue_quad[instruction_pointer]
+        value = "<" + code_to_token.get(quad.operand3).lower() + f" class=\"{class_name}\">"
+    elif quad.operand3 >= 600 and quad.operand3 <= 699:  # html tag
+        # eval, -1, -1, TAG
         value = "<" + code_to_token.get(quad.operand3).lower() + ">"
     else:
+        # eval, -1, -1, 16000
         value = get_value_from_address(quad.operand3)
         # print(f"VLUE TO PRINT: {value}, ADDRE: {quad.operand3}")
     vmh.queue_results.append(str(value))

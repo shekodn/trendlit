@@ -375,21 +375,21 @@ def p_arguments1(p):
 
 
 def p_tag(p):
-    """tag : H1 snp_open_html_tag
-        | H2 snp_open_html_tag
-        | H3 snp_open_html_tag
-        | H4 snp_open_html_tag
-        | H5 snp_open_html_tag
-        | H6 snp_open_html_tag
-        | DIV snp_open_html_tag
-        | P snp_open_html_tag
-        | TABLE snp_open_html_tag
-        | TR snp_open_html_tag
-        | TH snp_open_html_tag"""
+    """tag : H1 html_class snp_open_html_tag
+        | H2 html_class snp_open_html_tag
+        | H3 html_class snp_open_html_tag
+        | H4 html_class snp_open_html_tag
+        | H5 html_class snp_open_html_tag
+        | H6 html_class snp_open_html_tag
+        | DIV html_class snp_open_html_tag
+        | P html_class snp_open_html_tag
+        | TABLE html_class snp_open_html_tag
+        | TR html_class snp_open_html_tag
+        | TH html_class snp_open_html_tag"""
 
 
 def p_html_class(p):
-    """html_class : CLASS COLON CTESTR
+    """html_class : CLASS COLON CTESTR snp_class_quad
         | empty"""
 
 
@@ -1352,12 +1352,18 @@ def p_snp_add_gosub(p):
 
 def p_snp_open_html_tag(p):
     """snp_open_html_tag : empty"""
-    html_tag = p[-1].upper()
+    html_tag = p[-2].upper()
     quad_helper.push_tag(token_to_code.get(html_tag))
     quad_helper.add_quad(token_to_code.get("eval"), -1, -1, token_to_code.get(html_tag))
     # For debbuging
     # print("Html tag: ", html_tag)
     # print("Top tag: ", quad_helper.top_tag())
+
+def p_snp_class_quad(p):
+    """snp_class_quad : empty"""
+    class_str = p[-1]
+    cte_s = memory.get_or_set_addr_const(class_str, "str")
+    quad_helper.add_quad(token_to_code.get("eval"), -1, cte_s, token_to_code.get("CLASS"))
 
 
 def p_snp_close_html_tag(p):
