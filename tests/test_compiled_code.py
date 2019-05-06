@@ -121,3 +121,14 @@ class QuadruplesTestCase(unittest.TestCase):
         result = filecmp.cmp(expected_file, generated_file)
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
+
+    def test_final_func_fibonacci_it(self):
+        tl_file_to_compile = "final_func_fibonacci_it.tl"
+        trendlit_helper.reads_file(
+            COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
+        )
+        expected_file = TESTING_CODE_DIR + tl_file_to_compile + ".html.test"
+        generated_file = COMPILED_CODE_DIR + tl_file_to_compile + ".html"
+        result = filecmp.cmp(expected_file, generated_file)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
