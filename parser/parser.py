@@ -1359,11 +1359,14 @@ def p_snp_open_html_tag(p):
     # print("Html tag: ", html_tag)
     # print("Top tag: ", quad_helper.top_tag())
 
+
 def p_snp_class_quad(p):
     """snp_class_quad : empty"""
     class_str = p[-1]
     cte_s = memory.get_or_set_addr_const(class_str, "str")
-    quad_helper.add_quad(token_to_code.get("eval"), -1, cte_s, token_to_code.get("CLASS"))
+    quad_helper.add_quad(
+        token_to_code.get("eval"), -1, cte_s, token_to_code.get("CLASS")
+    )
 
 
 def p_snp_close_html_tag(p):
