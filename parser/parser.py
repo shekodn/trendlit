@@ -382,6 +382,7 @@ def p_tag(p):
         | OL html_class snp_open_html_tag
         | UL html_class snp_open_html_tag
         | LI html_class snp_open_html_tag
+        | SPAN html_class snp_open_html_tag
         """
 
 

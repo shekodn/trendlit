@@ -67,6 +67,8 @@ token_to_code = {
     "/OL": 632,
     "UL": 633,
     "/UL": 634,
+    "SPAN": 635,
+    "/SPAN": 636,
     "CLASS": 699,
     # Aux
     "false_bottom": 999,
@@ -143,6 +145,8 @@ code_to_token = {
     632: "/OL",
     633: "UL",
     634: "/UL",
+    635: "SPAN",
+    636: "/SPAN",
     699: "CLASS",
     # Aux
     999: "false_bottom",

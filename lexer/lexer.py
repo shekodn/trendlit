@@ -42,6 +42,7 @@ reserved_words = {
     "tbody": "TBODY",
     # Others
     "br": "BR",
+    "span": "SPAN",
     # Lists
     "ol": "OL",
     "ul": "UL",
