@@ -382,7 +382,6 @@ def modules(quad):
         # Pop the module context from the stack
         memory_context_stack.pop()
         # Relocate IP and get call assignation quad from the quads
-        # instruction_pointer = memory_context_stack.top().return_quad
         quad = queue_quad[instruction_pointer]
         # Assign the resut to the func_var_addr
         # =, func_var_addr, -1, temp
