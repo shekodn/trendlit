@@ -1,164 +1,114 @@
-program ::= 'PROGRAM' 'ID' program1
-program1 ::= script program2 | program2
-program2 ::= htmltag program2 | empty
+    program ::= PROGRAM ID program1
+    program1 ::= script program2 | program2
+    program2 ::= htmltag program2 | empty
 
-script ::= 'SCRIPT' block
+    script ::= SCRIPT snp_script_start block
 
-block ::= 'OBRACE' declareBlock block1 'CBRACE'
-block1 ::= statement block1 | module block1 | empty
+    block ::= OBRACE declareBlock block1 CBRACE
+    block1 ::= statement block1 | module block1 | empty
 
-/*
-  Variable declaration/initialization not supported here
-  Used in cycles and conditions.
-*/
-simpleBlock ::= 'OBRACE' simpleBlock1 'CBRACE'
-simpleBlock1 ::= statement simpleBlock1 | empty
+    simpleBlock ::= OBRACE simpleBlock1 CBRACE
+    simpleBlock1 ::= statement simpleBlock1 | SPIT snp_return_module voidModuleBlock1 | SPIT expression snp_return_module returnModuleBlock1 | empty
 
-/*
-  Defining new modules not supported here
-  Used in void modules.
-*/
-voidModuleBlock ::= 'OBRACE' declareBlock voidModuleBlock1 'CBRACE'
-voidModuleBlock1 ::= statement voidModuleBlock1 | empty
+    voidModuleBlock ::= snp_save_void_type snp_save_type_to_module_table OBRACE snp_add_quad_cont_to_table declareBlock voidModuleBlock1 CBRACE
+    voidModuleBlock1 ::= statement voidModuleBlock1 | SPIT snp_return_module voidModuleBlock1 | empty
 
-/*
-  Defining new modules not supported here
-  Used in modules that return something.
-*/
-returnModuleBlock ::= 'COLON' type 'OBRACE' declareBlock returnModuleBlock1 'CBRACE'
-returnModuleBlock1 ::= statement returnModuleBlock1 | 'SPIT' expression
+    returnModuleBlock ::= COLON type snp_save_type_to_module_table OBRACE snp_add_quad_cont_to_table declareBlock returnModuleBlock1 CBRACE
+    returnModuleBlock1 ::= statement returnModuleBlock1 | SPIT expression snp_return_module returnModuleBlock1 | empty
 
-declareBlock ::= declare declareBlock | empty
-declare ::= type 'ID' | type 'ID' initializeSlices | initialize
+    declareBlock ::= declare declareBlock | empty
+    declare ::= type ID snp_add_var snp_push_solitary_operand | type ID snp_add_var initializeSlices snp_add_dimension EQ constSlices | initialize
 
-initialize ::= type initialize1 initialize2
-initialize1 ::= 'ID' 'EQ' value | 'ID' initializeSlices 'EQ' constSlices
-initialize2 ::= 'COMMA' initialize1 initialize2 | empty
+    initialize ::= type initialize1 initialize2
+    initialize1 ::= ID snp_add_var snp_push_pending_operand EQ snp_push_pending_token value snp_add_assignation_quad
+    initialize2 ::= COMMA initialize1 initialize2 | empty
 
-initializeSlices ::= initializeSlices1D | initializeSlices2D
-initializeSlices1D ::= 'OBRACK' 'CTEI' 'CBRACK'
-initializeSlices2D ::= 'OBRACK' 'CTEI' 'CBRACK' 'OBRACK' 'CTEI' 'CBRACK'
+    initializeSlices ::= initializeSlices1D | initializeSlices2D
+    initializeSlices1D ::= OBRACK CTEI CBRACK snp_increase_dimension_count
+    /*
+    initializeSlices2D ::= OBRACK CTEI CBRACK snp_increase_dimension_count OBRACK CTEI CBRACK snp_increase_dimension_count
+    */
 
-constSlices ::= constSlice1D | constSlice2D
-constSlice1D ::= 'OBRACK' value constSlice1D1 'CBRACK'
-constSlice1D1 ::= 'COMMA' value constSlice1D1 | empty
-/*TODO: FIX 2D SLICE*/
-constSlice2D ::=  'OBRACK' constSlice1D 'COMMA' 'CBRACK' | 'OBRACK' constSlice1D 'CBRACK'
+    constSlices ::= constSlice1D
+    constSlice1D ::= OBRACK CBRACK  snp_init_slice_1d
+    constSlice1D1 ::= COMMA value constSlice1D1 | empty
+    /*
+    constSlice2D ::= OBRACK constSlice1D constSlice2D1 CBRACK | OBRACK constSlice1D CBRACK
+    constSlice2D1 ::= COMMA constSlice1D constSlice2D1 | empty
+    */
 
-type ::= 'STR' | 'INT' | 'DOUBLE' | 'BOOL'
+    type ::= STR snp_save_type | INT snp_save_type | DOUBLE snp_save_type | BOOL snp_save_type
 
-statement ::= assignment | condition | cycle | doCycle |call | writing
+    statement ::= assignment | condition | cycle | doCycle | call | writing
 
-/*
-assignment:
-prev_var = "hi"
-prev_slice[1] = 1+1
-prev_mat[1][2] = 2
-*/
-assignment ::= 'ID'assignmentSlice 'EQ' expression
-assignmentSlice ::= assignmentSlice1D | assignmentSlice2D | empty
-assignmentSlice1D ::= 'OBRACK' expression 'CBRACK'
-assignmentSlice2D ::= 'OBRACK' expression 'CBRACK' 'OBRACK' expression 'CBRACK'
+    assignment ::= ID snp_push_pending_operand EQ snp_push_pending_token expression snp_add_assignation_quad | valueSlice EQ snp_push_pending_token expression snp_add_assignation_quad
 
-expression ::= exp expression1
-expression1 ::= 'REL' exp | 'ASSOCIATIVE' exp | empty
+    expression ::= rel_expression expression1 snp_check_precedence_and_create_quadruple_for_logic
+    expression1 ::= ASSOCIATIVE snp_push_pending_token expression | empty
 
-exp ::= term exp1
-exp1 ::= 'SIGN' exp exp1 | empty
+    rel_expression ::= exp rel_expression1 snp_check_precedence_and_create_quadruple_for_rel
+    rel_expression1 ::= REL snp_push_pending_token exp rel_expression1 | empty
 
-term ::= factor term1
-term1 ::= 'OP' term term1 | empty
+    exp ::= term snp_check_precedence_and_create_quadruple_for_sign exp1
+    exp1 ::= SIGN snp_push_pending_token exp exp1 | empty
 
-factor ::= 'OPAREN' expression 'CPAREN' | factor1
-factor1 ::= value | 'SIGN' value
+    term ::= factor snp_check_precedence_and_create_quadruple_for_op term1
+    term1 ::= OP snp_push_pending_token term term1 | empty
 
-value ::= 'ID' | valueSlice | call | 'CTEI' | 'CTED' | 'CTESTR' | 'FALSE' | 'TRUE'
-valueSlice ::= valueSlice1D | valueSlice2D
-valueSlice1D ::= 'ID' 'OBRACK' expression 'CBRACK'
-valueSlice2D ::= 'ID' 'OBRACK' expression 'CBRACK' 'OBRACK' expression 'CBRACK'
+    factor ::= OPAREN snp_push_pending_token expression CPAREN snp_clean_stack_until_false_bottom | factor1
+    factor1 ::= value | SIGN value
 
-condition ::= 'IF' 'OPAREN' expression 'CPAREN' simpleBlock condition1
-condition1 ::= 'ELSE' simpleBlock | empty
+    value ::= ID snp_checks_for_previous_declaration snp_push_pending_operand | valueSlice | exp_call | CTEI snp_save_type_int snp_push_pending_operand | CTED snp_save_type_double snp_push_pending_operand | CTESTR snp_save_type_str snp_push_pending_operand | FALSE snp_save_type_bool snp_push_pending_operand | TRUE snp_save_type_bool snp_push_pending_operand
 
-cycle ::= 'LOOP' 'OPAREN' expression 'CPAREN' simpleBlock
+    slice_expression ::= slice_exp slice_expression1 snp_check_precedence_and_create_quadruple_for_rel
+    slice_expression1 ::= REL snp_push_pending_token slice_exp | empty
+    slice_exp ::= slice_term snp_check_precedence_and_create_quadruple_for_sign slice_exp1
+    slice_exp1 ::= SIGN snp_push_pending_token slice_exp slice_exp1 | empty
+    slice_term ::= slice_factor snp_check_precedence_and_create_quadruple_for_op slice_term1
+    slice_term1 ::= OP snp_push_pending_token slice_term slice_term1 | empty
+    slice_factor ::= OPAREN snp_push_pending_token slice_expression CPAREN snp_clean_stack_until_false_bottom | slice_factor1
+    slice_factor1 ::= slice_value | SIGN slice_value
+    slice_value ::= ID snp_checks_for_previous_declaration snp_push_pending_operand | CTEI snp_save_type_int snp_push_pending_operand
 
-doCycle ::= 'DO' simpleBlock 'LOOP' 'OPAREN' expression 'CPAREN'
+    valueSlice ::= valueSlice1D
+    valueSlice1D ::= ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 snp_push_start_false_bottom slice_expression snp_slice_access_3 CBRACK snp_clean_stack_until_false_bottom snp_reset_dim_access_count
 
+    condition ::= IF OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock condition1 snp_conditional_statement_2
+    condition1 ::= ELSE snp_conditional_statement_3 simpleBlock | empty
 
-module ::= 'DEF' 'ID' 'OPAREN' arguments 'CPAREN' module1
-module1 ::= voidModuleBlock | returnModuleBlock
+    cycle ::= LOOP snp_while_1 OPAREN expression CPAREN snp_conditional_statement_1 simpleBlock snp_while_3
+    doCycle ::= DO snp_while_1 simpleBlock LOOP OPAREN expression CPAREN snp_do_while_gotot
 
-call ::= 'ID' call1 | predef
-call1 ::= 'OPAREN' params 'CPAREN'
+    module ::= DEF ID snp_add_module OPAREN arguments CPAREN snp_add_params_count_to_table module1 snp_end_module
+    module1 ::= voidModuleBlock | returnModuleBlock
 
-params ::= expression params1
-params1 ::= 'COMMA' params | empty
+    call ::= ID snp_verify_module_existance call1 snp_add_gosub
+    exp_call ::= ID snp_verify_module_existance call1 snp_check_return snp_add_gosub
+    call1 ::= OPAREN snp_add_era_size_quad params CPAREN
 
-predef ::= predef_avg | predef_find_max | predef_find_min | predef_median | predef_mode | predef_find_mult_slice | predef_pow | predef_randoms | predef_sort_slice | predef_suck_csv | predef_zeros_args
+    params ::= expression snp_check_param params1 | empty
+    params1 ::= COMMA params | empty
 
-predef_avg ::= 'AVG' 'OPAREN' 'ID' 'CPAREN'
+    writing ::= EVAL OPAREN writing1 CPAREN
+    writing1 ::= snp_push_pending_eval_token expression snp_add_eval_quad writing2
+    writing2 ::= COMMA writing1 | empty
 
-predef_find_max ::= 'FIND_MAX' 'OPAREN' 'ID' 'COMMA' predef_find_max_args 'CPAREN'
-predef_find_max_args ::= 'ID' | 'CTEI'
+    arguments ::= type ID snp_add_var snp_counts_params arguments1 | empty
+    arguments1 ::= COMMA type ID snp_add_var snp_counts_params arguments1 | empty
 
-predef_find_min ::= 'FIND_MIN' 'OPAREN' 'ID' 'COMMA' predef_find_min_args 'CPAREN'
-predef_find_min_args ::= 'ID' | 'CTEI'
-
-predef_find_mult_slice ::= 'MULTIPLY_1DSLICE' 'OPAREN' 'ID' 'COMMA' predef_find_mult_slice_args 'CPAREN'
-predef_find_mult_slice_args ::= 'ID' | 'CTEI'
-
-predef_median ::= 'MEDIAN' 'OPAREN' 'ID' 'CPAREN'
-predef_mode ::= 'MODE' 'OPAREN' 'ID' 'CPAREN'
-
-predef_pow::= 'POW' 'OPAREN' predef_pow_args 'COMMA' predef_pow_args 'CPAREN'
-predef_pow_args ::= 'ID' | 'CTEI'
-
-predef_randoms ::= 'RANDOMS' 'OPAREN' predef_randoms_args 'CPAREN'
-predef_randoms_args ::= 'ID' | 'CTEI'
-
-predef_zeros ::= 'ZEROS' 'OPAREN' predef_zeros_args 'CPAREN'
-predef_zeros_args ::= 'ID' | 'CTEI'
-
-predef_sort_slice::= 'SORT_SLICE' 'OPAREN' 'ID' 'COMMA' predef_sort_slice_option 'CPAREN'
-predef_sort_slice_option::= 'MAX' | 'MIN'
-
-predef_suck_csv ::= 'SUCK_CSV' 'OPAREN' predef_suck_csv_args 'CPAREN'
-predef_suck_csv_args ::= 'ID' | 'CTESTR'
-
-writing ::= 'EVAL' 'OPAREN' expression 'CPAREN'
-
-/* falta agregar slices */
-arguments ::= type 'ID' arguments1 | empty
-arguments1 ::= 'COMMA' type 'ID' arguments1 | empty
-
-tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
-
-html_class ::= 'CLASS' 'COLON' 'CTESTR' | empty
-
-htmlscript ::= 'OEVALSCRIPT' expression 'CEVALSCRIPT'
-
-/* -------- NEW HTML GAMMAR -------- */
-
-htmltag ::= tag 'OBRACE' html_block 'CBRACE' | 'BR' 'OBRACE' 'CBRACE'
-
-tag ::= 'H1' | 'H2' | 'DIV' | 'P' | 'TABLE' | 'TR' | 'TH'
-
-html_block ::= html_statement html_block | htmltag html_block | empty
-
-html_statement ::= html_assignment | html_condition | htmlscript | html_cycle | html_do_cycle| html_call | writing
-
-html_assignment ::= 'INITCODEHTML' 'ID' 'EQ' expression 'CCODEHTML'
-
-html_condition ::= 'INITCODEHTML' 'IF' 'OPAREN' expression 'CPAREN' 'CCODEHTML' html_block html_condition1_else html_end_condition
-html_condition1_else ::= 'HTMLELSE' html_block | empty
-html_end_condition ::= 'HTMLEND'
-
-
-html_cycle ::= 'INITCODEHTML' 'LOOP' 'OPAREN' expression 'CPAREN' 'CCODEHTML' html_block html_end_cycle
-html_end_cycle ::= 'HTMLEND'
-
-html_do_cycle ::= 'INITCODEHTML' 'DO' 'CCODEHTML' html_block html_end_do_cycle
-html_end_do_cycle ::= 'HTMLENDDO' 'OPAREN' expression 'CPAREN' 'CCODEHTML'
-
-/* falta agregar predef a html calls (nuestras funciones propias)*/
-html_call ::= 'INITCODEHTML' 'ID' 'OPAREN' params 'CPAREN' 'CCODEHTML'
+    html_class ::= CLASS COLON CTESTR snp_class_quad | empty
+    html_href ::= HREF COLON CTESTR snp_href_quad | empty
+    html_img ::= SRC COLON CTESTR snp_img_quad | empty
+    htmlscript ::= OEVALSCRIPT snp_push_eval_pending_token expression CEVALSCRIPT snp_add_eval_quad
+    htmltag ::= tag OBRACE html_block CBRACE snp_close_html_tag | BR snp_br_html_tag OBRACE CBRACE
+    html_block ::= html_statement html_block | htmltag html_block | empty
+    html_statement ::= html_assignment | html_condition | htmlscript | html_cycle | html_do_cycle | html_call | writing
+    html_assignment ::= INITCODEHTML ID snp_push_pending_operand EQ snp_push_pending_token expression snp_add_assignation_quad CCODEHTML
+    html_condition ::= INITCODEHTML IF OPAREN expression CPAREN snp_conditional_statement_1 CCODEHTML html_block html_condition1_else html_end_condition
+    html_condition1_else ::= HTMLELSE snp_conditional_statement_3 html_block | empty
+    html_end_condition ::= HTMLEND snp_conditional_statement_2
+    html_cycle ::= INITCODEHTML LOOP snp_while_1 OPAREN expression CPAREN CCODEHTML snp_conditional_statement_1 html_block html_end_cycle snp_while_3
+    html_end_cycle ::= HTMLEND
+    html_do_cycle ::= INITCODEHTML DO CCODEHTML snp_while_1 html_block html_end_do_cycle
+    html_end_do_cycle ::= HTMLENDDO OPAREN expression CPAREN CCODEHTML snp_do_while_gotot
+    html_call ::= INITCODEHTML ID snp_verify_module_existance OPAREN snp_add_era_size_quad params CPAREN snp_add_gosub CCODEHTML
