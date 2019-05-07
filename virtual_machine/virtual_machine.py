@@ -60,10 +60,20 @@ call_context_stack = Stack()
 
 # MEMORY HELPERS
 def get_value_from_address(addr):
-
+    """
+        Description: Returns the value from a specific address. The method checks the context/scope type
+            using the memory address, and then calls the runtime_memory_instance.get_value() method from
+            the corresponding context.
+        Params:
+            addr (int): The address you want to get the value from
+        Return:
+            value (int, double, bool, str): The value from an address
+    """
     if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end: # global
         return g_memory.get_value(addr)
     elif addr >= 1000000: # ptr
+        # pointers are handled differently,
+        # there is no need to store which address they point to since you can substract 1000000 and get the address which the ptr var is pointing to
         return get_value_from_address(get_value_from_address(addr - 1000000)) # TODO: change this to return ptr memory from context? (- 1000000 or - 2000000 for local scopes)
     elif addr >= mem_const_start and addr <= mem_const_end: # constant
         return const_memory[addr]
@@ -72,6 +82,15 @@ def get_value_from_address(addr):
 
 
 def set_value_to_address(value, addr):
+    """
+        Description: Assigns a value to a specific address. The method checks the context/scope type
+            using the memory address, and then calls the runtime_memory_instance.set_value() method from
+            the corresponding context.
+        Params:
+            value (int, double, bool, str): The value you want to assign
+            addr (int): The address to modify
+        Return:
+    """
     if addr >= g_memory.mem_global_int_start and addr <= g_memory.mem_global_str_end:
         # Set GLOBAL variable address
         g_memory.set_value(value, addr)
@@ -83,27 +102,43 @@ def set_value_to_address(value, addr):
         # Set LOCAL or TEMP variable address (from current context)
         memory_context_stack.top().set_value(value, addr)
 
-
+# VM CODE EXECUTION
 def run_code(quads, const_mem):
-    # Set the constant memory (retrieved during compilation)
+    """
+        Description: Navigates through the quadruples with an instruction_pointer.
+            Whever the IP points to the VM will execute that quadruple.
+            This function handles the execution of the program, it is called
+            by the main method after compilation is successfully completed.
+        Params:
+            quads (Quadruple queue): The list of quadruples generated during compilation.
+        Return:
+            const_mem (hash {[value]->address}: The constant memory that was gathered
+                by the parser during compilation
+    """
     global const_memory, html_file, instruction_pointer, queue_quad
+    # Set the constant memory (retrieved during compilation)
     const_memory = const_mem
+    # Set the quadruple list (generated during compilation)
     queue_quad = quads
-
-    # html_file = open(
-    #     "trendlit.tl", "w"
-    # )  # TODO: change the file name to the program name the user wrote
-
+    # Start reading the first quadruple
     instruction_pointer = 0
-
+    # Loop through the quadruples until the IP points to the end of the program
     while instruction_pointer < len(queue_quad):
-        # print("ip: ", instruction_pointer)
+        # Execute the current quadruple
         exec_quad(queue_quad[instruction_pointer])
+        # Increase IP to move onto the next quadruple
         instruction_pointer = instruction_pointer + 1
-    # html_file.close()
 
-
+# VM QUAD EXECUTION
 def exec_quad(quad):
+    """
+        Description: Evaluates a quadruple, taking into consideration its operation code (token).
+            This function identifies the operation code and calls the appropiate actions to execute.
+            This func is called/used in VM run_code()
+        Params:
+            quad (Quadruple): The quadruple that will be executed. (token, operand1, operand2, operand3)
+        Return:
+    """
     if quad.token in ARTITHMETIC:
         arithmetic(quad)
     elif quad.token in RELATIONAL:

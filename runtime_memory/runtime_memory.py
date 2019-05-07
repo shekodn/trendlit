@@ -54,6 +54,7 @@ class RuntimeMemory(object):
         """
             Description: Returns the value from a specific address. The method checks the type
                 depending on the address range and then retrieves value from the corresponding memory hash.
+            Params:
                 addr (int): The address you want to get the value from
             Return:
                 value (int, double, bool, str): The value from an address
@@ -73,8 +74,9 @@ class RuntimeMemory(object):
         """
             Description: Assigns a value to a specific address. The method checks the type
                 depending on the address range and then assigns the value in the corresponding memory hash.
+            Params:
                 value (int, double, bool, str): The value you want to assign
-                addr (int): The address to verify
+                addr (int): The address to modify
             Return:
         """
         if self.is_int_addr(addr): # int
