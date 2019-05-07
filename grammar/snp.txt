@@ -2,303 +2,81 @@
 
 # --- PROCEDURE/MODULE SEMANTIC ACTIONS---
 
-# Start of script global scope (adds global scope to directory)
 snp_script_start
+# Start of script global scope (adds global scope to directory)
 
-# Start of the module (add module to directory)
 snp_add_module
+# Start of the module (add module to directory)
 
-# Save the last type defined
 snp_save_type_to_module_table
-
 # Save the last type defined
-snp_save_type
 
-# Save the last type as void (for modules)
+snp_save_type
+# Save the last type defined
+
 snp_save_void_type
+# Save the last type as void (for modules)
 
 # --- ARRAYS - SLICES ---
+# Retrieved from Acciones para el acceso a una variable dimensionada
 
-# Acciones para el acceso a una variable dimensionada
 snp_add_dimension
+# Increases dimension of var
 
-# primera pasada
 snp_increase_dimension_count
-    """snp_increase_dimension_count : empty"""
-    upper_limit = p[-2]
-    ctei = int(upper_limit)
-
-    # Checks that array has a value bigger than 0
-    if ctei <= 0:
-        error_helper.add_error(
-            305, f"Slice index value ({ctei}) should be a CTEI greater than 0"
-        )
-
-    # indicates another dimension in slice
-    parser_helper.curr_dimension_counter += 1
-    # adds upper limit to t_dimensions
-    dim_count = parser_helper.curr_dimension_counter
-    parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
-        parser_helper.curr_slice
-    ]["t_dimensions"]["ls" + str(dim_count)] = upper_limit
-    const_addr = memory.get_or_set_addr_const(upper_limit, "int")
-    # print("UPPER", parser_helper.curr_slice, "ls"+str(dim_count), upper_limit)
-    # calculates R
-    lower_limit = 0
-    parser_helper.curr_r = parser_helper.curr_r * (int(upper_limit) - lower_limit + 1)
-
-
-snp_slice_access_2
-    """snp_slice_access_2 : empty"""
-    var_addr = quad_helper.pop_operand()
-    slice_name = parser_helper.get_dimensioned_name(var_addr)
-    # For debuging
-    # print(f"Var addr: {var_addr}")
-    # print(f"Var name: {slice_name}")
-
-    # Verifies that ud is a Dimnensional Variable
-    if slice_name is not None:
-        dim = parser_helper.get_dimensions(slice_name)
-
-        # Check if dimension being accessed is valid
-        dim_counter = parser_helper.curr_dimension_counter
-
-        if not (dim <= dim_counter):
-            error_helper.add_error(202, f": {slice_name}")
-    else:
-        error_helper.add_error(302, f"{slice_name} is not defined")
-
+# Checks that array has a value bigger than 0, indicates another dimension in slice, adds upper limit to t_dimensions and calculates R
 
 snp_slice_access_3
-    """ snp_slice_access_3 : empty """
-    s = quad_helper.pop_operand()  # No se saca
-
-    slice_name = parser_helper.curr_slice
-    slice_type = parser_helper.get_var_type_from_dir(slice_name)
-    # print(f"slice_name: {slice_name}, dim: {parser_helper.curr_dimension_counter}")
-
-    # Add VER quad
-    lower_limit = 0
-    upper_limit = parser_helper.get_upper_limit(
-        slice_name, parser_helper.curr_dimension_counter
-    )
-
-    lower_limit_addr = memory.get_or_set_addr_const("0", "int")
-    upper_limit_addr = memory.get_or_set_addr_const(upper_limit, "int")
-    # print(f"lower_limit: {lower_limit}, upper_limit: {upper_limit}")
-    quad_helper.add_quad(
-        token_to_code.get("VER"), lower_limit_addr, upper_limit_addr, s
-    )
-
-    # Add base address to quad : +dirB(slice)
-    base_dir = parser_helper.get_var_address_from_dir(slice_name)
-    # assign memory address to temporary result variable and increase counter for temp/result vars
-    temp_memory_address = memory.set_addr_temp("int")  # should always be an int
-    # add the quad
-    # assigns a constant to the base_dir so that VM can read it properly
-    base_dir_addr = memory.get_or_set_addr_const(str(base_dir), "int")
-    quad_helper.add_quad(token_to_code.get("+"), s, base_dir_addr, temp_memory_address)
-
-    # Agregar (dircasilla) [pointer like address]
-    # Push a la pila con la (dircasilla) para que el siguiente cuadruplo la use
-    ptr_addr_cell = memory.set_addr_ptr(temp_memory_address)
-    # For debugging
-    # print(
-    #     f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}"
-    # )
-    quad_helper.push_operand(ptr_addr_cell)
-
+# Adds Verification quad and adds base address to quad (S)
 
 snp_update_curr_slice
-    """snp_update_curr_slice : empty"""
-    var_name = p[-1]
-    parser_helper.curr_slice = var_name
-
+# Saves current slice name
 
 snp_increase_dim_access_count
-    """snp_increase_dim_access_count : empty"""
-    # indicates another dimension in slice
-    parser_helper.curr_dimension_counter += 1
-
+# Indicates another dimension in slice (Increase current dimension counter by 1)
 
 snp_reset_dim_access_count
-    """snp_reset_dim_access_count : empty"""
-    # indicates another dimension in slice
-    parser_helper.curr_dimension_counter = 0
-
+# Resets current dimension counter
 
 snp_init_slice_1d
-    """snp_init_slice_1d : empty"""
-    # print("curr slice", parser_helper.curr_slice)
-    slice_name = parser_helper.curr_slice
-    slice_type = parser_helper.get_var_type_from_dir(slice_name)
+# initialize slice with respective initialization value (0 for int, False for bool, etc)
 
-    if slice_type in type_to_code:
-        upper_limit = int(parser_helper.get_upper_limit(slice_name, 1))
-
-        counter = 0
-        default_value = type_to_init_value.get(slice_type)
-        default_initial_value_address = memory.get_or_set_addr_const(
-            default_value, slice_type
-        )
-        operand_address = parser_helper.get_var_address_from_dir(slice_name)
-
-        while upper_limit > counter:
-            quad_helper.add_quad(
-                token_to_code.get("="),
-                default_initial_value_address,
-                -1,
-                operand_address,
-            )
-            # for debugging
-            # print("=", default_initial_value_address, -1, operand_address)
-            counter += 1
-            operand_address += 1
-
-    else:
-        print("Error: Invalid type")
-
-
-# Add a false bottom to maintain presedence with arrays []
 snp_push_start_false_bottom
-    """snp_push_start_false_bottom : empty"""
-    quad_helper.push_token("(")
-    # debbuging
-    # print("pushed token", quad_helper.top_token())
-
+# Add a false bottom to maintain presedence with arrays []
 
 snp_return_module
-    """snp_return_module : empty"""
-    if parser_helper.curr_scope is "global_script":
-        error_helper.add_error(0, "FIX ME")
-    else:
-        add_ret_endproc_quad()
+# Allows return only in non-global scopes (functions)
 
-
-# End of the module deltes the var table
-# snp #7 in Intermediate Code Actions for Module Definition
 snp_end_module
-    """snp_end_module : empty"""
-    # add_ret_endproc_quad()
-    curr_module_type = parser_helper.procedure_directory[parser_helper.curr_scope][
-        "type"
-    ]
-    if curr_module_type is "void":  # VOID MODULE
-        # Delete var table for the module that ended
-        quad_helper.add_quad(token_to_code.get("ENDPROC"), -1, -1, -1)
-    reset_local_contex()
-    end = quad_helper.pop_jump()
-    cont = quad_helper.quad_cont
-    quad_helper.fill(end, cont)
-
-
-def reset_local_contex():
-    # debbuging
-    # print(f"CURR SCOPE: {parser_helper.curr_scope}")
-    # print(f"TABLE: {parser_helper.procedure_directory} \n")
-    parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"].clear()
-    memory.reset_local_vars()
-    parser_helper.curr_scope = "global_script"
-    memory.curr_scope_type = scope_to_code.get("global")
-
-
-def add_ret_endproc_quad():
-    curr_module_type = parser_helper.procedure_directory[parser_helper.curr_scope][
-        "type"
-    ]
-    if curr_module_type is "void":  # VOID MODULE
-        # Delete var table for the module that ended
-        quad_helper.add_quad(token_to_code.get("ENDPROC"), -1, -1, -1)
-    else:  # RETURNING MODULE
-        return_value = quad_helper.pop_operand()
-        return_type = code_to_type.get(quad_helper.pop_type())
-        if return_type != curr_module_type:
-            print(
-                f"return_type: {return_type}, return_value: {return_value}, curr_module_type: {curr_module_type}"
-            )
-            error_helper.add_error(301, f"Return type is a mismatch")
-        else:
-            quad_helper.add_quad(
-                token_to_code.get("RET"), return_value, -1, "memory address"
-            )
-
+# End of the module deletes the var table (resets local contex)
+# snp #7 in Intermediate Code Actions for Module Definition
 
 # --- VARIABLE SEMANTIC ACTIONS ---
 
-# Adds a variable defined to the current scope variable table
 snp_add_var
-    """snp_add_var : empty"""
-    var_name = p[-1]  # get the last symbol read (left from this neural point)
-    # For debbuging
-    # Check if var already exists and add it to the table in currect scope
-    if parser_helper.is_var_in_current_scope(var_name):
-        error_message = f"Variable {var_name} has already been declared"
-        error_helper.add_error(0, error_message)
-    else:
-        scope_type = parser_helper.get_scope_type(parser_helper.curr_scope)
-        var_memory_address = memory.set_var_addr(scope_type, parser_helper.curr_type)
-        parser_helper.curr_slice = var_name
-        parser_helper.add_var_to_table(
-            var_name, var_memory_address, parser_helper.curr_scope
-        )
-
-    #     parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
-    #         var_name
-    #     ] = {
-    #         "type": parser_helper.curr_type,
-    #         "memory_address": var_memory_address,
-    #     }  # TODO : add more info later on
-    # # For debbuging
-    # # print("MEMROEY ADDRESS FOR VAR: ", var_memory_address)
-    # # print(
-    # #     f"var_name {var_name}, current_scope, {parser_helper.curr_scope}, SCOPE TYPE: {scope_type}"
-    # # )
-    # # print("ProcDir for curr_scope:", parser_helper.procedure_directory, "\n")
-
+# Adds a variable defined to the current scope variable table
 
 # ---  ESTATUTOS SECUENCIALES ---
+
 snp_add_eval_quad
-    """snp_add_eval_quad : empty"""
-    quad_helper.add_quad(quad_helper.pop_token(), -1, -1, quad_helper.pop_operand())
+# Adds eval quad
 
-
-# --- MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION) ---
-# PUSH PilaO (id)
 snp_push_pending_operand
-    """snp_push_pending_operand : empty"""
-    operand_id = p[-2] if p[-1] == None else p[-1]
-    operand_type = parser_helper.get_var_type_from_dir(operand_id)
-    quad_helper.push_type(operand_type)
-    if parser_helper.is_var_declared(operand_id):
-        operand_address = parser_helper.get_var_address_from_dir(operand_id)
-    else:  # operand is a constant
-        operand_address = memory.get_or_set_addr_const(operand_id, operand_type)
-    quad_helper.push_operand(operand_address)
-    # For debbuging
-    # print("OPERAND", operand_id, quad_helper.top_operand())
-    # print("TYPE", quad_helper.top_type())
-
+# Pushes pending operand to stack
+# Retrieved from: MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION)
 
 snp_save_type_int
-    """snp_save_type_int : empty"""
-    parser_helper.curr_type = "int"
-    # For debugging
-    # print("save ", p[-1])
-
+# Sets INT as current type of the ID that it is being proecessed
 
 snp_save_type_double
-    """snp_save_type_double : empty"""
-    parser_helper.curr_type = "double"
-
+# Sets DOUBLE as current type of the ID that it is being proecessed
 
 snp_save_type_str
-    """snp_save_type_str : empty"""
-    parser_helper.curr_type = "str"
-
+# Sets STR as current type of the ID that it is being proecessed
 
 snp_save_type_bool
-    """snp_save_type_bool : empty"""
-    parser_helper.curr_type = "bool"
+# Sets BOOL as current type of the ID that it is being proecessed
+
 
 
 snp_push_pending_token
@@ -470,140 +248,44 @@ def add_quadruple_expression():
     else:
         error_helper.add_error(301)
 
-
+# Checks for previously snp_checks_for_previous_declaration
 snp_checks_for_previous_declaration
-    """snp_checks_for_previous_declaration : empty"""
-    var = p[-1]
-    if not parser_helper.is_var_declared(var):
-        error_helper.add_error(302, f"{var} doesn't exist")
-
 
 # --- NON-LINEAR STATEMENTS (INTERMEDIATE REPRESENTATION) ---
 
 # --- CONDITIONALS ---
 
 # Actions to produce intermediate representation for non-linear statements using quadruples
-# snp for single IF
-# Equivalent to snp_while_2
+# snp for single IF. Equivalent to snp_while_2
 snp_conditional_statement_1
-    """snp_conditional_statement_1 : empty"""
-    top_type_code = quad_helper.pop_type()
-    result = quad_helper.pop_operand()
 
-    # Check if top_oper's type is type bool(1)
-    if code_to_type.get(top_type_code) is "bool":
-        # debbuging
-        quad_helper.add_quad(token_to_code.get("GOTOF"), result, -1, "pending")
-        quad_helper.push_jump(quad_helper.quad_cont - 1)
-        # debbuging
-        # print("Jump", quad_helper.quad_cont)
-    else:
-        error_helper.add_error(
-            0, "Type Missmatch: Expression is not a bool"
-        )  # TODO define code and custom error message
-
-
+# -
 snp_conditional_statement_2
-    """snp_conditional_statement_2 : empty"""
-    end = quad_helper.pop_jump()
-    cont = quad_helper.quad_cont
-    quad_helper.fill(end, cont)
 
-
+# -
 snp_conditional_statement_3
-    """snp_conditional_statement_3 : empty"""
-    quad_helper.add_quad(token_to_code.get("GOTO"), -1, -1, "pending")
-    false = quad_helper.pop_jump()
-    count = quad_helper.quad_cont
-    quad_helper.push_jump(count - 1)
-    # debbuging
-    # print(count-1, false)
-    # print(quad_helper.top_jump())
-    quad_helper.fill(false, count)
-
 
 # LOOPS
 
-
+# -
 snp_while_1
-    """snp_while_1 : empty"""
-    count = quad_helper.quad_cont
-    quad_helper.push_jump(count)
 
-
+# -
 snp_while_3
-    """snp_while_3 : empty"""
-    end = quad_helper.pop_jump()
-    ret = quad_helper.pop_jump()
-    quad_helper.add_quad(token_to_code.get("GOTO"), -1, -1, ret)
-    count = quad_helper.quad_cont
-    quad_helper.fill(end, count)
 
-
+# -
 snp_do_while_gotot
-    """snp_do_while_gotot : empty"""
-    top_type_code = quad_helper.pop_type()
-    result = quad_helper.pop_operand()
-    ret = quad_helper.pop_jump()
-
-    # Check if top_oper's type is type bool(1)
-    if code_to_type.get(top_type_code) is "bool":
-        quad_helper.add_quad(token_to_code.get("GOTOT"), result, -1, ret)
-    else:
-        error_helper.add_error(
-            0, "Type Missmatch: Expression is not a bool"
-        )  # TODO define code and custom error message
-
 
 ###Intermediate Code Actions for a Module Definition
 snp_counts_params
-    """snp_counts_params : empty"""
-    parser_helper.queue_params.append(type_to_code.get(parser_helper.curr_type))
-    parser_helper.curr_module_param_counter = (
-        parser_helper.curr_module_param_counter + 1
-    )
-    param_var_name = p[-2]
-    param_var_addr = parser_helper.get_var_address_from_dir(param_var_name)
-    parser_helper.queue_params_addresses.append(param_var_addr)
-    # For debbuging
-    # print ("Pushed type: ",parser_helper.queue_params[len(parser_helper.queue_params)-1])
-    # print("PARAM NAME: ", param_var_name, "PARAM VALUE: ", param_var_addr)
-    # print("Pushed addr: ",parser_helper.queue_params_addresses[len(parser_helper.queue_params_addresses)-1])
-
 
 # snp_add_params_count_to_table is snp #4 in Intermediate Code Actions for Module Definition
 snp_add_params_count_to_table
-    """snp_add_params_count_to_table : empty"""
-    # add counter value to table
-    parser_helper.procedure_directory[parser_helper.curr_scope][
-        "params_count"
-    ] = parser_helper.curr_module_param_counter
-    # add the param list to the table
-    parser_helper.procedure_directory[parser_helper.curr_scope][
-        "queue_params"
-    ] = parser_helper.queue_params
-    # add the param address list to the table
-    parser_helper.procedure_directory[parser_helper.curr_scope][
-        "queue_params_addresses"
-    ] = parser_helper.queue_params_addresses
-    # clears counter
-    parser_helper.curr_module_param_counter = 0
-    # clears the param list
-    parser_helper.queue_params = []
-    # clears the param address list
-    parser_helper.queue_params_addresses = []
-    # debbuging
-    # counter = parser_helper.procedure_directory[parser_helper.curr_scope][
-    #     "params_count"
-    # ]
-    # print(f"current scope: {parser_helper.curr_scope} counter: {counter}")
-
 
 # --- INTERMEDIATECODE ACTIONS FOR MODULE DEFINITION (INTERMEDIATE REPRESENTATION) ---
 
 # snp #6 in Intermediate Code Actions for Module Definition
 snp_add_quad_cont_to_table
-
 
 # --- INTERMEDIATECODE ACTIONS FOR MODULE CALL (INTERMEDIATE REPRESENTATION) ---
 
@@ -640,7 +322,7 @@ snp_img_quad
 # Checks that the respective html_tag has a closing tag. For example: img doesn't have one, but h1 yes (<h1></h1>)
 snp_close_html_tag
 
-# -
+# Gnerates quad for html br tag (it only closes </br>, doesn't open <br>)
 snp_br_html_tag
 
 # -
