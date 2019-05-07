@@ -1,5 +1,4 @@
 # SEMANTIC NEURAL POINTS
-
 ## PROCEDURE/MODULE SEMANTIC ACTION
 
 ### snp_script_start
@@ -18,7 +17,7 @@ Save the last type defined
 Save the last type as void (for modules)
 
 ## ARRAYS - SLICES
-Retrieved from Acciones para el acceso a una variable dimensionada
+###### Retrieved from Acciones para el acceso a una variable dimensionada
 
 ### snp_add_dimension
 Increases dimension of var
@@ -42,7 +41,7 @@ Resets current dimension counter
 initialize slice with respective initialization value (0 for int, False for bool, etc)
 
 ### snp_push_start_false_bottom
-Add a false bottom to maintain presedence with arrays []
+Add a false bottom to maintain precedence with arrays []
 
 ### snp_return_module
 Allows return only in non-global scopes (functions)
@@ -51,35 +50,35 @@ Allows return only in non-global scopes (functions)
 End of the module deletes the var table (resets local contex)
 snp #7 in Intermediate Code Actions for Module Definition
 
-## VARIABLE SEMANTIC ACTIONS
+## Variable Semantic Actions
 
 ### snp_add_var
 Adds a variable defined to the current scope variable table
 
-## ESTATUTOS SECUENCIALES
+## Sequential Statements
 
 ### snp_add_eval_quad
-Adds eval quad
+Add eval quad
 
 ### snp_push_pending_operand
 Pushes pending operand to stack
-Retrieved from: MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION)
+###### Retrieved from: MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION)
 
 ### snp_save_type_int
-Sets INT as current type of the ID that it is being proecessed
+Sets INT as current type of the ID that it is being processed
 
 ### snp_save_type_double
-Sets DOUBLE as current type of the ID that it is being proecessed
+Sets DOUBLE as current type of the ID that it is being processed
 
 ### snp_save_type_str
-Sets STR as current type of the ID that it is being proecessed
+Sets STR as current type of the ID that it is being processed
 
 ### snp_save_type_bool
-Sets BOOL as current type of the ID that it is being proecessed
+Sets BOOL as current type of the ID that it is being processed
 
 ### snp_push_pending_token
 Pushes pending token to stack
-Retrieved from: MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION)
+###### Retrieved from: Mathematical expressions (intermediate representation
 
 ### snp_push_pending_eval_token
 Pushes pending EVAL token to stack
@@ -109,12 +108,12 @@ Removes false bottom from the stack
 ### snp_checks_for_previous_declaration
 Checks for previously declared modules/variables
 
-
-## CONDITIONALS
+## Conditionals
 
 ### snp_conditional_statement_1
 Actions to produce intermediate representation for non-linear statements using quadruples
-snp for single IF. Equivalent to snp_while_2
+
+### snp for single IF. Equivalent to snp_while_2
 
 ### snp_conditional_statement_2
 Fills GOTOF
@@ -122,49 +121,49 @@ Fills GOTOF
 ### snp_conditional_statement_3
 For else: generates GOTO quad
 
-## LOOPS
+## Loops
 
 ### snp_while_1
 Pushes counter to stack of jumps
 
 ### snp_while_3
-Genertes GOTO quad
+Gerentes GOTO quad
 
 ### snp_do_while_gotot
 Generates GOTOT quad
-
-## Intermediate Code Actions for a Module Definition
+Intermediate Code Actions for a Module Definition
 
 ### snp_counts_params
 Counts number of params for module definitions
 
 ### snp_add_params_count_to_table
-Retrieved from snp #4 in Intermediate Code Actions for Module Definition
 Creates param lists with types
+###### Retrieved from snp #4 in Intermediate Code Actions for Module Definition
 
-## INTERMEDIATECODE ACTIONS FOR MODULE DEFINITION (INTERMEDIATE REPRESENTATION)
+
+## Intermediate code actions for module definition (intermediate representation
 
 ### snp_add_quad_cont_to_table
-Retrieved from snp #6 in Intermediate Code Actions for Module Definition
+###### Retrieved from snp #6 in Intermediate Code Actions for Module Definition
 
 ### snp_verify_module_existance
 Verifies that the procedure exists in the Procedure Directory
-Retrieved from snp #1 Module Call
+###### Retrieved from snp #1 Module Call
 
 ### snp_add_era_size_quad
-Generates ERA size (Activation Record expansion - NEW - size) and adds a pointer to the first prarameter type in the parameter table
-Retrieved from snp #2 Module Call
+Generates ERA size (Activation Record expansion - NEW - size) and adds a pointer to the first parameter type in the parameter table
+###### Retrieved from snp #2 Module Call
 
 ### snp_check_param
 Verifies Argument type agains current parameter(#k) in parameter table Generates action PARAMETER, Argument, Argument#k
-Retrieved from snp #3 Module Call
+###### Retrieved from snp #3 Module Call
 
 ### snp_check_return
 Checks if current function is void, to see if you can use it to assign a value
 
 ### snp_add_gosub
-Generates quad GOSUB, procedure_name, -1, intitial-address
-Retrieved from snp #6 Module Call
+Generates quad GOSUB, procedure_name, -1, intitial - address
+###### Retrieved from snp #6 Module Call
 
 ## HTML
 
@@ -188,7 +187,7 @@ Checks that the respective html_tag has a closing tag.
 For example: img doesn't have one, but h1 yes
 
 ### snp_br_html_tag
-Gnerates quad for html br tag (it only closes br doesn't open br)
+Generates quad for html br tag (it only closes br doesn't open br)
 
 ### snp_push_eval_pending_token
 pushes eval token to stack
