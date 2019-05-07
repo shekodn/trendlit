@@ -32,9 +32,12 @@ If `http://localhost`  is up and running, we are golden.
 
 We do a bunch of magic in the background, but the cool part is you don’t need to worry about any of that just focus on doing some fun stuff with Trendlit.
 
+# What can I do with trendlit?
+![sample_output](sample_output.png)
+
 # Cool.. but how do I program in trendlit?
 ## Sample Code
-### Input
+This code is used for documentation. As a result, it should provide a sneak peak of all the cool stuff we just showed you.
 
 ```
 program the_name_of_the_program
@@ -425,5 +428,3 @@ p {
 
 }
 ```
-### Output
-![sample_output](sample_output.png)
