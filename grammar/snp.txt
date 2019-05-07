@@ -77,253 +77,122 @@ snp_save_type_str
 snp_save_type_bool
 # Sets BOOL as current type of the ID that it is being proecessed
 
-
-
 snp_push_pending_token
-    """snp_push_pending_token : empty"""
-    token = p[-1]
-    quad_helper.push_token(token)
-    # debbuging
-    # print("pushed token: ", quad_helper.top_token())
-
+# Pushes pending token to stack
+# Retrieved from: MATHEMATICAL EXPRESSIONS (INTERMEDIATE REPRESENTATION)
 
 snp_push_pending_eval_token
-    """snp_push_pending_eval_token : empty"""
-    quad_helper.push_token("eval")
-
+# Pushes pending EVAL token to stack
 
 snp_push_solitary_operand
-    """snp_push_solitary_operand : empty"""
-
-    """
-    Variables declared without a corresponding initialization are zero-valued.
-    For example, the zero value for an int is 0
-    """
-    operand_id = p[-2]
-    operand_address = parser_helper.get_var_address_from_dir(operand_id)
-    type = parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
-        operand_id
-    ]["type"]
-    default_initial_value = type_to_init_value.get(type)
-    default_initial_value_address = memory.get_or_set_addr_const(
-        default_initial_value, type
-    )
-    operator = token_to_code.get("=")
-
-    quad_helper.add_quad(operator, default_initial_value_address, -1, operand_address)
-    # for debbuging
-    # print("Type", type, "address", default_initial_value_address)
-
+# Variables declared without a corresponding initialization are zero-valued.
+# For example, the zero value for an int is 0
 
 snp_add_assignation_quad
-    """snp_add_assignation_quad : empty"""
-    add_quadruple_assignation()
+# If it makes semantic sense, it generates quadruple for assignations
 
-
-def add_quadruple_assignation():
-    right_operand = quad_helper.pop_operand()  # TODO: type int
-    right_operand_type = quad_helper.pop_type()
-    left_operand = quad_helper.pop_operand()  # TODO: type str
-    left_operand_type = quad_helper.pop_type()
-    token = quad_helper.pop_token()
-
-    if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
-        quad_helper.add_quad(token, right_operand, -1, left_operand)  # assignation
-    else:
-        error_helper.add_error(301)
-    # For debbuging
-    # print(
-    #     "Semantic Cube Checked: ",
-    #     "right: ",
-    #     right_operand_type,
-    #     "left: ",
-    #     left_operand_type,
-    #     "token: ",
-    #     token,
-    # )
-
-
-# sign => "+|-"
 snp_check_precedence_and_create_quadruple_for_sign
-    """snp_check_precedence_and_create_quadruple_for_sign : empty"""
-    top = quad_helper.top_token()
-    add = token_to_code.get("+")
-    sub = token_to_code.get("-")
-    is_sign = (top is add) or (top is sub)
-    if is_sign:
-        add_quadruple_expression()
+# Generates quadruple expression for arithmetic operations
 
-
-# op => "*|/"
 snp_check_precedence_and_create_quadruple_for_op
-    """snp_check_precedence_and_create_quadruple_for_op : empty"""
+# Generates quadruple expression for product operations
 
-    top = quad_helper.top_token()
-    division = token_to_code.get("/")
-    product = token_to_code.get("*")
-    is_op = (top is division) or (top is product)
-
-    if is_op:
-        add_quadruple_expression()
-
-
-# rel => "is|not|>=|<=|>|<"
 snp_check_precedence_and_create_quadruple_for_rel
-    """snp_check_precedence_and_create_quadruple_for_rel : empty"""
+# Generates quadruple expression for relational operations
 
-    top = quad_helper.top_token()
-    eq = token_to_code.get("is")
-    noteq = token_to_code.get("not")
-    get = token_to_code.get(">=")
-    let = token_to_code.get("<=")
-    gt = token_to_code.get(">")
-    lt = token_to_code.get("<")
-
-    is_rel = (
-        (top is eq)
-        or (top is noteq)
-        or (top is get)
-        or (top is let)
-        or (top is gt)
-        or (top is lt)
-    )
-
-    if is_rel:
-        add_quadruple_expression()
-
-
-# logic => "and|or"
 snp_check_precedence_and_create_quadruple_for_logic
-    """snp_check_precedence_and_create_quadruple_for_logic : empty"""
-    top = quad_helper.top_token()
-    and_op = token_to_code.get("and")
-    or_op = token_to_code.get("or")
-
-    is_logic = (top is and_op) or (top is or_op)
-
-    if is_logic:
-        add_quadruple_expression()
-
+# Generates quadruple expression for logical operations
 
 snp_clean_stack_until_false_bottom
-    """snp_clean_stack_until_false_bottom : empty"""
-    # CPAREN ", "stack should pop until finding ')' or '(' ")
-    quad_helper.pop_token()
+# Removes false bottom from the stack
 
-
-def add_quadruple_expression():
-    right_operand = quad_helper.pop_operand()  # TODO: type int
-    right_operand_type = quad_helper.pop_type()
-    # TODO: TESTTTT
-    left_operand = quad_helper.pop_operand()  # TODO: type str
-    left_operand_type = quad_helper.pop_type()
-    false_bottom = token_to_code.get("(")
-    # debbuging
-    # print("quad_helper.top_token()", quad_helper.top_token())
-    if quad_helper.top_token() is false_bottom:
-        print("false bottom:", quad_helper.top_token())
-        quad_helper.pop_token()
-        token = quad_helper.pop_token()
-    else:
-        token = quad_helper.pop_token()
-    # token = quad_helper.pop_token()
-
-    # debbuging HERE
-    # print("SMEMANTIC CUBE: ", right_operand, left_operand, token)
-    # print("TYPES: ", right_operand_type, left_operand_type)
-    if semantic_cube.is_in_cube(right_operand_type, left_operand_type, token):  # baila?
-        # add the result (temp var) to the operand stack
-        result_type = semantic_cube.cube[right_operand_type, left_operand_type, token]
-        # assign memory address to temporary result variable and increase counter for temp/result vars
-        temp_memory_address = memory.set_addr_temp(code_to_type.get(result_type))
-        # add the quad
-        quad_helper.add_quad(token, left_operand, right_operand, temp_memory_address)
-        # expression
-        quad_helper.push_operand(temp_memory_address)
-        # add the result type (temp var) to the type stack
-        quad_helper.push_type(code_to_type.get(result_type))
-        # For debbuging
-        # print("OPERAND", quad_helper.top_operand())
-        # print("TYPE", quad_helper.top_type())
-    else:
-        error_helper.add_error(301)
-
-# Checks for previously snp_checks_for_previous_declaration
 snp_checks_for_previous_declaration
+# Checks for previously declared modules/variables
 
 # --- NON-LINEAR STATEMENTS (INTERMEDIATE REPRESENTATION) ---
 
 # --- CONDITIONALS ---
 
+snp_conditional_statement_1
 # Actions to produce intermediate representation for non-linear statements using quadruples
 # snp for single IF. Equivalent to snp_while_2
-snp_conditional_statement_1
 
-# -
 snp_conditional_statement_2
+# Fills GOTOF
 
-# -
 snp_conditional_statement_3
+# For else: generates GOTO quad
 
-# LOOPS
+# --- LOOPS
 
-# -
 snp_while_1
+# Pushes counter to stack of jumps
 
-# -
 snp_while_3
+# Genertes GOTO quad
 
-# -
 snp_do_while_gotot
+# Generates GOTOT quad
 
-###Intermediate Code Actions for a Module Definition
+# --- Intermediate Code Actions for a Module Definition
+
 snp_counts_params
+# Counts number of params for module definitions
 
-# snp_add_params_count_to_table is snp #4 in Intermediate Code Actions for Module Definition
 snp_add_params_count_to_table
+# Retrieved from snp #4 in Intermediate Code Actions for Module Definition
+# Creates param lists with types
 
 # --- INTERMEDIATECODE ACTIONS FOR MODULE DEFINITION (INTERMEDIATE REPRESENTATION) ---
 
-# snp #6 in Intermediate Code Actions for Module Definition
 snp_add_quad_cont_to_table
+# Retrieved from snp #6 in Intermediate Code Actions for Module Definition
 
-# --- INTERMEDIATECODE ACTIONS FOR MODULE CALL (INTERMEDIATE REPRESENTATION) ---
-
-# snp #1 Module Call
-# Verify that the procedure exists in the Procedure Directory
 snp_verify_module_existance
+# Verifies that the procedure exists in the Procedure Directory
+# Retrieved from snp #1 Module Call
 
-# snp #2 Module Call: Generates ERA size (Activation Record expansion - NEW - size) and add a pointer to the first prarameter type in the parameter table
 snp_add_era_size_quad
+# Generates ERA size (Activation Record expansion - NEW - size) and adds a pointer to the first prarameter type in the parameter table
+# Retrieved from snp #2 Module Call
 
-# snp #3 Module Call: Verify Argument type agains current parameter(#k) in parameter table Generates action PARAMETER, Argument, Argument#k
 snp_check_param
+# Verifies Argument type agains current parameter(#k) in parameter table Generates action PARAMETER, Argument, Argument#k
+# Retrieved from snp #3 Module Call
 
-# Checks if current function is void, to see if you can use it to assign a value
 snp_check_return
+# Checks if current function is void, to see if you can use it to assign a value
 
-# snp #6 Module Call: Generate quad GOSUB, procedure_name, -1, intitial-address
 snp_add_gosub
+# Generates quad GOSUB, procedure_name, -1, intitial-address
+# Retrieved from snp #6 Module Call
 
 # --- HTML ---
 
-# -
 snp_open_html_tag
+# Creates eval token to process an html tag in the VM
 
-# -
 snp_class_quad
+# Gets STRING from the declared class
+# In HTML: <h2 class="STRING">London</h2>
+# In trendlit: h2 class : "STRING" {}
 
-# -
 snp_href_quad
+# Gets STRING from the declared href
+# In HTML: <a href="STRING">Visit W3Schools</a>
+# In trendlit: link href : "STRING" {}
 
-# -
 snp_img_quad
+# Gets STRING from the declared img
+# In HTML: <img src="STRING">
+# In trendlit: img src : "STRING" {}
 
-# Checks that the respective html_tag has a closing tag. For example: img doesn't have one, but h1 yes (<h1></h1>)
 snp_close_html_tag
+# Checks that the respective html_tag has a closing tag.
+# For example: img doesn't have one, but h1 yes (<h1></h1>)
 
-# Gnerates quad for html br tag (it only closes </br>, doesn't open <br>)
 snp_br_html_tag
+# Gnerates quad for html br tag (it only closes </br>, doesn't open <br>)
 
-# -
 snp_push_eval_pending_token
+# pushes eval token to stack
