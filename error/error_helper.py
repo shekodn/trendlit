@@ -4,7 +4,7 @@ from error.error import Error
 # Errors
 unknwon_error = "Unkown Error. "
 type_mismatch = "No baila"
-syntax_error = "Sintax error:"
+syntax_error = "Syntax error:"
 var_not_defined = "Var"
 module_not_defined = "Module"
 wrong_params_num = "Wrong number of params"
@@ -33,7 +33,7 @@ code_to_error = {
     # Unkown 0
     0: unknwon_error,
     # Lexer 100
-    # Sintax 200
+    # Syntax 200
     201: syntax_error,
     202: index_out_of_range,
     # Semantic 300

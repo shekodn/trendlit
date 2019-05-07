@@ -188,7 +188,7 @@ def relational(quad):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
-        # Execute substraction
+        # Execute comparison ==
         res_val = left_op == right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
@@ -196,7 +196,7 @@ def relational(quad):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
-        # Execute substraction
+        # Execute comparison !=
         res_val = left_op != right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
@@ -204,7 +204,7 @@ def relational(quad):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
-        # Execute substraction
+        # Execute comparison >=
         res_val = left_op >= right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
@@ -212,7 +212,7 @@ def relational(quad):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
-        # Execute substraction
+        # Execute comparison <=
         res_val = left_op <= right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
@@ -220,7 +220,7 @@ def relational(quad):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
-        # Execute substraction
+        # Execute comparison >
         res_val = left_op > right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
@@ -231,7 +231,7 @@ def relational(quad):
         right_op = get_value_from_address(quad.operand2)
         # For debbuging
         # print(f"left_op {left_op} right_op {right_op}")
-        # Execute substraction
+        # Execute comparison <
         res_val = left_op < right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
@@ -241,7 +241,7 @@ def logical(quad):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
-        # Execute substraction
+        # Execute comparison &&
         res_val = left_op and right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
@@ -249,7 +249,7 @@ def logical(quad):
         # Get value from memory
         left_op = get_value_from_address(quad.operand1)
         right_op = get_value_from_address(quad.operand2)
-        # Execute substraction
+        # Execute comparison ||
         res_val = left_op or right_op
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
@@ -320,11 +320,12 @@ def jumps(quad):
         # Get trigger (result of condition)
         trigger = get_value_from_address(quad.operand1)
         # print("TRIGGER ", trigger)
-        # Change inst = destination quad IF trigger is FALSE
+        # Change inst = destination quad IF trigger is TRUE
         if trigger:
             instruction_pointer = quad.operand3 - 1
 
 def is_arr_out_of_bounds(quad):
+    # VER, lower_limit, upper_limit, S
     lower_limit = get_value_from_address(quad.operand1) # Should always be 0
     upper_limit = get_value_from_address(quad.operand2)
     s = get_value_from_address(quad.operand3)
@@ -340,11 +341,12 @@ def is_arr_out_of_bounds(quad):
 def modules(quad):
     global instruction_pointer
     if quad.token == token_to_code.get("ERA"): # Activation Record
+        # ERA, func_name,  -1,  -1
         # Start a Local Memory Context
         curr_l_memory = RuntimeMemory(scope_to_code.get("local"))
         # Push to Call Stack
         call_context_stack.push(curr_l_memory)
-    elif quad.token == token_to_code.get("PARAMETER"): #Go to subroutine
+    elif quad.token == token_to_code.get("PARAMETER"): #Set param value
         # PARAMETER, addr_value_being_sent, -1, param_addr
         # Get value being sent from address (param value)
         param_value = get_value_from_address(quad.operand1)
