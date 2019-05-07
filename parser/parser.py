@@ -113,7 +113,6 @@ def p_initializeSlices(p):
 
 def p_initializeSlices1D(p):
     """initializeSlices1D : OBRACK CTEI CBRACK snp_increase_dimension_count"""
-    # """initializeSlices1D : OBRACK CTEI snp_check_ctei CBRACK snp_increase_dimension_count"""
 
 
 def p_initializeSlices2D(p):
@@ -129,20 +128,8 @@ def p_constSlice1D(p):
     """constSlice1D : OBRACK CBRACK  snp_init_slice_1d"""
 
 
-def p_constSlice1D1(p):
-    """constSlice1D1 : COMMA value constSlice1D1
-        | empty"""
-
-
-# TODO: FIX 2D SLICE
 def p_constSlice2D(p):
-    """constSlice2D : OBRACK constSlice1D constSlice2D1 CBRACK
-        | OBRACK constSlice1D CBRACK"""
-
-
-def p_constSlice2D1(p):
-    """constSlice2D1 : COMMA constSlice1D constSlice2D1
-        | empty"""
+    """constSlice2D : OBRACK OBRACK CBRACK CBRACK """
 
 
 def p_type(p):
@@ -596,7 +583,7 @@ def p_snp_add_dimension(p):
         upper_limit = parser_helper.get_upper_limit(slice_name, 1)
         # For debuging
         # print("R ", parser_helper.curr_r, "Upper", upper_limit, "Lower", lower_limit)
-        m1 = parser_helper.curr_r / ((int(upper_limit) - lower_limit + 1))
+        m1 = parser_helper.curr_r / (((int(upper_limit) - 1) - lower_limit + 1))
         parser_helper.procedure_directory[parser_helper.curr_scope]["var_table"][
             parser_helper.curr_slice
         ]["t_dimensions"]["m1"] = int(m1)
@@ -608,10 +595,34 @@ def p_snp_add_dimension(p):
             parser_helper.curr_slice
         ]["t_dimensions"]["m2"] = k
         const_addr = memory.get_or_set_addr_const(k, "int")
-    #
+
+        # initialize 2d slice with default values
+        slice_type = parser_helper.get_var_type_from_dir(slice_name)
+
+        if slice_type in type_to_code:
+            counter = 0
+            default_value = type_to_init_value.get(slice_type)
+            default_initial_value_address = memory.get_or_set_addr_const(
+                default_value, slice_type
+            )
+            operand_address = parser_helper.get_var_address_from_dir(slice_name)
+
+            while parser_helper.curr_r > counter:
+                quad_helper.add_quad(
+                    token_to_code.get("="),
+                    default_initial_value_address,
+                    -1,
+                    operand_address,
+                )
+                counter += 1
+                operand_address += 1
+
+        else:
+            print("Error: Invalid type")
+
     scope_type = parser_helper.get_scope_type(parser_helper.curr_scope)
     slice_type = parser_helper.get_var_type_from_dir(slice_name)
-    memory.increase_next_mem(scope_type, slice_type, parser_helper.curr_r)
+    memory.increase_next_mem(scope_type, slice_type, parser_helper.curr_r - 1)
 
     # for debbuging
     # print("curr_r", parser_helper.curr_r)
@@ -658,7 +669,9 @@ def p_snp_increase_dimension_count(p):
     # print("UPPER", parser_helper.curr_slice, "ls"+str(dim_count), upper_limit)
     # calculates R
     lower_limit = 0
-    parser_helper.curr_r = parser_helper.curr_r * (int(upper_limit) - lower_limit + 1)
+    parser_helper.curr_r = parser_helper.curr_r * (
+        (int(upper_limit) - 1) - lower_limit + 1
+    )
 
 
 def p_snp_slice_access_2(p):
