@@ -160,7 +160,7 @@ class ParserHelper(object):
             "t_dimensions": {"li1": 0, "ls1": 0, "m1": 0, "li2": 0, "ls2": 0, "m2": 0},
             "type": self.curr_type,
             "memory_address": var_memory_address,
-        }  # TODO : add more info later on
+        }
 
     def get_upper_limit(self, slice_name, dimension):
         if self.is_var_in_current_scope(slice_name):

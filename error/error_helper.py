@@ -49,15 +49,27 @@ code_to_error = {
 
 class ErrorHelper(object):
     def __init__(self):
-        self.queue_error = []
-        self.error_cont = 0
+        self.queue_error = []  # Stores all errors found and prints them in the end
+        self.error_cont = 0  # Error count (useful for tests)
 
     def add_error(self, code, custom_message=""):
+        """
+            Description: Adds an error message into the queue_error, that will
+            Params:
+                code (int): The code of the error code that will be triggered
+                custom_message (str): The extra message that will be added. Optional param.
+            Return:
+        """
         error = Error(code, custom_message)
         self.queue_error.append(error)
         self.error_cont = self.error_cont + 1
 
     def print_errors(self):
+        """
+            Description: Prints all error messages found (if any). Called when parser is done attempting to compile.
+            Params:
+            Return:
+        """
         for error in self.queue_error:
             error_message = code_to_error.get(error.code)
 

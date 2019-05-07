@@ -51,6 +51,13 @@ class RuntimeMemory(object):
     # ---- GET INFO FROM A MEMORY ADDRESS ----
 
     def get_value(self, addr):
+        """
+            Description: Returns the value from a specific address. The method checks the type
+                depending on the address range and then retrieves value from the corresponding memory hash.
+                addr (int): The address you want to get the value from
+            Return:
+                value (int, double, bool, str): The value from an address
+        """
         if self.is_int_addr(addr): # int
             return self.int_memory[addr]
         elif self.is_double_addr(addr): # double
@@ -63,6 +70,13 @@ class RuntimeMemory(object):
             return self.temp_memory[addr]
 
     def set_value(self, value, addr):
+        """
+            Description: Assigns a value to a specific address. The method checks the type
+                depending on the address range and then assigns the value in the corresponding memory hash.
+                value (int, double, bool, str): The value you want to assign
+                addr (int): The address to verify
+            Return:
+        """
         if self.is_int_addr(addr): # int
             self.int_memory[addr] = value
         elif self.is_double_addr(addr): # double
@@ -76,35 +90,30 @@ class RuntimeMemory(object):
 
 
     def is_int_addr(self, addr):
-        # if self.scope_type is scope_to_code.get("global"):
         return self.is_addr_in_range(addr, self.mem_global_int_start, self.mem_global_int_end) or  self.is_addr_in_range(addr, self.mem_local_int_start, self.mem_local_int_end)
-        # else:
-        #     return self.is_addr_in_range(addr, self.mem_local_int_start, self.mem_local_int_end)
-        # return False
 
     def is_double_addr(self, addr):
-        if self.scope_type is scope_to_code.get("global"):
-            return self.is_addr_in_range(addr, self.mem_global_double_start, self.mem_global_double_end)
-        else:
-            return self.is_addr_in_range(addr, self.mem_local_double_start, self.mem_local_double_end)
+        return self.is_addr_in_range(addr, self.mem_global_double_start, self.mem_global_double_end) or self.is_addr_in_range(addr, self.mem_local_double_start, self.mem_local_double_end)
 
     def is_bool_addr(self, addr):
-        if self.scope_type is scope_to_code.get("global"):
-            return self.is_addr_in_range(addr, self.mem_global_bool_start, self.mem_global_bool_end)
-        else:
-            return self.is_addr_in_range(addr, self.mem_local_bool_start, self.mem_local_bool_end)
+        return self.is_addr_in_range(addr, self.mem_global_bool_start, self.mem_global_bool_end) or self.is_addr_in_range(addr, self.mem_local_bool_start, self.mem_local_bool_end)
 
     def is_str_addr(self, addr):
-        if self.scope_type is scope_to_code.get("global"):
-            return self.is_addr_in_range(addr, self.mem_global_str_start, self.mem_global_str_end)
-        else:
-            return self.is_addr_in_range(addr, self.mem_local_str_start, self.mem_local_str_end)
+        return self.is_addr_in_range(addr, self.mem_global_str_start, self.mem_global_str_end) or self.is_addr_in_range(addr, self.mem_local_str_start, self.mem_local_str_end)
 
     def is_temp_addr(self, addr):
         return self.is_addr_in_range(addr, self.mem_temp_int_start, self.mem_temp_str_end)
 
-
     def is_addr_in_range(self, addr, start_range, end_range):
+        """
+            Description: Checks if an address is inside some specific range. This is used as a helper to check/find the type from an address.
+            Params:
+                addr (int): The address to verify
+                start_range (int): The lower limit
+                end_range (int): The upper limit
+            Return:
+                valid (bool): Returns True if address is within range, else returns False
+        """
         if addr >= start_range and addr <= end_range:
             return True
         return False

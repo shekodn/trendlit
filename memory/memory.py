@@ -231,7 +231,7 @@ class Memory(object):
 
     def increase_next_mem(self, scope_type, type, amount):
         """
-            Description:
+            Description: Increases the counter a certain amount for the next_mem of a specific scope and var_type. The module is used after an array is declared, this sets the counters to be ready for the next variable. This is how the memory is saved for all slice cells.
             Params:
                 scope_type (int): the type of the scope
                 type (str): the type of the variable we want to assign
@@ -266,7 +266,7 @@ class Memory(object):
 
     def reset_local_vars(self):
         """
-            Description: reset the local var counter
+            Description: reset the local var counters, , this module is called when a module ends. Var table is deleted from procedure directory, so addresses must be ready for next module.
             Params:
             Return:
          """
@@ -278,7 +278,7 @@ class Memory(object):
 
     def reset_temp_vars(self):
         """
-            Description: reset the temp var counter
+            Description: reset the temp var counters, this module is called when a module ends. Var table is deleted from procedure directory, so addresses must be ready for next module.
             Params:
             Return:
         """

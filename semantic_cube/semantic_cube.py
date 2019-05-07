@@ -230,6 +230,15 @@ class Cube:
         }
 
     def is_in_cube(self, operType1, operType2, op):
+        """
+            Description: Checks if the operation that wants to be performed is valid or not.
+            Params:
+                operType1 (int): The code of the first type
+                operType2 (int): The code of the second type
+                op (int): The code of the operation/token
+            Return:
+                valid (bool): Returns True if valid operation else returns False
+        """
         if (operType1, operType2, op) in self.cube and (
             self.cube[(operType1, operType2, op)] is not type_error
         ):
