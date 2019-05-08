@@ -207,9 +207,13 @@ def p_factor1(p):
         | SIGN value"""
 
 
+def p_isList(p):
+    """isList : OBRACK slice_expression CBRACK isList
+        | empty """
+
+
 def p_value(p):
-    """value : ID snp_checks_for_previous_declaration snp_push_pending_operand
-        | valueSlice
+    """value : ID snp_checks_for_previous_declaration snp_push_pending_operand isList
         | exp_call
         | CTEI snp_save_type_int snp_push_pending_operand
         | CTED snp_save_type_double snp_push_pending_operand
