@@ -5,9 +5,42 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
 </head>
 <div class="container">
     <h2> Start Coding! </h2>
+
+    <p> Here are some examples that come out of the box! </p>
+
+    <div class="sample_code">
+      <label>
+          <input name="sample_code" type="radio" value="default" checked />
+          <span> Default </span>
+      </label>
+      <label>
+          <input name="sample_code" type="radio" value="fibo_it" />
+          <span> Iterative Fibonacci </span>
+      </label>
+      <label>
+          <input name="sample_code" type="radio" value="fibo_rec"  />
+          <span> Recursive Fibonacci </span>
+      </label>
+      <label>
+          <input name="sample_code" type="radio" value="factorial_it"  />
+          <span> Iterative Factorial </span>
+      </label>
+      <label>
+          <input name="sample_code" type="radio" value="factorial_rec"  />
+          <span> Recursive Factorial </span>
+      </label>
+      <label>
+          <input name="sample_code" type="radio" value="dogs"  />
+          <span> Dogs </span>
+      </label>
+    </div>
+
+
     <!--  REFERENCE: https://codepen.io/kpourdeilami/pen/KDepk -->
     <form action="/cgi-bin/server.py" method="post" align="center">
         <textarea id="main" name="textcontent" cols="40" rows="4" ng-keyup="autoExpand($event)">
@@ -83,7 +116,125 @@
 
 <script type="text/javascript">
 
-  default_text = `
+
+  $('input[name="sample_code"]').on('change', function() {
+    var radioValue = $("input[name='sample_code']:checked").val()
+
+    if (radioValue == "fibo_it") {
+      $("#main").val(fibonacci_iterative_sample_code)
+
+    } else if (radioValue == "fibo_rec") {
+      $("#main").val(fibonacci_recursive_sample_code)
+
+    } else if (radioValue == "factorial_it") {
+      $("#main").val(factorial_iterative_sample_code)
+
+    } else if (radioValue == "factorial_rec") {
+      $("#main").val(factorial_recursive_sample_code)
+
+    } else if (radioValue == "dogs") {
+      $("#main").val(dogs_sample_code)
+
+    } else {
+      $("#main").val(default_code)
+    }
+
+  });
+
+  fibonacci_recursive_sample_code = `
+  program fibonacci_recursive
+      script {
+
+          def fib(int n) : int {
+
+              if (n <= 1){
+                  spit n
+              }
+
+              spit (fib(n - 1)) + (fib(n - 2))
+          }
+
+          eval(fib(13))
+      }
+  `
+  fibonacci_iterative_sample_code = `
+  program fibonacci_iterative
+      script {
+
+          def fibo2 (int nth_number) : int {
+
+              int previous_previous_number = 0
+              int previous_number = 0
+              int current_number = 1
+              int i = 1
+
+          loop (i < nth_number)  {
+              previous_previous_number = previous_number
+
+              previous_number = current_number
+
+              current_number = previous_previous_number + previous_number
+
+              i = i+1
+          }
+              spit (current_number)
+          }
+
+          eval(fibo2(50))
+      }
+
+  `
+  factorial_recursive_sample_code = `
+  program factorial_recursive
+      script {
+
+          def factorial(int n) : int {
+              if (n is 0) {
+                  spit 1;
+              }
+
+              spit n * (factorial(n - 1))
+          }
+
+          eval(factorial(10)) # savior
+      }
+`
+  factorial_iterative_sample_code = `
+  program factorial_iterative
+      script {
+
+          int product = 1
+          int j = 1
+          int N = 11
+
+          loop(j <= N) {
+              product = product * j
+              j = j + 1
+          }
+
+          eval(product)
+      }
+`
+  dogs_sample_code = `
+  program dogs
+
+  script {
+    int number_of_dogs = 1000
+    int counter = 0
+  }
+
+  div class : "pretty" {}
+
+  div class : "container" {
+    div class : "row" {
+      <% loop(counter < number_of_dogs) %>
+        img src : "https://picsum.photos/id/237/200/300" {}
+        <% counter = counter + 1 %>
+      <% end %>
+    }
+  }
+  `
+  default_code = `
   program the_name_of_the_program
       script {
         int card_counter = 9
@@ -355,5 +506,7 @@
       }
 
   `
-  document.getElementById("main").innerHTML=default_text;
+
+  document.getElementById("main").innerHTML=default_code;
+
 </script>
