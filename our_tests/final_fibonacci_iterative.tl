@@ -1,5 +1,5 @@
 # https://dev.to/khalilsaboor/fibonacci-recursion-vs-iteration--474l
-program the_name_of_the_program
+program fibonacci_iterative
     script {
 
         def fibo2 (int nth_number) : int {
