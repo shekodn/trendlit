@@ -86,6 +86,9 @@ program the_name_of_the_program
         fill_mat()
     }
 
+    head class : "pretty" {}
+    div class : "container" {
+
     h1{
         <^"Mat 1:"^>
     }
@@ -106,4 +109,5 @@ program the_name_of_the_program
     h2{
         <%multiply_matrix()%>
         <% print_mat_res() %>
+    }
     }
