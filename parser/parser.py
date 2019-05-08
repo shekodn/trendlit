@@ -212,14 +212,15 @@ def p_factor1(p):
     """factor1 : value
         | SIGN value"""
 
-
+# snp_push_start_false_bottom
+# snp_clean_stack_until_false_bottom
 def p_isList(p):
-    """isList : OBRACK snp_increase_dim_access_count snp_slice_access_2 slice_expression snp_slice_access_3 CBRACK isList
+    """isList : OBRACK snp_increase_dim_access_count snp_slice_access_2 snp_push_start_false_bottom slice_expression snp_slice_access_3 snp_clean_stack_until_false_bottom CBRACK isList
         | snp_slice_access2D_final_dim_3 snp_reset_dim_access_count"""
 
 
 def p_value(p):
-    """value : ID snp_checks_for_previous_declaration snp_push_pending_operand snp_update_curr_slice isList
+    """value : ID snp_checks_for_previous_declaration snp_push_pending_operand snp_update_curr_slice snp_push_start_false_bottom isList snp_clean_stack_until_false_bottom
         | exp_call
         | CTEI snp_save_type_int snp_push_pending_operand
         | CTED snp_save_type_double snp_push_pending_operand
