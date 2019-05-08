@@ -1,4 +1,4 @@
-program the_name_of_the_program
+program factorial_recursive
     script {
 
         def factorial(int n) : int {

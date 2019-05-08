@@ -1,4 +1,4 @@
-program the_name_of_the_program
+program fibonacci_recursive
     script {
 
         def fib(int n) : int {

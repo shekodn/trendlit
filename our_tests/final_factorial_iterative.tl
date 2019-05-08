@@ -1,9 +1,9 @@
-program the_name_of_the_program
+program factorial_iterative
     script {
 
         int product = 1
         int j = 1
-        int N = 11 
+        int N = 11
 
         loop(j <= N) {
             product = product * j
