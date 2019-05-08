@@ -6,9 +6,23 @@
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-
 </head>
+
+<div class="navbar-fixed">
+  <nav>
+    <div class="nav-wrapper fixed">
+      <div class="container">
+        <a href="#" class="brand-logo">Trendlit</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="https://github.com/anakarenbm/trendlit" target="_blank">Docs</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+
 <div class="container">
+
     <h2> Start Coding! </h2>
 
     <p> Here are some examples that come out of the box! </p>
@@ -20,19 +34,27 @@
       </label>
       <label>
           <input name="sample_code" type="radio" value="fibo_it" />
-          <span> Iterative Fibonacci </span>
+          <span> Fibonacci (It) </span>
       </label>
       <label>
           <input name="sample_code" type="radio" value="fibo_rec"  />
-          <span> Recursive Fibonacci </span>
+          <span> Fibonacci (Rec) </span>
       </label>
       <label>
           <input name="sample_code" type="radio" value="factorial_it"  />
-          <span> Iterative Factorial </span>
+          <span> Factorial (It) </span>
       </label>
       <label>
           <input name="sample_code" type="radio" value="factorial_rec"  />
-          <span> Recursive Factorial </span>
+          <span> Factorial (Rec) </span>
+      </label>
+      <label>
+          <input name="sample_code" type="radio" value="bubble_sort"  />
+          <span> Bubble Sort </span>
+      </label>
+      <label>
+          <input name="sample_code" type="radio" value="find"  />
+          <span> Find </span>
       </label>
       <label>
           <input name="sample_code" type="radio" value="dogs"  />
@@ -82,10 +104,6 @@
 </div>
 
 <style media="screen">
-    body {
-        /* background: #43434B; */
-        padding-top: 5%;
-    }
 
     textarea {
         /* height: auto; */
@@ -135,6 +153,11 @@
     } else if (radioValue == "dogs") {
       $("#main").val(dogs_sample_code)
 
+    } else if (radioValue == "bubble_sort") {
+      $("#main").val(bubble_sort_sample_code)
+
+    } else if (radioValue == "find") {
+      $("#main").val(find_sample_code)
     } else {
       $("#main").val(default_code)
     }
@@ -505,6 +528,109 @@
 
       }
 
+  `
+  bubble_sort_sample_code = `
+  program bubble_sort
+      script {
+
+          int size_array = 10
+          int arr[10] = []
+
+          def init_array(int size_array){
+
+              int counter = size_array
+              int aux = 0
+
+              counter = size_array - 1
+
+              loop (counter > 0) {
+                  arr[aux] = counter
+                  counter = counter - 1
+                  aux = aux + 1
+              }
+          }
+
+          def print_array (int size_array) {
+              int i = 0, j=0
+              loop(i < size_array) {
+                  eval(arr[i])
+                  i = i + 1
+                }
+               i = 0
+          }
+
+          def bubble_sort() {
+              int i = 0, j=0, temp = 0
+
+              loop(i < size_array - 1) {
+                  loop(j < size_array - i - 1) {
+                      if (arr[j] > arr[j+1]) {
+                          temp = arr[j]
+                          arr[j] = arr[j+1]
+                          arr[j+1] = temp
+                      }
+                      j = j+1
+                  }
+                  j = 0
+                  i = i+1
+              }
+              i = 0
+          }
+
+          init_array(size_array)
+          print_array(size_array)
+          eval("-----")
+          bubble_sort()
+          print_array(size_array)
+      }
+  `
+  find_sample_code = `
+  program find
+      script {
+
+          int i = 0
+          int arr_size = 10
+          int arr[10] = []
+          int which_number = 100
+          bool in_array = False
+
+          arr[0] = 5
+          arr[1] = 1
+          arr[2] = 4
+          arr[3] = 2
+          arr[4] = 8
+          arr[5] = 100
+          arr[6] = -2
+          arr[7] = 3
+          arr[8] = 44
+          arr[9] = 0
+
+          loop(i < arr_size) {
+
+              if(arr[i] is which_number){
+                  in_array = True
+              }
+
+              i = i + 1
+          }
+
+          eval(in_array)
+
+          # Resets vars
+          i = 0
+          which_number = 1234
+          in_array = False
+
+          loop(i < arr_size) {
+
+              if(arr[i] is which_number){
+                  in_array = True
+              }
+
+              i = i + 1
+          }
+          eval(in_array)
+      }
   `
 
   document.getElementById("main").innerHTML=default_code;
