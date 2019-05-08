@@ -89,6 +89,28 @@ class QuadruplesTestCase(unittest.TestCase):
         should_files_be_equal = True
         self.assertEqual(should_files_be_equal, result)
 
+    def test_9_1_pass_slice1d_access(self):
+        tl_file_to_compile = "9_1_pass_slice1d_access.tl"
+        trendlit_helper.reads_file(
+            COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
+        )
+        expected_file = TESTING_CODE_DIR + tl_file_to_compile + ".html.test"
+        generated_file = COMPILED_CODE_DIR + tl_file_to_compile + ".html"
+        result = filecmp.cmp(expected_file, generated_file)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
+    def test_9_0_pass_matrix(self):
+        tl_file_to_compile = "9_0_pass_matrix.tl"
+        trendlit_helper.reads_file(
+            COMPILED_CODE_DIR, OUR_TESTS_PATH + tl_file_to_compile
+        )
+        expected_file = TESTING_CODE_DIR + tl_file_to_compile + ".html.test"
+        generated_file = COMPILED_CODE_DIR + tl_file_to_compile + ".html"
+        result = filecmp.cmp(expected_file, generated_file)
+        should_files_be_equal = True
+        self.assertEqual(should_files_be_equal, result)
+
     def test_5_6_0_pass_calls_function(self):
         tl_file_to_compile = "5_6_0_pass_calls_function.tl"
         trendlit_helper.reads_file(

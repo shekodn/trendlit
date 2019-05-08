@@ -113,8 +113,6 @@ def p_initializeSlices(p):
 
 def p_initializeSlices1D(p):
     """initializeSlices1D : OBRACK CTEI CBRACK snp_increase_dimension_count"""
-    print("Enter here")
-
 
 def p_initializeSlices2D(p):
     """initializeSlices2D : OBRACK CTEI CBRACK snp_increase_dimension_count OBRACK CTEI CBRACK snp_increase_dimension_count"""
@@ -277,22 +275,6 @@ def p_slice_factor1(p):
 def p_slice_value(p):
     """slice_value : ID snp_checks_for_previous_declaration snp_push_pending_operand
         | CTEI snp_save_type_int snp_push_pending_operand"""
-
-
-def p_valueSlice(p):
-    """valueSlice : valueSlice1D
-        | valueSlice2D"""
-
-
-def p_valueSlice1D(p):
-    """valueSlice1D : ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 snp_push_start_false_bottom slice_expression snp_slice_access_3 CBRACK snp_clean_stack_until_false_bottom snp_reset_dim_access_count"""
-
-def p_valueSlice2D(p):
-    # """valueSlice2D : ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 snp_push_start_false_bottom slice_expression snp_slice_access2D_3 CBRACK snp_clean_stack_until_false_bottom OBRACK snp_increase_dim_access_count snp_slice_access_2 snp_clean_stack_until_false_bottom slice_expression snp_slice_access2D_final_dim_3 CBRACK snp_clean_stack_until_false_bottom snp_reset_dim_access_count"""
-    """valueSlice2D : ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 CTEI CBRACK snp_slice_access2D_3 OBRACK snp_increase_dim_access_count snp_slice_access_2 CTEI CBRACK snp_slice_access2D_final_dim_3 snp_reset_dim_access_count"""
-    # """valueSlice2D : ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 slice_expression snp_slice_access2D_3 CBRACK OBRACK snp_increase_dim_access_count snp_slice_access_2 slice_expression snp_slice_access2D_final_dim_3 CBRACK snp_reset_dim_access_count"""
-    # """valueSlice2D : ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 snp_push_start_false_bottom slice_expression snp_slice_access2D_3 CBRACK OBRACK snp_increase_dim_access_count snp_slice_access_2 slice_expression snp_slice_access2D_final_dim_3 CBRACK snp_clean_stack_until_false_bottom snp_reset_dim_access_count"""
-    # """valueSlice2D : ID snp_update_curr_slice snp_push_pending_operand OBRACK snp_increase_dim_access_count snp_slice_access_2 snp_push_start_false_bottom slice_expression snp_slice_access2D_3 CBRACK OBRACK snp_increase_dim_access_count snp_slice_access_2 snp_push_start_false_bottom slice_expression snp_slice_access2D_final_dim_3 CBRACK snp_clean_stack_until_false_bottom snp_reset_dim_access_count"""
 
 
 def p_condition(p):
@@ -744,57 +726,8 @@ def p_snp_slice_access_3(p):
         temp_memory_address = memory.set_addr_temp("int")  # should always be an int
         quad_helper.add_quad(token_to_code.get("*"), s, m1, temp_memory_address)
         quad_helper.push_operand(temp_memory_address)
-
-    # # Add base address to quad : +dirB(slice)
-    # base_dir = parser_helper.get_var_address_from_dir(slice_name)
-    # # assign memory address to temporary result variable and increase counter for temp/result vars
-    # temp_memory_address = memory.set_addr_temp("int")  # should always be an int
-    # # add the quad
-    # # assigns a constant to the base_dir so that VM can read it properly
-    # base_dir_addr = memory.get_or_set_addr_const(str(base_dir), "int")
-    # quad_helper.add_quad(token_to_code.get("+"), s, base_dir_addr, temp_memory_address)
-    #
-    # # Agregar (dircasilla) [pointer like address]
-    # # Push a la pila con la (dircasilla) para que el siguiente cuadruplo la use
-    # ptr_addr_cell = memory.set_addr_ptr(temp_memory_address)
-    # # For debugging
-    # # print(
-    # #     f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}"
-    # # )
-    # quad_helper.push_operand(ptr_addr_cell)
-
-def p_snp_slice_access2D_3(p):
-    """ snp_slice_access2D_3 : empty """
-    s = quad_helper.pop_operand()  # No se saca
-
-    slice_name = parser_helper.curr_slice
-    slice_type = parser_helper.get_var_type_from_dir(slice_name)
-    # print(f"slice_name: {slice_name}, dim: {parser_helper.curr_dimension_counter}")
-
-    # Add VER quad
-    lower_limit = 0
-    upper_limit = parser_helper.get_upper_limit(
-        slice_name, parser_helper.curr_dimension_counter
-    )
-
-    lower_limit_addr = memory.get_or_set_addr_const("0", "int")
-    upper_limit_addr = memory.get_or_set_addr_const(upper_limit, "int")
-    # print(f"lower_limit: {lower_limit}, upper_limit: {upper_limit}")
-    quad_helper.add_quad(
-        token_to_code.get("VER"), lower_limit_addr, upper_limit_addr, s
-    )
-
-    # Add quad: s1*m1
-    m1 = parser_helper.get_m1(slice_name)
-    # m1 = int(m1)
-    m1 = memory.get_or_set_addr_const(m1, "int")
-    temp_memory_address = memory.set_addr_temp("int")  # should always be an int
-    quad_helper.add_quad(token_to_code.get("*"), s, m1, temp_memory_address)
-    quad_helper.push_operand(temp_memory_address)
-
-    # MODIFICATIONSSSS
-    base_dir = parser_helper.get_var_address_from_dir(slice_name)
-    quad_helper.push_operand(base_dir)
+    else:
+        quad_helper.push_operand(s)
 
 def p_snp_slice_access2D_final_dim_3(p):
     """snp_slice_access2D_final_dim_3 : empty"""
@@ -842,6 +775,8 @@ def p_snp_slice_access2D_final_dim_3(p):
     #     f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}"
     # )
     # print("SLICE NAME", slice_name)
+    # sacas el id, ya que tu accesso va a ser el pointer para un slice
+    quad_helper.pop_operand()
     quad_helper.push_operand(ptr_addr_cell)
 
 
@@ -1168,7 +1103,8 @@ def p_snp_check_precedence_and_create_quadruple_for_logic(p):
 def p_snp_clean_stack_until_false_bottom(p):
     """snp_clean_stack_until_false_bottom : empty"""
     # CPAREN ", "stack should pop until finding ')' or '(' ")
-    quad_helper.pop_token()
+    token = quad_helper.pop_token()
+    # print("tokenn", token)
 
 
 def add_quadruple_expression():

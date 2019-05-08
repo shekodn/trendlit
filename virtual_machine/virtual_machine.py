@@ -168,7 +168,7 @@ def arithmetic(quad):
         # print(f"Added: {left_op} + {right_op}")
         # Save result in memory
         set_value_to_address(res_val, quad.operand3)
-        print("final addr", quad.operand3, "final_val: ", get_value_from_address(quad.operand3))
+        # print("final addr", quad.operand3, "final_val: ", get_value_from_address(quad.operand3))
     elif quad.token == token_to_code.get("-"):  # Substraction
         # -, left_op, right_op, result
         # Get value from memory
@@ -208,8 +208,8 @@ def arithmetic(quad):
         value = get_value_from_address(quad.operand1)
         # Assign by storing value in memory
         set_value_to_address(value, quad.operand3)
-        print(f"VALUE!: {value}, VARIABLE: {quad.operand3}")
-        print("FINAL RES: ", get_value_from_address(quad.operand3))
+        # print(f"VALUE!: {value}, VARIABLE: {quad.operand3}")
+        # print("FINAL RES: ", get_value_from_address(quad.operand3))
         # For debbuging
         # print("-------")
         # print("int", g_memory.int_memory)
