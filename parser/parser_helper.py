@@ -172,3 +172,14 @@ class ParserHelper(object):
                 "t_dimensions"
             ]["ls" + str(dimension)]
         return 0  # slice_name not declared
+
+    def get_m1(self, slice_name):
+        if self.is_var_in_current_scope(slice_name):
+            return self.procedure_directory[self.curr_scope]["var_table"][slice_name][
+                "t_dimensions"
+            ]["m1"]
+        elif self.is_var_in_global_scope(slice_name):
+            return self.procedure_directory["global_script"]["var_table"][slice_name][
+                "t_dimensions"
+            ]["m1"]
+        return 0  # slice_name not declared
