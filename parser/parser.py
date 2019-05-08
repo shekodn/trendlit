@@ -113,6 +113,7 @@ def p_initializeSlices(p):
 
 def p_initializeSlices1D(p):
     """initializeSlices1D : OBRACK CTEI CBRACK snp_increase_dimension_count"""
+    print("Enter here")
 
 
 def p_initializeSlices2D(p):
@@ -148,9 +149,14 @@ def p_statement(p):
         | writing"""
 
 
+# def p_assignment(p):
+#     """assignment : ID snp_push_pending_operand EQ snp_push_pending_token expression snp_add_assignation_quad
+#     | valueSlice EQ snp_push_pending_token expression snp_add_assignation_quad"""
+
 def p_assignment(p):
-    """assignment : ID snp_push_pending_operand EQ snp_push_pending_token expression snp_add_assignation_quad
-    | valueSlice EQ snp_push_pending_token expression snp_add_assignation_quad"""
+    """assignment : ID snp_checks_for_previous_declaration snp_push_pending_operand snp_update_curr_slice isList EQ snp_push_pending_token expression snp_add_assignation_quad"""
+
+    # ID snp_checks_for_previous_declaration snp_push_pending_operand isList
 
 
 # LOGICAL => "or|and"
@@ -208,12 +214,12 @@ def p_factor1(p):
 
 
 def p_isList(p):
-    """isList : OBRACK slice_expression CBRACK isList
-        | empty """
+    """isList : OBRACK snp_increase_dim_access_count snp_slice_access_2 slice_expression snp_slice_access_3 CBRACK isList
+        | snp_slice_access2D_final_dim_3 snp_reset_dim_access_count"""
 
 
 def p_value(p):
-    """value : ID snp_checks_for_previous_declaration snp_push_pending_operand isList
+    """value : ID snp_checks_for_previous_declaration snp_push_pending_operand snp_update_curr_slice isList
         | exp_call
         | CTEI snp_save_type_int snp_push_pending_operand
         | CTED snp_save_type_double snp_push_pending_operand
@@ -688,8 +694,9 @@ def p_snp_increase_dimension_count(p):
 
 def p_snp_slice_access_2(p):
     """snp_slice_access_2 : empty"""
-    var_addr = quad_helper.pop_operand()
-    slice_name = parser_helper.get_dimensioned_name(var_addr)
+    # var_addr = quad_helper.top_operand()
+    # slice_name = parser_helper.get_dimensioned_name(var_addr)
+    slice_name = parser_helper.curr_slice
     # For debuging
     # print(f"Var addr: {var_addr}")
     # print(f"Var name: {slice_name}")
@@ -728,23 +735,32 @@ def p_snp_slice_access_3(p):
         token_to_code.get("VER"), lower_limit_addr, upper_limit_addr, s
     )
 
-    # Add base address to quad : +dirB(slice)
-    base_dir = parser_helper.get_var_address_from_dir(slice_name)
-    # assign memory address to temporary result variable and increase counter for temp/result vars
-    temp_memory_address = memory.set_addr_temp("int")  # should always be an int
-    # add the quad
-    # assigns a constant to the base_dir so that VM can read it properly
-    base_dir_addr = memory.get_or_set_addr_const(str(base_dir), "int")
-    quad_helper.add_quad(token_to_code.get("+"), s, base_dir_addr, temp_memory_address)
+    if (parser_helper.get_dimensions(slice_name) is 2 and parser_helper.curr_dimension_counter is 1):
+        # Add quad: s1*m1
+        m1 = parser_helper.get_m1(slice_name)
+        # m1 = int(m1)
+        m1 = memory.get_or_set_addr_const(m1, "int")
+        temp_memory_address = memory.set_addr_temp("int")  # should always be an int
+        quad_helper.add_quad(token_to_code.get("*"), s, m1, temp_memory_address)
+        quad_helper.push_operand(temp_memory_address)
 
-    # Agregar (dircasilla) [pointer like address]
-    # Push a la pila con la (dircasilla) para que el siguiente cuadruplo la use
-    ptr_addr_cell = memory.set_addr_ptr(temp_memory_address)
-    # For debugging
-    # print(
-    #     f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}"
-    # )
-    quad_helper.push_operand(ptr_addr_cell)
+    # # Add base address to quad : +dirB(slice)
+    # base_dir = parser_helper.get_var_address_from_dir(slice_name)
+    # # assign memory address to temporary result variable and increase counter for temp/result vars
+    # temp_memory_address = memory.set_addr_temp("int")  # should always be an int
+    # # add the quad
+    # # assigns a constant to the base_dir so that VM can read it properly
+    # base_dir_addr = memory.get_or_set_addr_const(str(base_dir), "int")
+    # quad_helper.add_quad(token_to_code.get("+"), s, base_dir_addr, temp_memory_address)
+    #
+    # # Agregar (dircasilla) [pointer like address]
+    # # Push a la pila con la (dircasilla) para que el siguiente cuadruplo la use
+    # ptr_addr_cell = memory.set_addr_ptr(temp_memory_address)
+    # # For debugging
+    # # print(
+    # #     f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}"
+    # # )
+    # quad_helper.push_operand(ptr_addr_cell)
 
 def p_snp_slice_access2D_3(p):
     """ snp_slice_access2D_3 : empty """
@@ -781,39 +797,41 @@ def p_snp_slice_access2D_3(p):
 
 def p_snp_slice_access2D_final_dim_3(p):
     """snp_slice_access2D_final_dim_3 : empty"""
-    s2 = quad_helper.pop_operand()  # No se saca
 
     slice_name = parser_helper.curr_slice
-    slice_type = parser_helper.get_var_type_from_dir(slice_name)
-    # print(f"slice_name: {slice_name}, dim: {parser_helper.curr_dimension_counter}")
+    last_token = p[-1]
+    # print("LAST_TOKEN", last_token, "slice_name", slice_name)
 
-    # Add VER quad
-    lower_limit = 0
-    upper_limit = parser_helper.get_upper_limit(
-        slice_name, parser_helper.curr_dimension_counter
-    )
+    if (parser_helper.get_dimensions(slice_name) is 0 or last_token is None):
+        return
 
-    lower_limit_addr = memory.get_or_set_addr_const("0", "int")
-    upper_limit_addr = memory.get_or_set_addr_const(upper_limit, "int")
-    # print(f"lower_limit: {lower_limit}, upper_limit: {upper_limit}")
-    quad_helper.add_quad(
-        token_to_code.get("VER"), lower_limit_addr, upper_limit_addr, s2
-    )
+    if (parser_helper.get_dimensions(slice_name) is 2):
+        s2 = quad_helper.pop_operand()  # No se saca
+        # Add quad: (s1*m1)+s2
+        s1_m2_res = quad_helper.pop_operand()
+        s1_m2_res_address = memory.set_addr_temp("int")  # should always be an int
+        quad_helper.add_quad(token_to_code.get("+"), s1_m2_res, s2, s1_m2_res_address)
+        # quad_helper.push_operand(s1_m2_res_address)
 
-    # Add quad: (s1*m1)+s2
-    s1_m2_res = quad_helper.pop_operand()
-    s1_m2_res_address = memory.set_addr_temp("int")  # should always be an int
-    quad_helper.add_quad(token_to_code.get("+"), s1_m2_res, s2, s1_m2_res_address)
-    # quad_helper.push_operand(s1_m2_res_address)
+        # Add base address to quad : +dirB(slice)
+        base_dir = parser_helper.get_var_address_from_dir(slice_name)
+        # assign memory address to temporary result variable and increase counter for temp/result vars
+        temp_memory_address = memory.set_addr_temp("int")  # should always be an int
 
-    # Add base address to quad : +dirB(slice)
-    base_dir = parser_helper.get_var_address_from_dir(slice_name)
-    # assign memory address to temporary result variable and increase counter for temp/result vars
-    temp_memory_address = memory.set_addr_temp("int")  # should always be an int
-    # add the quad
-    # assigns a constant to the base_dir so that VM can read it properly
-    base_dir_addr = memory.get_or_set_addr_const(str(base_dir), "int")
-    quad_helper.add_quad(token_to_code.get("+"), s1_m2_res_address, base_dir_addr, temp_memory_address)
+        # add the quad
+        # assigns a constant to the base_dir so that VM can read it properly
+        base_dir_addr = memory.get_or_set_addr_const(str(base_dir), "int")
+        quad_helper.add_quad(token_to_code.get("+"), s1_m2_res_address, base_dir_addr, temp_memory_address)
+    else:
+        s = quad_helper.pop_operand()  # No se saca
+        # Add base address to quad : +dirB(slice)
+        base_dir = parser_helper.get_var_address_from_dir(slice_name)
+        # assign memory address to temporary result variable and increase counter for temp/result vars
+        temp_memory_address = memory.set_addr_temp("int")  # should always be an int
+        # add the quad
+        # assigns a constant to the base_dir so that VM can read it properly
+        base_dir_addr = memory.get_or_set_addr_const(str(base_dir), "int")
+        quad_helper.add_quad(token_to_code.get("+"), s, base_dir_addr, temp_memory_address)
 
     # Agregar (dircasilla) [pointer like address]
     # Push a la pila con la (dircasilla) para que el siguiente cuadruplo la use
@@ -822,13 +840,15 @@ def p_snp_slice_access2D_final_dim_3(p):
     # print(
     #     f"curr scope: {code_to_scope.get(parser_helper.get_scope_type(parser_helper.curr_scope))} addr_ptr: {ptr_addr_cell}"
     # )
+    # print("SLICE NAME", slice_name)
     quad_helper.push_operand(ptr_addr_cell)
 
 
 def p_snp_update_curr_slice(p):
     """snp_update_curr_slice : empty"""
-    var_name = p[-1]
-    parser_helper.curr_slice = var_name
+    var_name = p[-3]
+    if (parser_helper.get_dimensions(var_name) > 0):
+        parser_helper.curr_slice = var_name
 
 
 def p_snp_increase_dim_access_count(p):
@@ -988,6 +1008,7 @@ def p_snp_push_pending_operand(p):
     if parser_helper.is_var_declared(operand_id):
         operand_address = parser_helper.get_var_address_from_dir(operand_id)
     else:  # operand is a constant
+        # print("OPERAND", operand_id)
         operand_address = memory.get_or_set_addr_const(operand_id, operand_type)
     quad_helper.push_operand(operand_address)
     # For debbuging
