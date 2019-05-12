@@ -8,5 +8,10 @@ IMAGE=trendlit
 TAG=`make version`
 HASH=`git log --format="%H" -n 1 | cut -c1-6`
 
-docker build --build-arg RELEASE=${TAG} -t ${REPOSITORY}/${IMAGE}:${TAG} .
-docker build --build-arg RELEASE=${TAG} -t ${REPOSITORY}/${IMAGE}:${HASH} .
+# ARG ADMIN_PORT=some_default_value
+# ENV ADMIN_PORT=${ADMIN_PORT}
+
+ARG RELEASE=${TAG}
+
+docker build --build-arg ${RELEASE} -t ${REPOSITORY}/${IMAGE}:${TAG} .
+docker build --build-arg ${RELEASE} -t ${REPOSITORY}/${IMAGE}:${HASH} .
