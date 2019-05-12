@@ -18,9 +18,11 @@ pipeline {
         }
       }
         steps {
-          sh 'scripts/docker_check.sh'
-          sh 'scripts/docker_build.sh'
-          sh 'scripts/docker_push.sh'
+          withDockerRegistry([ credentialsId: "shekodn", url: "" ]) {
+            sh 'scripts/docker_check.sh'
+            sh 'scripts/docker_build.sh'
+            sh 'scripts/docker_push.sh'
+          }
       }
     }
   }
