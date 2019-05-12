@@ -25,3 +25,8 @@ RUN chmod 755 /usr/lib/cgi-bin/upload.py
 
 # By default start up apache in the foreground, override with /bin/bash for iterative.
 CMD ["/usr/sbin/apache2ctl", "-D",  "FOREGROUND"]
+
+# In order to BUILD and use an argument you need to include ARG NAME
+# in your Dockerfile, otherwise the build args are not used.
+# Reference: https://github.com/moby/moby/issues/18205#issuecomment-267401902
+ARG RELEASE
