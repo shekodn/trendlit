@@ -13,13 +13,14 @@ pipeline {
     }
 
     stage('Build') {
-      agent none
+      agent any
       steps {
         sh 'scripts/docker_build.sh'
       }
     }
 
     stage('Push') {
+      agent any
       steps {
         script {
           docker.withRegistry('', 'docker_hub') {
@@ -35,6 +36,7 @@ pipeline {
     }
 
     stage('Remove') {
+      agent any
       steps {
         sh 'scripts/docker_rmi.sh'
       }
