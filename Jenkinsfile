@@ -28,17 +28,20 @@ pipeline {
               sh 'scripts/docker_check.sh'
               sh 'scripts/docker_push.sh'
             } catch (Exception e) {
-              sh 'echo check that the intended version is already bumped'
+              currentBuild.result = 'FAIL'
+              error 'echo check that the intended version is already bumped'
+              exit 1
             }
           }
         }
       }
     }
-
     stage('Remove') {
       agent any
       steps {
-        sh 'scripts/docker_rmi.sh'
+        script {
+            sh 'scripts/docker_rmi.sh'
+        }
       }
     }
   }
