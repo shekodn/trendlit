@@ -13,6 +13,7 @@ pipeline {
     }
 
     stage('Build') {
+      agent none
       steps {
         sh 'scripts/docker_build.sh'
       }
