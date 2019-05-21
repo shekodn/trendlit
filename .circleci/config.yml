@@ -1,8 +1,38 @@
 version: 2
 jobs:
-  build:
+  test:
     docker: # use the docker executor type; machine and macos executors are also supported
       - image: python:3.7-alpine # the primary container, where the job's commands are run
     steps:
       - checkout # check out the code in the project directory
       - run: python3 -m unittest tests/test_compiled_code.py
+  deploy:
+    docker: # use the docker executor type; machine and macos executors are also supported
+      - image: shekodn/alpine-essential:0.0.1  # the primary container, where the job's commands are run
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: |
+            docker login -u ${DOCKER_USER} -p ${DOCKER_PASS};
+      - run:
+          command: |
+            sh 'scripts/docker_build.sh';
+      - run:
+          command: |
+            sh 'scripts/docker_check.sh';
+      - run:
+          command: |
+            sh 'scripts/docker_push.sh';
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
