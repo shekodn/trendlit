@@ -1,7 +1,7 @@
 version: 2
 jobs:
   test:
-    docker: # use the docker executor type; machine and macos executors are also supported
+    docker: # use the docker executor type
       - image: python:3.7-alpine # the primary container, where the job's commands are run
     steps:
       - checkout # check out the code in the project directory
@@ -11,9 +11,12 @@ jobs:
       - image: docker:stable-git # the primary container, where the job's commands are run
     steps:
       - checkout # check out the code in the project directory
+      # A remote environment will be created, and your current primary container
+      # will be configured to use it.
+      # Then, any docker-related commands you use will be safely executed in this new environment.
       - setup_remote_docker:
           docker_layer_caching: true # Enables Docker Layer Caching here to speed up image building
-      - run: apk add make # Add MAKE in order to get the version and the the corresponding tagging from the Makefile
+      - run: apk add make # Add MAKE in order to get the version from trendlit's Makefile
       - run: docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
       - run: sh 'scripts/docker_build.sh'
       - run: sh 'scripts/docker_check.sh'
