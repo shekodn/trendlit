@@ -8,23 +8,16 @@ jobs:
       - run: python3 -m unittest tests/test_compiled_code.py
   deploy:
     docker: # use the docker executor type; machine and macos executors are also supported
-      - image: shekodn/alpine-essential:0.0.1  # the primary container, where the job's commands are run
+      - image: docker:stable-git # the primary container, where the job's commands are run
     steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          command: |
-            docker login -u ${DOCKER_USER} -p ${DOCKER_PASS};
-      - run:
-          command: |
-            sh 'scripts/docker_build.sh';
-      - run:
-          command: |
-            sh 'scripts/docker_check.sh';
-      - run:
-          command: |
-            sh 'scripts/docker_push.sh';
-
+      - checkout # check out the code in the project directory
+      - setup_remote_docker:
+          docker_layer_caching: true # Enables Docker Layer Caching here to speed up image building
+      # - run: apk add make # Add MAKE in order to get the version and the the corresponding tagging from the Makefile
+      - run: docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+      - run: sh 'scripts/docker_build.sh'
+      - run: sh 'scripts/docker_check.sh'
+      - run: sh 'scripts/docker_push.sh'
 workflows:
   version: 2
   test_and_deploy:
@@ -35,4 +28,4 @@ workflows:
             - test
           filters:
             branches:
-              only: master
+              ignore: master
