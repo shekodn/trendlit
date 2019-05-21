@@ -12,19 +12,10 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          command: |
-            docker login -u ${DOCKER_USER} -p ${DOCKER_PASS};
-      - run:
-          command: |
-            sh 'scripts/docker_build.sh';
-      - run:
-          command: |
-            sh 'scripts/docker_check.sh';
-      - run:
-          command: |
-            sh 'scripts/docker_push.sh';
-
+      - run: docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+      - run: sh 'scripts/docker_build.sh'
+      - run: sh 'scripts/docker_check.sh'
+      - run: sh 'scripts/docker_push.sh'
 workflows:
   version: 2
   test_and_deploy:
