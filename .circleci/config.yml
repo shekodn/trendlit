@@ -1,0 +1,8 @@
+version: 2
+jobs:
+  build:
+    docker: # use the docker executor type; machine and macos executors are also supported
+      - image: python:3.7-alpine # the primary container, where the job's commands are run
+    steps:
+      - checkout # check out the code in the project directory
+      - run: python3 -m unittest tests/test_compiled_code.py
