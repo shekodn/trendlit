@@ -2,7 +2,7 @@
 set -e
 
 echo "run container"
-# REGISTRY=
+
 REPOSITORY=shekodn
 IMAGE=trendlit
 TAG=`make version`
