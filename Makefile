@@ -1,6 +1,6 @@
 APP=trendlit
 PROJECT=github.com/shekodn/trendlit
-RELEASE?=0.0.12
+RELEASE?=0.0.13
 
 COMMIT?=$(shell git rev-parse HEAD)
 BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
