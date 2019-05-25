@@ -9,209 +9,174 @@
 </head>
 
 <div class="navbar-fixed">
-  <nav>
-    <div class="nav-wrapper fixed">
-      <div class="container">
-        <a href="#" class="brand-logo">Trendlit</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li><a href="https://github.com/anakarenbm/trendlit" target="_blank">Docs</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+    <nav>
+        <div class="nav-wrapper fixed">
+            <div class="container">
+                <a href="#" class="brand-logo">Trendlit</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="https://github.com/anakarenbm/trendlit" target="_blank">Docs</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </div>
 
 <div class="container">
-  <div class="section">
-
-    <h2> Start Coding! </h2>
-
-    <p> Here are some examples that come out of the box! </p>
-
-    <div class="sample_code">
-      <label>
-          <input name="sample_code" type="radio" value="default" checked />
-          <span> Default </span>
-      </label>
-      <label>
-          <input name="sample_code" type="radio" value="fibo_it" />
-          <span> Fibonacci (It) </span>
-      </label>
-      <label>
-          <input name="sample_code" type="radio" value="fibo_rec"  />
-          <span> Fibonacci (Rec) </span>
-      </label>
-      <label>
-          <input name="sample_code" type="radio" value="factorial_it"  />
-          <span> Factorial (It) </span>
-      </label>
-      <label>
-          <input name="sample_code" type="radio" value="factorial_rec"  />
-          <span> Factorial (Rec) </span>
-      </label>
-      <label>
-          <input name="sample_code" type="radio" value="bubble_sort"  />
-          <span> Bubble Sort </span>
-      </label>
-      <label>
-          <input name="sample_code" type="radio" value="find"  />
-          <span> Find </span>
-      </label>
-      <label>
-          <input name="sample_code" type="radio" value="dogs"  />
-          <span> Dogs </span>
-      </label>
-    </div>
-
-
-
-
-
-    <!--  REFERENCE: https://codepen.io/kpourdeilami/pen/KDepk -->
-    <form action="/cgi-bin/server.py" method="post" align="center">
-        <textarea id="main" name="textcontent" cols="40" rows="4" ng-keyup="autoExpand($event)">
-        </textarea>
-        <div class="">
-            <label>
-                <input name="type" type="radio" value="html" checked />
-                <span>HTML</span>
-            </label>
-            <label>
-                <input name="type" type="radio" value="plain" />
-                <span>Plain</span>
-            </label>
-        </div>
-        <div class="">
-            <button class="btn waves-effect waves-light" type="submit" name="action"> trendlit!
-                <i class="material-icons right">send</i>
-            </button>
-        </div>
-    </form>
-
-  </div>
-
     <div class="section">
 
-    <div class="">
-        <h2> Upload Your Own File</h2>
-        <p> If you don't like our text editor you can go and F ...ind a trendlit file that is stored in your computer.
-        </p>
-    </div>
+        <h2> Start Coding! </h2>
 
-    <form enctype="multipart/form-data" action="/cgi-bin/upload.py" method="post" align="center">
-        <div>
-            <input type="file" name="filename" />
+        <p> Here are some examples that come out of the box! </p>
+
+        <div class="sample_code">
+            <label>
+                <input name="sample_code" type="radio" value="default" checked />
+                <span> Default </span>
+            </label>
+            <label>
+                <input name="sample_code" type="radio" value="fibo_it" />
+                <span> Fibonacci (It) </span>
+            </label>
+            <label>
+                <input name="sample_code" type="radio" value="fibo_rec" />
+                <span> Fibonacci (Rec) </span>
+            </label>
+            <label>
+                <input name="sample_code" type="radio" value="factorial_it" />
+                <span> Factorial (It) </span>
+            </label>
+            <label>
+                <input name="sample_code" type="radio" value="factorial_rec" />
+                <span> Factorial (Rec) </span>
+            </label>
+            <label>
+                <input name="sample_code" type="radio" value="bubble_sort" />
+                <span> Bubble Sort </span>
+            </label>
+            <label>
+                <input name="sample_code" type="radio" value="find" />
+                <span> Find </span>
+            </label>
+            <label>
+                <input name="sample_code" type="radio" value="dogs" />
+                <span> Dogs </span>
+            </label>
         </div>
-        <br>
-        <div class="">
-            <button class="btn waves-effect waves-light" type="submit" name="action"> trendlit!
-                <i class="material-icons right">cloud</i>
-            </button>
-        </div>
-    </form>
-  </div>
+
+        <!--  REFERENCE: https://codepen.io/kpourdeilami/pen/KDepk -->
+        <form action="/cgi-bin/server.py" method="post" align="center">
+            <textarea id="main" name="textcontent" cols="40" rows="4" ng-keyup="autoExpand($event)">
+            </textarea>
+            <div class="">
+                <label>
+                    <input name="type" type="radio" value="html" checked />
+                    <span>HTML</span>
+                </label>
+                <label>
+                    <input name="type" type="radio" value="plain" />
+                    <span>Plain</span>
+                </label>
+            </div>
+            <div class="">
+                <button class="btn waves-effect waves-light" type="submit" name="action"> trendlit!
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+        </form>
+
+    </div>
 
 </div>
 
 <div class="section red lighten-2">
-<div class="container" style="color: white;">
-  <h2 class="center"> Developers </h2>
-    <div class="row wow fadeIn">
-      <div class="col s12 m6">
-        <div class="icon-block">
-          <h2 class="center">
+    <div class="container" style="color: white;">
+        <h2 class="center"> Developers </h2>
+        <div class="row wow fadeIn">
+            <div class="col s12 m6">
+                <div class="icon-block">
+                    <h2 class="center">
           <img src="https://media.licdn.com/dms/image/C5603AQFZO7MVGueekw/profile-displayphoto-shrink_800_800/0?e=1562803200&v=beta&t=PT5xvSvZ9C-MVf50P3qZcvfjKVfvAJimhob0vesIVbc" alt=""></h2>
-          <h5 class="center"> Ana Karen </h5>
-            <p class="light center">
-              Creating trendlit was a whole experience filled with hard work,
-              dedication and some  stressful moments, but in the end I am proud
-              to say we did it! trendlit has a lot of room for improvement and
-              real world applications could be benefited by our awesome language.
-              This is just the beginning of trendlit ;)
-            </p>
-        </div>
-      </div>
+                    <h5 class="center"> Ana Karen </h5>
+                    <p class="light center">
+                        Creating trendlit was a whole experience filled with hard work, dedication and some stressful moments, but in the end I am proud to say we did it! trendlit has a lot of room for improvement and real world applications could be benefited by our awesome language. This is just the beginning of trendlit ;)
+                    </p>
+                </div>
+            </div>
 
-      <div class="col s12 m6">
-        <div class="icon-block">
-          <h2 class="center">
+            <div class="col s12 m6">
+                <div class="icon-block">
+                    <h2 class="center">
           <img src="https://avatars3.githubusercontent.com/u/14099540?s=400&u=e57483b0d06ccf86146a8ec2f21a6d440143396f&v=4" alt=""></h2>
-          <h5 class="center"> Sergio </h5>
-            <p class="light center">
-              Building a programing language from “scratch” was more challenging
-               that I thought it was going to be. After building trendlit,
-               I feel I understand more what happens under the hood when I
-               code using Python or Java.
-            </p>
+                    <h5 class="center"> Sergio </h5>
+                    <p class="light center">
+                        Building a programing language from “scratch” was more challenging that I thought it was going to be. After building trendlit, I feel I understand more what happens under the hood when I code using Python or Java.
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-  </div>
+    </div>
 </div>
 
-
 <div class="section">
-<div class="container">
-  <h2 class="center"> Our Backers </h2>
-    <div class="row wow fadeIn">
-      <div class="col s12 m4">
-        <div class="icon-block">
-          <h2 class="center">
+    <div class="container">
+        <h2 class="center"> Our Backers </h2>
+        <div class="row wow fadeIn">
+            <div class="col s12 m4">
+                <div class="icon-block">
+                    <h2 class="center">
           <img src="https://avatars0.githubusercontent.com/u/11902612?s=400&v=4" alt=""></h2>
-          <h5 class="center"> Alan </h5>
-            <p class="light center">
-              Woah! Est&aacute bien padre, que onda? Usaron javascript como lenguaje
-              base me imagino? Ahora yo le quiero hacer una p&aacutegina al m&iacuteo hahaha
-            </p>
-        </div>
-      </div>
+                    <h5 class="center"> Alan </h5>
+                    <p class="light center">
+                        Woah! Est&aacute bien padre, que onda? Usaron javascript como lenguaje base me imagino? Ahora yo le quiero hacer una p&aacutegina al m&iacuteo hahaha
+                    </p>
+                </div>
+            </div>
 
-      <div class="col s12 m4">
-        <div class="icon-block">
-          <h2 class="center">
+            <div class="col s12 m4">
+                <div class="icon-block">
+                    <h2 class="center">
           <img src="https://avatars1.githubusercontent.com/u/8518253?s=400&v=4" alt=""></h2>
-          <h5 class="center"> Mely </h5>
-            <p class="light center">
-              This is an amazing project! Very very proud of my friends.
-              You deserve a 100! P.S Loved the Dog feature!
-        </div>
-      </div>
+                    <h5 class="center"> Mely </h5>
+                    <p class="light center">
+                        This is an amazing project! Very very proud of my friends. You deserve a 100! P.S Loved the Dog feature!
+                </div>
+            </div>
 
-      <div class="col s12 m4">
-        <div class="icon-block">
-          <h2 class="center">
+            <div class="col s12 m4">
+                <div class="icon-block">
+                    <h2 class="center">
           <img src="https://avatars3.githubusercontent.com/u/8519923?s=400&v=4" alt=""></h2>
-          <h5 class="center"> Oscar </h5>
-            <p class="light center">
-              TE LA VOLASTE! HAHAHA ESTA PADRISISISMO le dije a anakaren
-              que estoy bien contento que lo hicieron!
-            </p>
+                    <h5 class="center"> Oscar </h5>
+                    <p class="light center">
+                        TE LA VOLASTE! HAHAHA ESTA PADRISISISMO le dije a anakaren que estoy bien contento que lo hicieron!
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-  </div>
+    </div>
 </div>
 
 <footer class="page-footer">
-  <div class="container">
-    <div class="row">
-      <div class="col l6 s12">
-        <h5 class="white-text">Trendlit</h5>
-        <p class="grey-text text-lighten-4"> It makes developers' life easier. Manage and present your data in a webapp without using html!</p>
-      </div>
-      <div class="col l4 offset-l2 s12">
-        <h5 class="white-text">Docs</h5>
-        <ul>
-          <li><a class="grey-text text-lighten-3" href="https://github.com/anakarenbm/trendlit target="_blank">Github Repo</a></li>
+    <div class="container">
+        <div class="row">
+            <div class="col l6 s12">
+                <h5 class="white-text">Trendlit</h5>
+                <p class="grey-text text-lighten-4"> It makes developers' life easier. Manage and present your data in a webapp without using html!</p>
+            </div>
+            <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Docs</h5>
+                <ul>
+                    <li>
+                        <a class="grey-text text-lighten-3" href="https://github.com/anakarenbm/trendlit target=" _blank ">Github Repo</a></li>
         </ul>
       </div>
     </div>
   </div>
 
-  <div class="footer-copyright">
-    <div class="container">
+  <div class="footer-copyright ">
+    <div class="container ">
     &copy 2019 trendlit
     </div>
   </div>
