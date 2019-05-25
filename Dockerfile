@@ -21,7 +21,6 @@ RUN pip3 install -r requirements.txt
 COPY server/*.py /usr/lib/cgi-bin/
 
 RUN chmod 755 /usr/lib/cgi-bin/server.py
-RUN chmod 755 /usr/lib/cgi-bin/upload.py
 
 # By default start up apache in the foreground, override with /bin/bash for iterative.
 CMD ["/usr/sbin/apache2ctl", "-D",  "FOREGROUND"]
