@@ -1,0 +1,33 @@
+@startuml
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+actor Developer
+
+box "Code Repository"
+participant Feature_Branch
+actor Peer_Review
+participant Master_Branch
+end box
+
+box "Pipeline"
+participant Automated_Tests
+participant Container_Build
+end box
+
+box "Container_Repository"
+participant Dockerhub
+end box
+
+box "IaaS_Provider"
+participant AWS
+end box
+
+Developer -> Feature_Branch : 1
+Feature_Branch -> Automated_Tests : 2
+Feature_Branch -> Peer_Review : 3
+Peer_Review -> Master_Branch : 3
+Master_Branch -> Container_Build : 4
+Container_Build -> Dockerhub : 5
+Dockerhub -> AWS : 6
+
+@enduml
